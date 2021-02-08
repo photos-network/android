@@ -1,0 +1,7 @@
+<resources>
+    <string name="setup_host_label">Host</string>
+    <string name="setup_client_id_label">Client ID</string>
+    <string name="setup_client_secret_label">Client Secret</string>
+
+    <string name="button_next">Next</string>
+</resources>

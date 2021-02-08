@@ -18,8 +18,7 @@ Its core features are:
 This repository contains the official android client of the project.
 
 
-## Screenflow
+## Screens
 
-- Setup (enter server host, port, api key)
-- oauth login
-- photos grid
+![Setup screen](docs/screen_setup.png)
+![Login screen](docs/screen_login.png)
