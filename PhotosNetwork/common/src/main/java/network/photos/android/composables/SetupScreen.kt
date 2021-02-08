@@ -74,6 +74,7 @@ fun SetupScreen(
         Spacer(Modifier.preferredSize(padding))
 
         TextInput(
+            modifier = Modifier.fillMaxWidth(),
             label = stringResource(id = R.string.setup_host_label),
             name = host.value,
             enabled = !isConnectionCheckInProgress.value,
@@ -83,6 +84,7 @@ fun SetupScreen(
         )
 
         TextInput(
+            modifier = Modifier.fillMaxWidth(),
             label = stringResource(id = R.string.setup_client_id_label),
             name = clientId.value,
             enabled = !isConnectionCheckInProgress.value,
@@ -91,6 +93,7 @@ fun SetupScreen(
             })
 
         TextInput(
+            modifier = Modifier.fillMaxWidth(),
             label = stringResource(id = R.string.setup_client_secret_label),
             name = clientSecret.value,
             enabled = !isConnectionCheckInProgress.value,
