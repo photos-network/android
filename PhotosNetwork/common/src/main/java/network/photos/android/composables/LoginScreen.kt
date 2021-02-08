@@ -1,6 +1,9 @@
 package network.photos.android.composables
 
+import android.net.Uri
+import android.util.Log
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +32,8 @@ fun PreviewLoginScreen() {
         host = host,
         clientId = clientId,
         clientSecret = clientSecret,
+        {},
+        {}
     )
 }
 
@@ -36,7 +41,9 @@ fun PreviewLoginScreen() {
 fun LoginScreen(
     host: MutableState<String>,
     clientId: MutableState<String>,
-    clientSecret: MutableState<String>
+    clientSecret: MutableState<String>,
+    onAuthCode: (authCode: String) -> Unit,
+    onError: (error: String) -> Unit,
 ) {
     Column(
         modifier = Modifier.padding(8.dp),
@@ -47,11 +54,36 @@ fun LoginScreen(
             viewBlock = ::WebView,
             modifier = Modifier.fillMaxSize()
         ) { webView ->
+            val redirectUri =  "photosapp://authenticate"
+            val nonce = "uogotry1uji"
+
             with(webView) {
-                settings.javaScriptEnabled = true
-                webViewClient = WebViewClient()
+                webViewClient = object : WebViewClient() {
+                    override fun shouldOverrideUrlLoading(
+                        view: WebView?,
+                        request: WebResourceRequest?
+                    ): Boolean {
+                        request?.let {
+                            // check oauth redirect
+                            if (request.url.toString().startsWith(redirectUri)) {
+                                // check the 'state' to prevent CSRF attacks. Ignore if not matching with sent 'nonce'
+                                val responseState = request.url.getQueryParameter("state")
+                                if (responseState == nonce) {
+                                    request.url.getQueryParameter("code")?.let { authCode ->
+                                        onAuthCode.invoke(authCode)
+                                    } ?: run {
+                                        onError.invoke("User cancelled the login flow!")
+                                    }
+                                } else {
+                                    onError.invoke("Could not verify 'state'")
+                                }
+                            }
+                        }
+                        return super.shouldOverrideUrlLoading(view, request)
+                    }
+                }
                 webChromeClient = WebChromeClient()
-                loadUrl("${host.value}/oauth/authorize?client_id=${clientId.value}&redirect_uri=photosapp:///authenticate&scope=openid profile email phone library%3Awrite&response_type=code&response_mode=query&nonce=uogotry1uji")
+                loadUrl("${host.value}/oauth/authorize?client_id=${clientId.value}&redirect_uri=${redirectUri}&scope=openid profile email phone library%3Awrite&response_type=code&response_mode=query&state=${nonce}")
             }
         }
     }

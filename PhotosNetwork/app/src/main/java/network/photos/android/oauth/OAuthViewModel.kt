@@ -8,16 +8,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class OAuthViewModel : ViewModel() {
-    private val _host = mutableStateOf("https://slack.stuermer.pro")
+    private val _host = mutableStateOf("")
     val host: MutableState<String>
         get() = _host
 
-    private val _clientId = mutableStateOf("1803463f-c10f-4a65-aa15-b2e39be9f14d")
+    private val _clientId = mutableStateOf("")
     val clientId: MutableState<String>
         get() = _clientId
 
 
-    private val _clientSecret = mutableStateOf("1TmlFYywRd7MwlbRNiePjQ")
+    private val _clientSecret = mutableStateOf("")
     val clientSecret: MutableState<String>
         get() = _clientSecret
 
@@ -39,5 +39,9 @@ class OAuthViewModel : ViewModel() {
             _isConnectionValid.value = true
             _isConnectionCheckInProgress.value = false
         }
+    }
+
+    fun requestAccessToken(authCode: String) {
+        // TODO: request access token
     }
 }
