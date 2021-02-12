@@ -27,17 +27,15 @@ jobs:
         with:
           java-version: 11
 
-      - name: Generate cache key
-        run: ./scripts/checksum.sh PhotosNetwork checksum.txt
-
-      - name: Gradle cache
+      - name: Cache between builds
         uses: actions/cache@v2
         with:
           path: |
-            ~/.gradle/caches/modules-*
-            ~/.gradle/caches/jars-*
-            ~/.gradle/caches/build-cache-*
-          key: gradle-${{ hashFiles('checksum.txt') }}
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Build project
         working-directory: PhotosNetwork
@@ -76,17 +74,15 @@ jobs:
         with:
           java-version: 11
 
-      - name: Generate cache key
-        run: ./scripts/checksum.sh PhotosNetwork checksum.txt
-
       - name: Gradle Cache
         uses: actions/cache@v2
         with:
           path: |
-            ~/.gradle/caches/modules-*
-            ~/.gradle/caches/jars-*
-            ~/.gradle/caches/build-cache-*
-          key: gradle-${{ hashFiles('checksum.txt') }}
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Run instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
