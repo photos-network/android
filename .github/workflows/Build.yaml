@@ -4,11 +4,8 @@ on:
   push:
     branches:
       - development
-    paths:
-      - 'PhotosNetwork/**'
   pull_request:
-    paths:
-      - 'PhotosNetwork/**'
+    types: [opened, synchronize, reopened, edited]
 
 jobs:
   build:
