@@ -36,7 +36,7 @@ jobs:
 
       - name: Build project
         working-directory: PhotosNetwork
-        run: ./gradlew spotlessCheck assembleDebug lintDebug --stacktrace
+        run: ./gradlew assembleDebug lintDebug
 
       - name: Upload build outputs (APKs)
         uses: actions/upload-artifact@v2
@@ -88,7 +88,7 @@ jobs:
           target: google_apis
           arch: x86
           disable-animations: true
-          script: ./gradlew connectedCheck --stacktrace
+          script: ./gradlew connectedCheck
           working-directory: PhotosNetwork
 
       - name: Upload test reports
