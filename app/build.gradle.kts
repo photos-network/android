@@ -83,6 +83,8 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     androidTestImplementation(Libs.AndroidX.Test.rules)
     androidTestImplementation(Libs.AndroidX.Test.Ext.junit)
+    androidTestImplementation(Libs.AndroidX.Compose.test)
+    androidTestImplementation(Libs.AndroidX.Compose.uiTest)
 
     implementation(project(":common"))
 }

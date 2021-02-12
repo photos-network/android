@@ -48,7 +48,8 @@ dependencies {
     api(Libs.AndroidX.Compose.runtime)
     api(Libs.AndroidX.Compose.runtimeLivedata)
     api(Libs.AndroidX.Compose.viewBinding)
-    androidTestApi(Libs.AndroidX.Compose.uiTest)
+    androidTestImplementation(Libs.AndroidX.Compose.test)
+    androidTestImplementation(Libs.AndroidX.Compose.uiTest)
 
     api("com.squareup.retrofit2:retrofit:2.9.0")
     api("com.squareup.retrofit2:converter-gson:2.9.0")
