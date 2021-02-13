@@ -4,11 +4,8 @@ on:
   push:
     branches:
       - development
-    paths:
-      - 'PhotosNetwork/**'
   pull_request:
-    paths:
-      - 'PhotosNetwork/**'
+    types: [opened, synchronize, reopened, edited]
 
 jobs:
   build:
@@ -27,34 +24,31 @@ jobs:
         with:
           java-version: 11
 
-      - name: Generate cache key
-        run: ./scripts/checksum.sh PhotosNetwork checksum.txt
-
-      - name: Gradle cache
+      - name: Cache between builds
         uses: actions/cache@v2
         with:
           path: |
-            ~/.gradle/caches/modules-*
-            ~/.gradle/caches/jars-*
-            ~/.gradle/caches/build-cache-*
-          key: gradle-${{ hashFiles('checksum.txt') }}
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Build project
-        working-directory: PhotosNetwork
-        run: ./gradlew spotlessCheck assembleDebug lintDebug --stacktrace
+        run: ./gradlew assembleDebug lintDebug
 
       - name: Upload build outputs (APKs)
         uses: actions/upload-artifact@v2
         with:
           name: build-outputs
-          path: PhotosNetwork/app/build/outputs
+          path: app/build/outputs
 
       - name: Upload build reports
         if: always()
         uses: actions/upload-artifact@v2
         with:
           name: build-reports
-          path: PhotosNetwork/app/build/reports
+          path: app/build/reports
 
   test:
     needs: build
@@ -76,17 +70,15 @@ jobs:
         with:
           java-version: 11
 
-      - name: Generate cache key
-        run: ./scripts/checksum.sh PhotosNetwork checksum.txt
-
       - name: Gradle Cache
         uses: actions/cache@v2
         with:
           path: |
-            ~/.gradle/caches/modules-*
-            ~/.gradle/caches/jars-*
-            ~/.gradle/caches/build-cache-*
-          key: gradle-${{ hashFiles('checksum.txt') }}
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Run instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -95,12 +87,11 @@ jobs:
           target: google_apis
           arch: x86
           disable-animations: true
-          script: ./gradlew connectedCheck --stacktrace
-          working-directory: PhotosNetwork
+          script: ./gradlew connectedCheck
 
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v2
         with:
           name: test-reports
-          path: PhotosNetwork/app/build/reports
+          path: app/build/reports

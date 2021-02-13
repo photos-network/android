@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/github/license/photos-network/android)](./LICENSE.md)
 [![GitHub contributors](https://img.shields.io/github/contributors/photos-network/android?color=success)](https://github.com/photos-network/android/graphs/contributors)
 [![Discord](https://img.shields.io/discord/793235453871390720)](https://discord.gg/dGFDpmWp46)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/photos-network/android/build)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/photos-network/android/Build)
 
 
 [Photos.network](https://photos.network) is an open source project for self hosted photo management.
