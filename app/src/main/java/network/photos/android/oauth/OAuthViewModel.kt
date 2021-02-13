@@ -1,5 +1,6 @@
 package network.photos.android.oauth
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -43,5 +44,6 @@ class OAuthViewModel : ViewModel() {
 
     fun requestAccessToken(authCode: String) {
         // TODO: request access token
+        Log.e("OAauthViewModel", "request Access token for authCode: $authCode")
     }
 }
