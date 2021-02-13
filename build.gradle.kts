@@ -1,3 +1,5 @@
+import java.net.URI
+
 buildscript {
     repositories {
         google()
@@ -14,6 +16,9 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url = URI("https://kotlin.bintray.com/kotlinx")
+        }
     }
 }
 
