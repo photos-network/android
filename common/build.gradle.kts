@@ -71,10 +71,3 @@ dependencies {
     api(Libs.Squareup.Retrofit.retrofit)
     api(Libs.Squareup.Retrofit.converterGson)
 }
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xallow-jvm-ir-dependencies")
-    }
-}
