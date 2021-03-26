@@ -62,9 +62,9 @@ android {
     }
 
     packagingOptions {
-        exclude("META-INF/licenses/**")
-        exclude("META-INF/AL2.0")
-        exclude("META-INF/LGPL2.1")
+        resources.excludes.add("META-INF/licenses/**")
+        resources.excludes.add("META-INF/AL2.0")
+        resources.excludes.add("META-INF/LGPL2.1")
     }
 }
 
@@ -77,8 +77,15 @@ dependencies {
     implementation(Libs.AndroidX.Lifecycle.livedata)
     implementation(Libs.AndroidX.Navigation.fragment)
     implementation(Libs.AndroidX.Navigation.uiKtx)
-    implementation(Libs.Google.material)
 
+    implementation(Libs.Google.material)
+    implementation(Libs.Google.gson)
+
+    // rest api
+    implementation(Libs.OkHttp.okhttp)
+    implementation(Libs.OkHttp.logging)
+
+    // testing
     androidTestImplementation(Libs.AndroidX.Test.core)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     androidTestImplementation(Libs.AndroidX.Test.rules)
