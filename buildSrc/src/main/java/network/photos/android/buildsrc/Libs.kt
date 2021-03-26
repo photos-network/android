@@ -4,7 +4,7 @@ package network.photos.android.buildsrc
 
 object Libs {
     object Kotlin {
-        private const val version = "1.4.20"
+        private const val version = "1.4.31"
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
         const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
         const val extensions = "org.jetbrains.kotlin:kotlin-android-extensions:$version"
@@ -23,6 +23,21 @@ object Libs {
         const val hiltAndroid = "com.google.dagger:hilt-android:$version"
         const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:$version"
         const val junit = "com.google.dagger:hilt-android-compiler:$version"
+        const val gson = "com.google.code.gson:gson:2.8.5"
+    }
+
+    object Squareup {
+        object Retrofit {
+            private const val version = "2.9.0"
+            const val retrofit = "com.squareup.retrofit2:retrofit:2.9.0"
+            const val converterGson = "com.squareup.retrofit2:converter-gson:2.9.0"
+        }
+
+        object OkHttp {
+            private const val version = "4.9.0"
+            const val okhttp = "com.squareup.okhttp3:okhttp:$version"
+            const val logging = "com.squareup.okhttp3:logging-interceptor:$version"
+        }
     }
 
     object AndroidX {
@@ -30,7 +45,7 @@ object Libs {
         const val coreKtx = "androidx.core:core-ktx:1.5.0-alpha04"
 
         object Compose {
-            private const val version = "1.0.0-alpha11"
+            const val version = "1.0.0-beta02"
 
             const val foundation = "androidx.compose.foundation:foundation:$version"
             const val layout = "androidx.compose.foundation:foundation-layout:$version"
@@ -38,14 +53,14 @@ object Libs {
             const val materialIconsExtended = "androidx.compose.material:material-icons-extended:$version"
             const val runtime = "androidx.compose.runtime:runtime:$version"
             const val runtimeLivedata = "androidx.compose.runtime:runtime-livedata:$version"
-            const val tooling = "androidx.compose.ui:ui-tooling:1.0.0-alpha11"
+            const val tooling = "androidx.compose.ui:ui-tooling:$version"
             const val test = "androidx.compose.ui:ui-test:$version"
             const val uiTest = "androidx.compose.ui:ui-test-junit4:$version"
             const val uiUtil = "androidx.compose.ui:ui-util:${version}"
             const val viewBinding = "androidx.compose.ui:ui-viewbinding:$version"
 
             // Navigation !
-            const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha06"
+            const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha09"
         }
 
         object Navigation {

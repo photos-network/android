@@ -1,13 +1,11 @@
 package network.photos.android.app
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.viewinterop.AndroidViewBinding
-import androidx.core.os.bundleOf
-import androidx.navigation.findNavController
 import network.photos.android.composables.app.AppScaffold
 import network.photos.android.app.databinding.ActivityMainBinding
 

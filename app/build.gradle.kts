@@ -58,7 +58,7 @@ android {
         jvmTarget = "1.8"
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.0.0-alpha11"
+        kotlinCompilerExtensionVersion = Libs.AndroidX.Compose.version
     }
 
     packagingOptions {
@@ -78,12 +78,9 @@ dependencies {
     implementation(Libs.AndroidX.Navigation.fragment)
     implementation(Libs.AndroidX.Navigation.uiKtx)
 
+    // material
     implementation(Libs.Google.material)
     implementation(Libs.Google.gson)
-
-    // rest api
-    implementation(Libs.OkHttp.okhttp)
-    implementation(Libs.OkHttp.logging)
 
     // testing
     androidTestImplementation(Libs.AndroidX.Test.core)
