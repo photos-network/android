@@ -58,13 +58,13 @@ android {
         jvmTarget = "1.8"
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.0.0-alpha11"
+        kotlinCompilerExtensionVersion = Libs.AndroidX.Compose.version
     }
 
     packagingOptions {
-        exclude("META-INF/licenses/**")
-        exclude("META-INF/AL2.0")
-        exclude("META-INF/LGPL2.1")
+        resources.excludes.add("META-INF/licenses/**")
+        resources.excludes.add("META-INF/AL2.0")
+        resources.excludes.add("META-INF/LGPL2.1")
     }
 }
 
@@ -77,8 +77,12 @@ dependencies {
     implementation(Libs.AndroidX.Lifecycle.livedata)
     implementation(Libs.AndroidX.Navigation.fragment)
     implementation(Libs.AndroidX.Navigation.uiKtx)
-    implementation(Libs.Google.material)
 
+    // material
+    implementation(Libs.Google.material)
+    implementation(Libs.Google.gson)
+
+    // testing
     androidTestImplementation(Libs.AndroidX.Test.core)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     androidTestImplementation(Libs.AndroidX.Test.rules)
@@ -87,12 +91,4 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Compose.uiTest)
 
     implementation(project(":common"))
-}
-
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xallow-jvm-ir-dependencies")
-    }
 }

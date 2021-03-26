@@ -50,8 +50,10 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AndroidView(
-            viewBlock = ::WebView,
+        AndroidView<WebView>(
+            factory = { viewBlockContext ->
+                WebView(viewBlockContext)
+            },
             modifier = Modifier.fillMaxSize()
         ) { webView ->
             val redirectUri =  "photosapp://authenticate"

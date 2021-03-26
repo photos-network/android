@@ -11,6 +11,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,7 +48,7 @@ fun SplashScreen(modifier: Modifier = Modifier, onTimeout: () -> Unit) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(vectorResource(id = R.drawable.ic_launcher_foreground), contentDescription = null)
+            Image(painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null)
             Text(
                 text = "Photos.network",
                 style = AppTypography.h4,

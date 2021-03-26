@@ -4,6 +4,25 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!--  Sync images from/to server  -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <!--  Keep device alive during sync  -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!--  Download images in background  -->
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+
+    <!--  Sync images from 3rd party apps  -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!--  Read location data from media files  -->
+    <!--  https://developer.android.com/training/data-storage/shared/media  -->
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
+
+    <!--  use precise location coordinates  -->
+    <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
+
     <application
         android:name=".PhotosNetworkApplication"
         android:allowBackup="false"

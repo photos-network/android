@@ -1,12 +1,7 @@
 package network.photos.android.composables
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.preferredSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
@@ -20,7 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import network.photos.android.app.composables.AppTheme
 import network.photos.android.app.composables.AppTypography
 import network.photos.android.common.R
 
@@ -72,7 +66,7 @@ fun SetupScreen(
             style = AppTypography.body1
         )
 
-        Spacer(Modifier.preferredSize(padding))
+        Spacer(Modifier.size(padding))
 
         TextInput(
             modifier = Modifier.fillMaxWidth(),
@@ -102,7 +96,7 @@ fun SetupScreen(
                 clientSecret.value = it
             })
 
-        Spacer(Modifier.preferredSize(padding))
+        Spacer(Modifier.size(padding))
 
         Button(
             onClick = onButtonClick,
@@ -113,11 +107,11 @@ fun SetupScreen(
         }
 
         if (isConnectionCheckInProgress.value) {
-            Spacer(Modifier.preferredSize(4.dp))
+            Spacer(Modifier.size(4.dp))
             LinearProgressIndicator()
         }
 
-        Spacer(Modifier.preferredSize(padding))
+        Spacer(Modifier.size(padding))
 
         Text(
             modifier = Modifier.clickable(onClick = onHelpClick),

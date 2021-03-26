@@ -30,13 +30,13 @@ android {
         jvmTarget = "1.8"
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.0.0-alpha11"
+        kotlinCompilerExtensionVersion = Libs.AndroidX.Compose.version
     }
 
     packagingOptions {
-        exclude("META-INF/licenses/**")
-        exclude("META-INF/AL2.0")
-        exclude("META-INF/LGPL2.1")
+        resources.excludes.add("META-INF/licenses/**")
+        resources.excludes.add("META-INF/AL2.0")
+        resources.excludes.add("META-INF/LGPL2.1")
     }
 }
 
@@ -54,16 +54,20 @@ dependencies {
     api(Libs.AndroidX.Compose.runtime)
     api(Libs.AndroidX.Compose.runtimeLivedata)
     api(Libs.AndroidX.Compose.viewBinding)
+
+    // testing
+    androidTestImplementation(Libs.AndroidX.Test.core)
+    androidTestImplementation(Libs.AndroidX.Test.espressoCore)
+    androidTestImplementation(Libs.AndroidX.Test.rules)
+    androidTestImplementation(Libs.AndroidX.Test.Ext.junit)
     androidTestImplementation(Libs.AndroidX.Compose.test)
     androidTestImplementation(Libs.AndroidX.Compose.uiTest)
 
-    api("com.squareup.retrofit2:retrofit:2.9.0")
-    api("com.squareup.retrofit2:converter-gson:2.9.0")
-}
+    // http client
+    api(Libs.Squareup.OkHttp.okhttp)
+    api(Libs.Squareup.OkHttp.logging)
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xallow-jvm-ir-dependencies")
-    }
+    // rest client
+    api(Libs.Squareup.Retrofit.retrofit)
+    api(Libs.Squareup.Retrofit.converterGson)
 }

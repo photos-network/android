@@ -15,7 +15,7 @@ fun AppScaffold(
     AppTheme {
         Scaffold(
             scaffoldState = scaffoldState,
-            bodyContent = content
+            content = content
         )
     }
 }
