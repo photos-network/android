@@ -30,8 +30,8 @@ android {
 
     buildTypes {
         debug {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
         release {
@@ -81,6 +81,9 @@ dependencies {
     // material
     implementation(Libs.Google.material)
     implementation(Libs.Google.gson)
+
+    implementation(Libs.UI.Glide.glide)
+    implementation(Libs.UI.Glide.glideAccompanist)
 
     // testing
     androidTestImplementation(Libs.AndroidX.Test.core)

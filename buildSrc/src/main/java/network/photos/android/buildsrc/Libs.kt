@@ -56,7 +56,7 @@ object Libs {
             const val tooling = "androidx.compose.ui:ui-tooling:$version"
             const val test = "androidx.compose.ui:ui-test:$version"
             const val uiTest = "androidx.compose.ui:ui-test-junit4:$version"
-            const val uiUtil = "androidx.compose.ui:ui-util:${version}"
+            const val uiUtil = "androidx.compose.ui:ui-util:$version"
             const val viewBinding = "androidx.compose.ui:ui-viewbinding:$version"
 
             // Navigation !
@@ -87,6 +87,14 @@ object Libs {
             const val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
             const val livedata = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
             const val viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
+        }
+    }
+
+    object UI {
+
+        object Glide {
+            const val glide = "com.github.bumptech.glide:glide:4.11.0"
+            const val glideAccompanist = "com.google.accompanist:accompanist-glide:0.7.0"
         }
     }
 }

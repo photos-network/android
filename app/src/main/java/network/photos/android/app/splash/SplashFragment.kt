@@ -19,7 +19,7 @@ class SplashFragment: Fragment() {
         setContent {
             AppTheme {
                 SplashScreen(onTimeout = {
-                    findNavController().navigate(R.id.nav_setup)
+                    findNavController().navigate(R.id.nav_grid)
                 })
             }
         }
