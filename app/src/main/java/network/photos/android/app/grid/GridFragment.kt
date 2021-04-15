@@ -5,20 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -55,8 +57,25 @@ class GridFragment : Fragment() {
                         Text(text = "Get Photos")
                     }
                     ImageGrid(
-                        imageURLs = viewModel.photos
-                    )
+                        columnCount = 3
+                    ) {
+                        viewModel.photos.forEach {
+                            GlideImage(
+                                data = it,
+                                contentDescription = null,
+                                loading = {
+                                    Box(Modifier.matchParentSize()) {
+                                        CircularProgressIndicator(Modifier.align(Alignment.Center))
+                                    }
+                                },
+                                contentScale = ContentScale.FillWidth,
+                                fadeIn = true,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -64,22 +83,55 @@ class GridFragment : Fragment() {
 
     @Composable
     fun ImageGrid(
-        imageURLs: List<String>
+        modifier: Modifier = Modifier,
+        columnCount: Int,
+        content: @Composable () -> Unit,
     ) {
-        LazyVerticalGrid(
-            cells = GridCells.Adaptive(minSize = 90.dp),
-        ) {
-            items(imageURLs) { url ->
-                GlideImage(
-                    data = url,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .border(2.dp, Color.Magenta, RoundedCornerShape(4.dp))
-                        .padding(2.dp)
-                        .clip(RoundedCornerShape(2.dp))
-                )
+        Layout(
+            content = content,
+            modifier = modifier
+                .verticalScroll(rememberScrollState(0)),
+        ) { measurables, constraints ->
+            val placeableXY: MutableMap<Placeable, Pair<Int, Int>> = mutableMapOf()
+
+            val columnWidth = constraints.maxWidth / columnCount
+            val childConstraints = constraints.copy(maxWidth = columnWidth)
+
+            val columnHeights = IntArray(columnCount) { 0 }
+            val placeables = measurables.map {
+                val column = shortestColumn(columnHeights)
+                val placeable = it.measure(childConstraints)
+
+                placeableXY[placeable] = (columnWidth * column) to columnHeights[column]
+
+                columnHeights[column] += placeable.height
+                placeable
+            }
+
+            val layoutHeight = columnHeights
+                .maxOrNull()
+                ?.coerceIn(constraints.minHeight, constraints.maxHeight) ?: constraints.minHeight
+
+            layout(
+                width = constraints.maxWidth,
+                height = layoutHeight
+            ) {
+                placeables.forEach {
+                    it.place(placeableXY.getValue(it).first, placeableXY.getValue(it).second)
+                }
             }
         }
+    }
+
+    private fun shortestColumn(colHeights: IntArray): Int {
+        var minHeight = Int.MAX_VALUE
+        var column = 0
+        colHeights.forEachIndexed { index, height ->
+            if (height < minHeight) {
+                minHeight = height
+                column = index
+            }
+        }
+        return column
     }
 }
