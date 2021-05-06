@@ -45,7 +45,7 @@ object Libs {
         const val coreKtx = "androidx.core:core-ktx:1.5.0-alpha04"
 
         object Compose {
-            const val version = "1.0.0-beta03"
+            const val version = "1.0.0-beta06"
 
             const val foundation = "androidx.compose.foundation:foundation:$version"
             const val layout = "androidx.compose.foundation:foundation-layout:$version"
@@ -60,7 +60,7 @@ object Libs {
             const val viewBinding = "androidx.compose.ui:ui-viewbinding:$version"
 
             // Navigation !
-            const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha09"
+            const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha10"
         }
 
         object Navigation {
