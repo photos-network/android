@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.viewinterop.AndroidViewBinding
+import dagger.hilt.android.AndroidEntryPoint
 import network.photos.android.composables.app.AppScaffold
 import network.photos.android.app.databinding.ActivityMainBinding
 
@@ -13,6 +14,7 @@ import network.photos.android.app.databinding.ActivityMainBinding
  * Main entry point, showing a splash screen on first start, followed by a setup progress.
  * On subsequent starts it will redirect to the photos grid.
  */
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 

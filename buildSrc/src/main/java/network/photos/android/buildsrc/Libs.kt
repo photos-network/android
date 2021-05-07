@@ -18,9 +18,11 @@ object Libs {
     }
 
     object Google {
-        private const val version = "2.33-beta"
+        private const val version = "2.35.1"
         const val material = "com.google.android.material:material:1.3.0"
+        const val hiltAndroidPlugin = "com.google.dagger:hilt-android-gradle-plugin:$version"
         const val hiltAndroid = "com.google.dagger:hilt-android:$version"
+        const val hiltAndroidTesting = "com.google.dagger:hilt-android-testing:$version"
         const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:$version"
         const val junit = "com.google.dagger:hilt-android-compiler:$version"
         const val gson = "com.google.code.gson:gson:2.8.6"
@@ -31,6 +33,13 @@ object Libs {
             private const val version = "2.9.0"
             const val retrofit = "com.squareup.retrofit2:retrofit:$version"
             const val converterGson = "com.squareup.retrofit2:converter-gson:$version"
+            const val converterMoshi = "com.squareup.retrofit2:converter-moshi:$version"
+        }
+
+        object Moshi {
+            private const val version = "1.8.0"
+            const val moshi = "com.squareup.moshi:moshi:$version"
+            const val codegen = "com.squareup.moshi:moshi-kotlin-codegen:$version"
         }
 
         object OkHttp {
@@ -63,6 +72,11 @@ object Libs {
             const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha10"
         }
 
+        object Security {
+            private const val version = "1.0.0"
+            const val securityCrypto = "androidx.security:security-crypto:$version"
+        }
+
         object Navigation {
             private const val version = "2.3.4"
             const val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
@@ -87,6 +101,7 @@ object Libs {
             const val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
             const val livedata = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
             const val viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
+            const val hiltLifeCycle = "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02"
         }
     }
 
@@ -94,6 +109,13 @@ object Libs {
         object Glide {
             const val glide = "com.github.bumptech.glide:glide:4.11.0"
             const val glideAccompanist = "com.google.accompanist:accompanist-glide:0.7.0"
+        }
+    }
+
+    object Test {
+        object Robolectric {
+            private const val version = "4.5.1"
+            const val robolectric = "org.robolectric:robolectric:$version"
         }
     }
 }

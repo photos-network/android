@@ -1,4 +1,4 @@
-package network.photos.android.app.grid
+package network.photos.android.app.home.photos.grid
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import network.photos.android.remote.PhotoService
-import network.photos.android.remote.RetrofitService
+import network.photos.android.data.photos.network.PhotoService
+import network.photos.android.data.photos.network.RetrofitService
 
 class GridViewModel : ViewModel() {
 

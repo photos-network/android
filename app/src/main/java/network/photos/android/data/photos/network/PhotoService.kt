@@ -1,7 +1,7 @@
-package network.photos.android.remote
+package network.photos.android.data.photos.network
 
-import network.photos.android.remote.data.PhotoElement
-import network.photos.android.remote.data.PhotoList
+import network.photos.android.data.photos.domain.PhotoElement
+import network.photos.android.data.photos.domain.PhotoList
 import retrofit2.http.GET
 
 interface PhotoService {

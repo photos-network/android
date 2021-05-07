@@ -1,4 +1,4 @@
-package network.photos.android.app.grid
+package network.photos.android.app.home.photos.grid
 
 import android.os.Bundle
 import android.view.LayoutInflater

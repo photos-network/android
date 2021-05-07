@@ -1,4 +1,4 @@
-package network.photos.android.remote
+package network.photos.android.data.photos.network
 
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit

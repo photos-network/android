@@ -14,7 +14,7 @@ class NavigationTest {
     @Test
     fun app_launches() {
         // Check app launches at the correct destination
-        assertEquals(getNavController().currentDestination?.id, R.id.setup)
+        assertEquals(getNavController().currentDestination?.id, R.id.nav_setup)
     }
 
     private fun getNavController(): NavController {

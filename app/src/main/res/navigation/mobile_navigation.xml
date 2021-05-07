@@ -12,17 +12,17 @@
 
     <fragment
         android:id="@+id/nav_setup"
-        android:name="network.photos.android.app.setup.SetupFragment"
+        android:name="network.photos.android.app.onboarding.setup.SetupFragment"
         android:label="Setup" />
 
     <fragment
         android:id="@+id/nav_login"
-        android:name="network.photos.android.app.login.LoginFragment"
+        android:name="network.photos.android.app.onboarding.login.LoginFragment"
         android:label="Login" />
 
     <fragment
         android:id="@+id/nav_grid"
-        android:name="network.photos.android.app.grid.GridFragment"
+        android:name="network.photos.android.app.home.photos.grid.GridFragment"
         android:label="Home" />
 
 </navigation>

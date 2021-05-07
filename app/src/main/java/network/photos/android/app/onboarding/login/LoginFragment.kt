@@ -1,4 +1,4 @@
-package network.photos.android.app.login
+package network.photos.android.app.onboarding.login
 
 import android.os.Bundle
 import android.util.Log
@@ -10,16 +10,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import network.photos.android.app.R
 import network.photos.android.app.composables.AppTheme
 import network.photos.android.composables.LoginScreen
-import network.photos.android.oauth.OAuthViewModel
 
 /**
  * show oauth login via webview
  */
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
-    private val viewModel: OAuthViewModel by viewModels()
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,12 +39,20 @@ class LoginFragment : Fragment() {
                     clientId = viewModel.clientId,
                     clientSecret = viewModel.clientSecret,
                     { authCode: String ->
-                        // TODO: access token request
-                        viewModel.requestAccessToken(authCode)
-
+                        viewModel.requestAccessToken(authCode) {
+                            if (it) {
+                                findNavController().navigate(R.id.nav_grid)
+                            } else {
+                                // TODO: show error message
+                                Log.e("LoginFrgmnt", "Request access token failed")
+                                scope.launch {
+                                    scaffoldState.snackbarHostState.showSnackbar("Error: Request access token failed")
+                                }
+                            }
+                        }
                     },
                     { error: String ->
-                        Log.w("OAuth", error)
+                        Log.e("OAuth", error)
                         // TODO: show user facing error
                         scope.launch {
                             scaffoldState.snackbarHostState.showSnackbar("Error: $error")

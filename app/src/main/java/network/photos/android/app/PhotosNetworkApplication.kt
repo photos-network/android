@@ -1,9 +1,7 @@
 package network.photos.android.app
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
-class PhotosNetworkApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
-    }
-}
+@HiltAndroidApp
+class PhotosNetworkApplication : Application()

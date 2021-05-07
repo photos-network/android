@@ -1,4 +1,4 @@
-package network.photos.android.remote.data
+package network.photos.android.data.photos.domain
 
 data class PhotoElement(
     val id: String,

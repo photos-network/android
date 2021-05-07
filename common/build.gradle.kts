@@ -10,7 +10,7 @@ plugins {
 android {
     compileSdk = 30
     defaultConfig {
-        minSdk =21
+        minSdk = 23
         targetSdk = 30
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -53,6 +53,9 @@ dependencies {
     api(Libs.AndroidX.Compose.runtimeLivedata)
     api(Libs.AndroidX.Compose.viewBinding)
 
+    // security
+    api(Libs.AndroidX.Security.securityCrypto)
+
     // testing
     androidTestImplementation(Libs.AndroidX.Test.core)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
@@ -68,4 +71,9 @@ dependencies {
     // rest client
     api(Libs.Squareup.Retrofit.retrofit)
     api(Libs.Squareup.Retrofit.converterGson)
+    api(Libs.Squareup.Retrofit.converterMoshi)
+
+    // json parsing
+    api(Libs.Squareup.Moshi.moshi)
+    kapt(Libs.Squareup.Moshi.codegen)
 }
