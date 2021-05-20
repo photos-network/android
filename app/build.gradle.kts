@@ -5,14 +5,15 @@ plugins {
     id("kotlin-android")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 30
     defaultConfig {
         applicationId = "photos.network.android"
-        minSdkVersion(21)
-        targetSdkVersion(30)
+        minSdk = 23
+        targetSdk = 30
         versionCode = 1
         versionName = "0.1.0"
 
@@ -30,13 +31,11 @@ android {
 
     buildTypes {
         debug {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
         release {
             isMinifyEnabled = true
-            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
@@ -62,6 +61,7 @@ android {
     }
 
     packagingOptions {
+        resources.excludes.add("META-INF/gradle/incremental.annotation.processors")
         resources.excludes.add("META-INF/licenses/**")
         resources.excludes.add("META-INF/AL2.0")
         resources.excludes.add("META-INF/LGPL2.1")
@@ -69,18 +69,23 @@ android {
 }
 
 dependencies {
-    implementation(Libs.Kotlin.stdlib)
-    implementation(Libs.Coroutines.android)
-
     implementation(Libs.AndroidX.coreKtx)
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.Lifecycle.livedata)
     implementation(Libs.AndroidX.Navigation.fragment)
     implementation(Libs.AndroidX.Navigation.uiKtx)
+    implementation(Libs.AndroidX.Navigation.compose)
+
+    // hilt dependency injection
+    kapt(Libs.Google.hiltAndroidCompiler)
+    kaptAndroidTest(Libs.Google.hiltAndroidCompiler)
+    androidTestImplementation(Libs.Google.hiltAndroidTesting)
+    implementation(Libs.Google.hiltAndroid)
+    implementation(Libs.AndroidX.Lifecycle.hiltLifeCycle)
+    implementation(Libs.AndroidX.Lifecycle.navigationCompose)
 
     // material
     implementation(Libs.Google.material)
-    implementation(Libs.Google.gson)
 
     // testing
     androidTestImplementation(Libs.AndroidX.Test.core)
@@ -89,6 +94,7 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.Ext.junit)
     androidTestImplementation(Libs.AndroidX.Compose.test)
     androidTestImplementation(Libs.AndroidX.Compose.uiTest)
+    androidTestImplementation(Libs.Test.Robolectric.robolectric)
 
     implementation(project(":common"))
 }

@@ -8,12 +8,10 @@ plugins {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 30
     defaultConfig {
-        minSdkVersion(21)
-        targetSdkVersion(30)
-        versionCode = 1
-        versionName = "0.1.0"
+        minSdk = 23
+        targetSdk = 30
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
@@ -41,10 +39,11 @@ android {
 }
 
 dependencies {
-    implementation(Libs.Kotlin.stdlib)
-    implementation(Libs.Coroutines.android)
+    api(Libs.Kotlin.stdlib)
+    api(Libs.Coroutines.android)
 
-    api(Libs.AndroidX.Compose.navigation)
+    // compose
+    api(Libs.AndroidX.Navigation.compose)
     api(Libs.AndroidX.Compose.foundation)
     api(Libs.AndroidX.Compose.layout)
     api(Libs.AndroidX.Compose.material)
@@ -55,13 +54,8 @@ dependencies {
     api(Libs.AndroidX.Compose.runtimeLivedata)
     api(Libs.AndroidX.Compose.viewBinding)
 
-    // testing
-    androidTestImplementation(Libs.AndroidX.Test.core)
-    androidTestImplementation(Libs.AndroidX.Test.espressoCore)
-    androidTestImplementation(Libs.AndroidX.Test.rules)
-    androidTestImplementation(Libs.AndroidX.Test.Ext.junit)
-    androidTestImplementation(Libs.AndroidX.Compose.test)
-    androidTestImplementation(Libs.AndroidX.Compose.uiTest)
+    // security
+    api(Libs.AndroidX.Security.securityCrypto)
 
     // http client
     api(Libs.Squareup.OkHttp.okhttp)
@@ -70,4 +64,23 @@ dependencies {
     // rest client
     api(Libs.Squareup.Retrofit.retrofit)
     api(Libs.Squareup.Retrofit.converterGson)
+    api(Libs.Squareup.Retrofit.converterMoshi)
+
+    // json parsing
+    api(Libs.Squareup.Moshi.moshi)
+    kapt(Libs.Squareup.Moshi.codegen)
+    // TODO: moshi vs gson
+    api(Libs.Google.gson)
+
+    // image loading
+    api(Libs.UI.Glide.glide)
+    api(Libs.Google.Accompanist.glide)
+
+    // testing
+    androidTestImplementation(Libs.AndroidX.Test.core)
+    androidTestImplementation(Libs.AndroidX.Test.espressoCore)
+    androidTestImplementation(Libs.AndroidX.Test.rules)
+    androidTestImplementation(Libs.AndroidX.Test.Ext.junit)
+    androidTestImplementation(Libs.AndroidX.Compose.test)
+    androidTestImplementation(Libs.AndroidX.Compose.uiTest)
 }
