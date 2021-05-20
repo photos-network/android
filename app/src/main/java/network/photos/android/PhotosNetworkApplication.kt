@@ -1,4 +1,4 @@
-package network.photos.android.app
+package network.photos.android
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

@@ -1,6 +1,9 @@
 package network.photos.android.composables
 
 import android.net.Uri
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
 import android.util.Log
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
@@ -14,28 +17,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import network.photos.android.app.composables.AppTypography
-
-@Preview(name = "Login")
-@Composable
-fun PreviewLoginScreen() {
-    val host: MutableState<String> = mutableStateOf("")
-    val clientId: MutableState<String> = mutableStateOf("")
-    val clientSecret: MutableState<String> = mutableStateOf("")
-
-    LoginScreen(
-        host = host,
-        clientId = clientId,
-        clientSecret = clientSecret,
-        {},
-        {}
-    )
-}
 
 @Composable
 fun LoginScreen(
@@ -85,7 +73,7 @@ fun LoginScreen(
                     }
                 }
                 webChromeClient = WebChromeClient()
-                loadUrl("${host.value}/oauth/authorize?client_id=${clientId.value}&redirect_uri=${redirectUri}&scope=openid profile email phone library%3Awrite&response_type=code&response_mode=query&state=${nonce}")
+                loadUrl("${host.value}/oauth/authorize?client_id=${clientId.value}&response_type=code&redirect_uri=${redirectUri}&response_mode=query&scope=openid profile email phone library%3Awrite&response_type=code&response_mode=query&state=${nonce}")
             }
         }
     }

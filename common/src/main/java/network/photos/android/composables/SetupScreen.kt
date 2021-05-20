@@ -8,43 +8,46 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import network.photos.android.app.composables.AppTypography
 import network.photos.android.common.R
 
-@Preview(name = "Setup")
-@Composable
-fun PreviewSetupScreen() {
-    val host: MutableState<String> = mutableStateOf("")
-    val clientId: MutableState<String> = mutableStateOf("")
-    val clientSecret: MutableState<String> = mutableStateOf("")
-    val isConnectionCheckInProgress: MutableState<Boolean> = mutableStateOf(false)
-    val isConnectionValid: MutableState<Boolean> = mutableStateOf(false)
-    SetupScreen(
-        host = host,
-        clientId = clientId,
-        clientSecret = clientSecret,
-        isConnectionCheckInProgress = isConnectionCheckInProgress,
-        isConnectionValid = isConnectionValid,
-        onButtonClick = {},
-        onHelpClick = {}
-    )
-}
+//@Preview(name = "Setup")
+//@Composable
+//fun PreviewSetupScreen() {
+//    val host by remember { mutableStateOf("") }
+//    val clientId by remember { mutableStateOf("") }
+//    val clientSecret by remember { mutableStateOf("") }
+//    val isConnectionCheckInProgress by remember { mutableStateOf(false) }
+//    val isConnectionValid by remember { mutableStateOf(false) }
+//    SetupScreen(
+//        host = host,
+//        clientId = clientId,
+//        clientSecret = clientSecret,
+//        isConnectionCheckInProgress = isConnectionCheckInProgress,
+//        isConnectionValid = isConnectionValid,
+//        onNextClick = {},
+//        onHelpClick = {}
+//    )
+//}
 
 @Composable
 fun SetupScreen(
-    host: MutableState<String>,
-    clientId: MutableState<String>,
-    clientSecret: MutableState<String>,
+    host: MutableState<String?>,
+    clientId: MutableState<String?>,
+    clientSecret: MutableState<String?>,
     isConnectionCheckInProgress: MutableState<Boolean>,
     isConnectionValid: MutableState<Boolean>,
-    onButtonClick: () -> Unit,
+    onNextClick: () -> Unit,
     onHelpClick: () -> Unit
 ) {
     Column(
@@ -71,7 +74,7 @@ fun SetupScreen(
         TextInput(
             modifier = Modifier.fillMaxWidth(),
             label = stringResource(id = R.string.setup_host_label),
-            name = host.value,
+            name = host.value ?: "",
             enabled = !isConnectionCheckInProgress.value,
             onNameChange = {
                 host.value = it
@@ -81,7 +84,7 @@ fun SetupScreen(
         TextInput(
             modifier = Modifier.fillMaxWidth(),
             label = stringResource(id = R.string.setup_client_id_label),
-            name = clientId.value,
+            name = clientId.value ?: "",
             enabled = !isConnectionCheckInProgress.value,
             onNameChange = {
                 clientId.value = it
@@ -90,7 +93,7 @@ fun SetupScreen(
         TextInput(
             modifier = Modifier.fillMaxWidth(),
             label = stringResource(id = R.string.setup_client_secret_label),
-            name = clientSecret.value,
+            name = clientSecret.value ?: "",
             enabled = !isConnectionCheckInProgress.value,
             onNameChange = {
                 clientSecret.value = it
@@ -99,7 +102,7 @@ fun SetupScreen(
         Spacer(Modifier.size(padding))
 
         Button(
-            onClick = onButtonClick,
+            onClick = onNextClick,
             modifier = Modifier.layoutId("button"),
             enabled = !isConnectionCheckInProgress.value
         ) {

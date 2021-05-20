@@ -1,5 +1,6 @@
 package network.photos.android.app.onboarding.setup
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.hilt.lifecycle.ViewModelInject
@@ -22,9 +23,9 @@ class SetupViewModel @Inject constructor(
 
     val currentUser = mutableStateOf<User?>(null)
 
-    val host = mutableStateOf("")
-    val clientId = mutableStateOf("")
-    val clientSecret = mutableStateOf("")
+    val host = mutableStateOf<String?>(null)
+    val clientId = mutableStateOf<String?>(null)
+    val clientSecret = mutableStateOf<String?>(null)
 
     private val _isConnectionCheckInProgress = mutableStateOf(false)
     val isConnectionCheckInProgress: MutableState<Boolean>
@@ -46,23 +47,31 @@ class SetupViewModel @Inject constructor(
         }
     }
 
-    fun checkConnection() {
+    fun checkConnection(onSuccess: () -> Unit) {
         viewModelScope.launch {
-            settingsRepository.saveSettings(
-                Settings(
-                    host = host.value,
-                    clientId = clientId.value,
-                    clientSecret = clientSecret.value
-                )
-            )
-
             _isConnectionCheckInProgress.value = true
 
+            // TODO: remove delay
             delay(3_000)
 
-            // TODO: if connection was successfull
-            _isConnectionValid.value = true
-            _isConnectionCheckInProgress.value = false
+            if (host.value == null || clientId.value == null || clientSecret.value == null) {
+                isConnectionValid.value = false
+            } else {
+                // TODO: try to connect to host
+                Log.e("SetupVM", "save settings. Host: ${host.value}")
+                settingsRepository.saveSettings(
+                    Settings(
+                        host = host.value!!,
+                        clientId = clientId.value!!,
+                        clientSecret = clientSecret.value!!
+                    )
+                )
+                // TODO: if connection was successfull
+                _isConnectionValid.value = true
+                _isConnectionCheckInProgress.value = false
+
+                onSuccess()
+            }
         }
     }
 }

@@ -37,7 +37,7 @@ class SetupScreenTest {
                     clientSecret = clientSecret,
                     isConnectionCheckInProgress = isConnectionCheckInProgress,
                     isConnectionValid = isConnectionValid,
-                    onButtonClick = {
+                    onNextClick = {
                         buttonIsTriggered.value = true
                     },
                     onHelpClick = {}

@@ -69,27 +69,23 @@ android {
 }
 
 dependencies {
-    implementation(Libs.Kotlin.stdlib)
-    implementation(Libs.Coroutines.android)
-
-    kapt(Libs.Google.hiltAndroidCompiler)
-    kaptAndroidTest(Libs.Google.hiltAndroidCompiler)
-    androidTestImplementation(Libs.Google.hiltAndroidTesting)
-    implementation(Libs.Google.hiltAndroid)
-    implementation(Libs.AndroidX.Lifecycle.hiltLifeCycle)
-
     implementation(Libs.AndroidX.coreKtx)
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.Lifecycle.livedata)
     implementation(Libs.AndroidX.Navigation.fragment)
     implementation(Libs.AndroidX.Navigation.uiKtx)
+    implementation(Libs.AndroidX.Navigation.compose)
+
+    // hilt dependency injection
+    kapt(Libs.Google.hiltAndroidCompiler)
+    kaptAndroidTest(Libs.Google.hiltAndroidCompiler)
+    androidTestImplementation(Libs.Google.hiltAndroidTesting)
+    implementation(Libs.Google.hiltAndroid)
+    implementation(Libs.AndroidX.Lifecycle.hiltLifeCycle)
+    implementation(Libs.AndroidX.Lifecycle.navigationCompose)
 
     // material
     implementation(Libs.Google.material)
-    implementation(Libs.Google.gson)
-
-    implementation(Libs.UI.Glide.glide)
-    implementation(Libs.UI.Glide.glideAccompanist)
 
     // testing
     androidTestImplementation(Libs.AndroidX.Test.core)

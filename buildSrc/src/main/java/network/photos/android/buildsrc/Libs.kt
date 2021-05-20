@@ -26,6 +26,19 @@ object Libs {
         const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:$version"
         const val junit = "com.google.dagger:hilt-android-compiler:$version"
         const val gson = "com.google.code.gson:gson:2.8.6"
+        const val navigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0-alpha02"
+
+        object Accompanist {
+            private const val version = "0.10.0"
+            const val coil = "com.google.accompanist:accompanist-coil:$version"
+            const val glide = "com.google.accompanist:accompanist-glide:$version"
+            const val insets = "com.google.accompanist:accompanist-insets:$version"
+            const val systemuicontroller = "com.google.accompanist:accompanist-systemuicontroller:$version"
+            const val appcompat = "com.google.accompanist:accompanist-appcompat-theme:$version"
+            const val pager = "com.google.accompanist:accompanist-pager:$version"
+            const val flowlayout = "com.google.accompanist:accompanist-flowlayout:$version"
+            const val swiperefresh = "com.google.accompanist:accompanist-swiperefresh:$version"
+        }
     }
 
     object Squareup {
@@ -54,7 +67,9 @@ object Libs {
         const val coreKtx = "androidx.core:core-ktx:1.5.0-alpha04"
 
         object Compose {
-            const val version = "1.0.0-beta06"
+            // member is also used to set the compiler extension version
+            @Suppress("MemberVisibilityCanBePrivate")
+            const val version = "1.0.0-beta07"
 
             const val foundation = "androidx.compose.foundation:foundation:$version"
             const val layout = "androidx.compose.foundation:foundation-layout:$version"
@@ -67,9 +82,6 @@ object Libs {
             const val uiTest = "androidx.compose.ui:ui-test-junit4:$version"
             const val uiUtil = "androidx.compose.ui:ui-util:$version"
             const val viewBinding = "androidx.compose.ui:ui-viewbinding:$version"
-
-            // Navigation !
-            const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha10"
         }
 
         object Security {
@@ -78,9 +90,10 @@ object Libs {
         }
 
         object Navigation {
-            private const val version = "2.3.4"
+            private const val version = "2.4.0-alpha01"
             const val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
             const val uiKtx = "androidx.navigation:navigation-ui-ktx:$version"
+            const val compose = "androidx.navigation:navigation-compose:$version"
         }
 
         object Test {
@@ -102,13 +115,13 @@ object Libs {
             const val livedata = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
             const val viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
             const val hiltLifeCycle = "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02"
+            const val navigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0-alpha02"
         }
     }
 
     object UI {
         object Glide {
             const val glide = "com.github.bumptech.glide:glide:4.11.0"
-            const val glideAccompanist = "com.google.accompanist:accompanist-glide:0.7.0"
         }
     }
 

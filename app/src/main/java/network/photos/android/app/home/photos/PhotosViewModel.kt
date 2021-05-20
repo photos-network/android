@@ -1,4 +1,4 @@
-package network.photos.android.app.home.photos.grid
+package network.photos.android.app.home.photos
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import network.photos.android.data.photos.network.PhotoService
 import network.photos.android.data.photos.network.RetrofitService
 
-class GridViewModel : ViewModel() {
+class PhotosViewModel : ViewModel() {
 
     private val photoService = RetrofitService().createService(PhotoService::class.java)
 
@@ -28,7 +28,7 @@ class GridViewModel : ViewModel() {
             val newPhotos = photoService.getPhotos()
 
             CoroutineScope(Dispatchers.Main).launch {
-                _photos.addAll(newPhotos.results.mapNotNull { it.image_url })
+                _photos.addAll(newPhotos.results.map { it.image_url })
             }
         }
     }

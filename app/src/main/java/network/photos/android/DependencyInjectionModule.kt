@@ -33,18 +33,14 @@ object DependencyInjectionModule {
     @Provides
     fun providesRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit = Retrofit.Builder()
         .client(okHttpClient)
-        .baseUrl("https://photos.stuermer.pro")
+        .baseUrl("https://test.photos.network")
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
 
     @Provides
     fun providersMoshi(): Moshi = Moshi.Builder()
         .build()
-}
 
-@Module
-@InstallIn(SingletonComponent::class)
-object RepoModule {
     @Provides
     fun providesUserApi(retrofit: Retrofit): UserApi = retrofit.create(UserApi::class.java)
 

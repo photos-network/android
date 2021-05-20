@@ -39,10 +39,11 @@ android {
 }
 
 dependencies {
-    implementation(Libs.Kotlin.stdlib)
-    implementation(Libs.Coroutines.android)
+    api(Libs.Kotlin.stdlib)
+    api(Libs.Coroutines.android)
 
-    api(Libs.AndroidX.Compose.navigation)
+    // compose
+    api(Libs.AndroidX.Navigation.compose)
     api(Libs.AndroidX.Compose.foundation)
     api(Libs.AndroidX.Compose.layout)
     api(Libs.AndroidX.Compose.material)
@@ -56,14 +57,6 @@ dependencies {
     // security
     api(Libs.AndroidX.Security.securityCrypto)
 
-    // testing
-    androidTestImplementation(Libs.AndroidX.Test.core)
-    androidTestImplementation(Libs.AndroidX.Test.espressoCore)
-    androidTestImplementation(Libs.AndroidX.Test.rules)
-    androidTestImplementation(Libs.AndroidX.Test.Ext.junit)
-    androidTestImplementation(Libs.AndroidX.Compose.test)
-    androidTestImplementation(Libs.AndroidX.Compose.uiTest)
-
     // http client
     api(Libs.Squareup.OkHttp.okhttp)
     api(Libs.Squareup.OkHttp.logging)
@@ -76,4 +69,18 @@ dependencies {
     // json parsing
     api(Libs.Squareup.Moshi.moshi)
     kapt(Libs.Squareup.Moshi.codegen)
+    // TODO: moshi vs gson
+    api(Libs.Google.gson)
+
+    // image loading
+    api(Libs.UI.Glide.glide)
+    api(Libs.Google.Accompanist.glide)
+
+    // testing
+    androidTestImplementation(Libs.AndroidX.Test.core)
+    androidTestImplementation(Libs.AndroidX.Test.espressoCore)
+    androidTestImplementation(Libs.AndroidX.Test.rules)
+    androidTestImplementation(Libs.AndroidX.Test.Ext.junit)
+    androidTestImplementation(Libs.AndroidX.Compose.test)
+    androidTestImplementation(Libs.AndroidX.Compose.uiTest)
 }

@@ -33,7 +33,6 @@ class LoginViewModel @Inject constructor(
 
     fun requestAccessToken(authCode: String, callback : (success: Boolean) -> Unit) {
         viewModelScope.launch {
-            // TODO: request access token
             Log.e("LoginVM", "requestAccessToken: $authCode")
 
             val success = userRepository.requestAuthorization(authCode, clientId.value)
