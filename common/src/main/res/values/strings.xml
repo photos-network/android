@@ -4,4 +4,5 @@
     <string name="setup_client_secret_label">Client Secret</string>
 
     <string name="button_next">Next</string>
+    <string name="icon_tags">tags icon</string>
 </resources>
