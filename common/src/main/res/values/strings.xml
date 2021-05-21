@@ -6,4 +6,7 @@
     <string name="button_next">Next</string>
     <string name="icon_user_profile">User profile icon</string>
     <string name="icon_tags">tags icon</string>
+
+    <string name="search_icon">Search icon</string>
+    <string name="search_hint">Search</string>
 </resources>
