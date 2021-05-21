@@ -42,7 +42,7 @@ fun Tag(
         modifier = Modifier
             .background(
                 color = MaterialTheme.colors.secondaryVariant,
-                shape = RoundedCornerShape(50)
+                shape = RoundedCornerShape(topStartPercent = 50, bottomStartPercent = 1)
             )
             .clip(RoundedCornerShape(topStartPercent = 50))
             .clickable(onClick = { onClickTag(tag) })
