@@ -54,7 +54,7 @@ fun Tag(
                 .size(24.dp)
                 .padding(vertical = 4.dp),
             imageVector = Icons.Default.Bookmarks,
-            contentDescription = stringResource(id = R.string.search_icon)
+            contentDescription = stringResource(id = R.string.icon_tags)
         )
         Text(
             modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
