@@ -22,7 +22,7 @@ class SettingsStorage(private val context: Context) {
     private val gson: Gson = GsonBuilder().create()
     private val secureFile = File(context.filesDir, filename)
 
-    suspend fun readSettings(): Settings? {
+    fun readSettings(): Settings? {
         try {
             val encryptedFile = EncryptedFile.Builder(
                 secureFile,
@@ -59,7 +59,7 @@ class SettingsStorage(private val context: Context) {
         return null
     }
 
-    suspend fun writeSettings(settings: Settings) {
+    fun writeSettings(settings: Settings) {
         val encryptedFile = EncryptedFile.Builder(
             secureFile,
             context.applicationContext,

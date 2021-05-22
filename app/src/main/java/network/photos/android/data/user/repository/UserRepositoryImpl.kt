@@ -13,7 +13,7 @@ class UserRepositoryImpl(
 ) : UserRepository {
     private var currentUser: User? = null
 
-    override suspend fun currentUser(): User? {
+    override fun currentUser(): User? {
         if (currentUser != null) return currentUser
 
         userStorage.read()?.let {

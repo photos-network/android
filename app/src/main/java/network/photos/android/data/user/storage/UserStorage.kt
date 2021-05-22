@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.charset.StandardCharsets
 
-class UserStorage(private val context: Context) {
+class UserStorage(context: Context) {
     private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
     private val filename = "user_storage.txt"
     private val gson: Gson = GsonBuilder().create()
@@ -22,7 +22,7 @@ class UserStorage(private val context: Context) {
         EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
     ).build()
 
-    suspend fun save(user: User) {
+    fun save(user: User) {
         val jsonString = gson.toJson(user)
 
         if (secureFile.exists()) {
@@ -36,7 +36,7 @@ class UserStorage(private val context: Context) {
         }
     }
 
-    suspend fun read(): User? {
+    fun read(): User? {
         try {
             val inputStream = encryptedFile.openFileInput()
             val byteArrayOutputStream = ByteArrayOutputStream()
