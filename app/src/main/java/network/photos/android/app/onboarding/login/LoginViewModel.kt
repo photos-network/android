@@ -1,6 +1,5 @@
 package network.photos.android.app.onboarding.login
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,11 +32,7 @@ class LoginViewModel @Inject constructor(
 
     fun requestAccessToken(authCode: String, callback : (success: Boolean) -> Unit) {
         viewModelScope.launch {
-            Log.e("LoginVM", "requestAccessToken: $authCode")
-
-            val success = userRepository.requestAuthorization(authCode, clientId.value)
-
-            callback.invoke(success)
+            callback.invoke(userRepository.requestAuthorization(authCode, clientId.value))
         }
     }
 }
