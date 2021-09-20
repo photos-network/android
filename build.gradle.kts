@@ -1,7 +1,7 @@
 import java.net.URI
 
 buildscript {
-    val kotlinVersion = "1.4.32"
+    val kotlinVersion = "1.5.31"
     repositories {
         google()
         mavenCentral()
