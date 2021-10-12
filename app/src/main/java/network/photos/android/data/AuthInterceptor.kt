@@ -15,7 +15,7 @@ class AuthInterceptor(
     override fun authenticate(route: Route?, response: Response): Request? {
         return userRepository.currentUser()?.let { user ->
             response.request.newBuilder()
-                .addHeader("Authorization", user.token.accessToken)
+                .addHeader("Authorization", user.token?.accessToken ?: "")
                 .build()
         }
     }

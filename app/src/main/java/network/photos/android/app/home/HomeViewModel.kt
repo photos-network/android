@@ -1,13 +1,15 @@
 package network.photos.android.app.home
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import network.photos.android.data.Resource
 import network.photos.android.data.photos.domain.PhotoElement
+import network.photos.android.data.photos.repository.PhotoRepository
 import network.photos.android.data.settings.domain.Settings
 import network.photos.android.data.settings.repository.SettingsRepository
 import network.photos.android.data.user.domain.User
@@ -18,28 +20,77 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val userRepository: UserRepository,
-//    private val photosRepository: PhotoRepository,
-): ViewModel() {
-    val currentUser = mutableStateOf<User?>(null)
-    val currentSettings = mutableStateOf<Settings?>(null)
-
+    private val photoRepository: PhotoRepository,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState(loading = true))
     val uiState: StateFlow<HomeUiState> = _uiState
 
-
     init {
-        viewModelScope.launch {
-            currentSettings.value = settingsRepository.loadSettings()
-            currentUser.value = userRepository.currentUser()
+        loadSettings()
+        loadUser()
+        refreshPhotos()
+    }
 
-//            val photos = photosRepository.getPhotos(0)
-//            _uiState.value = HomeUiState(photos = photos)
+    fun loadSettings() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    currentSettings = settingsRepository.loadSettings()
+                )
+            }
+        }
+    }
+
+    fun loadUser() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    currentUser = userRepository.currentUser(),
+                    loading = false,
+                )
+            }
+        }
+    }
+
+    fun refreshPhotos() {
+        _uiState.update { it.copy(loading = true) }
+
+        viewModelScope.launch {
+            val result = photoRepository.getPhotos(
+                token = userRepository.currentUser()?.token,
+                page = 0
+            )
+            _uiState.update {
+                when (result) {
+                    is Resource.Success -> it.copy(photos = result.data!!, loading = false)
+                    is Resource.Error -> {
+                        it.copy(errorMessages = result.message, loading = false)
+                    }
+                    is Resource.Loading -> {
+                        it.copy(loading = true)
+                    }
+                }
+            }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    currentUser = null,
+                )
+            }
+            userRepository.invalidateAuthorization()
         }
     }
 }
 
 data class HomeUiState(
-    val photos: Collection<PhotoElement> = emptyList(),
+    val photos: List<PhotoElement> = emptyList(),
+    val currentUser: User? = null,
+    val currentSettings: Settings? = null,
     val loading: Boolean = false,
-    val refreshError: Boolean = false
+    val refreshError: Boolean = false,
+    val errorMessages: String? = null,
 )

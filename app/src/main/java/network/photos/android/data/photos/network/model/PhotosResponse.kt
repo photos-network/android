@@ -1,16 +1,19 @@
 package network.photos.android.data.photos.network.model
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PhotosResponse(
-    @field:Json(name = "offset") val offset: Int,
-    @field:Json(name = "limit") val limit: Int,
-    @field:Json(name = "size") val size: Int,
-    @field:Json(name = "results") val results: List<PhotoItem>,
+    @SerialName("offset") val offset: Int,
+    @SerialName("limit") val limit: Int,
+    @SerialName("size") val size: Int,
+    @SerialName("results") val results: List<PhotoItem>,
 )
 
+@Serializable
 data class PhotoItem(
-    @field:Json(name = "id") val id: String,
-    @field:Json(name = "name") val name: String,
-    @field:Json(name = "image_url") val imageUrl: String,
+    @SerialName("id") val id: String,
+    @SerialName("name") val name: String,
+    @SerialName("image_url") val imageUrl: String,
 )

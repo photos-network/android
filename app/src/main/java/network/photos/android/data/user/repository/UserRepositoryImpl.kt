@@ -45,4 +45,10 @@ class UserRepositoryImpl(
 
         return true
     }
+
+    override suspend fun invalidateAuthorization() {
+        Log.i("UserRepo", "delete currently logged in User.")
+        currentUser = null
+        userStorage.delete()
+    }
 }

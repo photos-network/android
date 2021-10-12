@@ -25,14 +25,18 @@ class UserStorage(context: Context) {
     fun save(user: User) {
         val jsonString = gson.toJson(user)
 
-        if (secureFile.exists()) {
-            secureFile.delete()
-        }
+        delete()
 
         encryptedFile.openFileOutput().apply {
             write(jsonString.toByteArray(StandardCharsets.UTF_8))
             flush()
             close()
+        }
+    }
+
+    fun delete() {
+        if (secureFile.exists()) {
+            secureFile.delete()
         }
     }
 

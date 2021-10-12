@@ -6,4 +6,6 @@ interface UserRepository {
     fun currentUser(): User?
 
     suspend fun requestAuthorization(authCode: String, clientId: String): Boolean
+
+    suspend fun invalidateAuthorization()
 }
