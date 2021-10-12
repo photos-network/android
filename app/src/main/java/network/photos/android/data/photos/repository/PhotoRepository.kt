@@ -1,13 +1,12 @@
 package network.photos.android.data.photos.repository
 
+import network.photos.android.data.Resource
 import network.photos.android.data.photos.domain.PhotoElement
-import network.photos.android.data.photos.network.PhotoService
-import network.photos.android.data.photos.network.RetrofitService
+import network.photos.android.data.user.domain.Token
 
-class PhotoRepository {
-    private val photoService = RetrofitService().createService(PhotoService::class.java)
-
-    suspend fun getPhotos(page: Int): List<PhotoElement> {
-        return photoService.getPhotos().results.map { it }
-    }
+interface PhotoRepository {
+    suspend fun getPhotos(
+        token: Token? = null,
+        page: Int
+    ): Resource<List<PhotoElement>>
 }

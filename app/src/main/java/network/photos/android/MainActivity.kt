@@ -4,22 +4,25 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.Text
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navArgument
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
-import network.photos.android.app.composables.AppTheme
-import network.photos.android.app.home.HomeViewModel
-import network.photos.android.app.home.photos.PhotosViewModel
-import network.photos.android.app.onboarding.login.LoginViewModel
-import network.photos.android.app.onboarding.setup.SetupViewModel
-import network.photos.android.composables.GridScreen
-import network.photos.android.composables.LoginScreen
-import network.photos.android.composables.SetupScreen
+import network.photos.android.app.details.DetailScreen
+import network.photos.android.app.home.HomeScreen
+import network.photos.android.app.onboarding.login.LoginScreen
+import network.photos.android.app.onboarding.setup.SetupScreen
+import network.photos.android.navigation.Destination
+import network.photos.android.theme.AppTheme
+import network.photos.android.theme.darkColors
+import network.photos.android.theme.lightColors
 
 /**
  * Main entry point, showing a splash screen on first start, followed by a setup progress.
@@ -31,81 +34,47 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val navController = rememberNavController()
+            PhotosApp(startDestination = Destination.Home.route)
+        }
+    }
+}
 
-            AppTheme {
-                NavHost(
-                    navController = navController,
-                    startDestination = "home",
-                ) {
-                    composable(route = "setup") {
-                        val setupViewModel = hiltViewModel<SetupViewModel>()
+@Composable
+fun PhotosApp(
+    startDestination: String = Destination.Home.route,
+) {
+    val navController = rememberAnimatedNavController()
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = !isSystemInDarkTheme()
 
-                        SetupScreen(
-                            host = setupViewModel.host,
-                            clientId = setupViewModel.clientId,
-                            clientSecret = setupViewModel.clientSecret,
-                            isConnectionCheckInProgress = setupViewModel.isConnectionCheckInProgress,
-                            isConnectionValid = setupViewModel.isConnectionValid,
-                            onNextClick = {
-                                setupViewModel.checkConnection(onSuccess = {
-                                    navController.navigate("login")
-                                })
-                            },
-                            onHelpClick = {
-                                Log.e("TAG", "Not implemented yet.")
-                            })
-                    }
-                    composable(route = "login") {
-                        val viewModel = hiltViewModel<LoginViewModel>()
-                        LoginScreen(
-                            host = viewModel.host,
-                            clientId = viewModel.clientId,
-                            clientSecret = viewModel.clientSecret,
-                            onAuthCode = { authCode: String ->
-                                viewModel.requestAccessToken(authCode) { success ->
-                                    if (success) {
-                                        navController.navigate("home")
-                                    } else {
-                                        // TODO: show user facing error message
-                                        Log.e("LoginFrgmnt", "Request access token failed")
-                                    }
-                                }
-                            },
-                            onError = { error: String ->
-                                Log.e("OAuth", error)
-                                // TODO: show user facing error message
-                            }
-                        )
-                    }
-                    composable(route = "home") {
-                        val homeViewModel = hiltViewModel<HomeViewModel>()
-                        val gridViewModel = hiltViewModel<PhotosViewModel>()
+    SideEffect {
+        systemUiController.setSystemBarsColor(
+            color = Color.Transparent,
+            darkIcons = useDarkIcons
+        )
+    }
 
-                        if (homeViewModel.currentSettings.value == null) {
-                            navController.navigate("setup")
-                            return@composable
-                        }
-
-                        if (homeViewModel.currentUser.value == null) {
-                            navController.navigate("login")
-                            return@composable
-                        }
-
-                        // TODO: add bottom navigation (photos / albums)
-                        GridScreen(
-                            photos = gridViewModel.photos,
-                            requestPhotos = {
-                                gridViewModel.getPhotos()
-                            }
-                        )
-                    }
-                    composable(route = "photo/{id}", arguments = listOf(navArgument("id") {
-                        type = NavType.StringType
-                    })) {
-                        // TODO: add detail screen here
-                        Text("Add detail screen for photo $id")
-                    }
+    AppTheme(colors = if (isSystemInDarkTheme()) darkColors() else lightColors()) {
+        AnimatedNavHost(
+            navController = navController,
+            startDestination = startDestination,
+        ) {
+            Log.e("Main", "route: ${this.route}")
+            composable(route = Destination.Setup.route) { SetupScreen(navController = navController) }
+            composable(route = Destination.Login.route) { LoginScreen(navController = navController) }
+            composable(route = Destination.Home.route) { HomeScreen(navController = navController) }
+            composable(
+                route = "${Destination.Details.route}/{identifier}",
+                arguments = listOf(navArgument("identifier") {
+                    defaultValue = "-1"
+                    type = NavType.StringType
+                })
+            ) { backStackEntry ->
+                backStackEntry.arguments?.getString("identifier")?.let {
+                    DetailScreen(
+                        navController = navController,
+                        photoIdentifier = it
+                    )
                 }
             }
         }

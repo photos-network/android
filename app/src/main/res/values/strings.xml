@@ -1,3 +1,19 @@
 <resources>
-    <string name="app_name">PhotosNetwork</string>
+    <string name="app_name">Photos</string>
+
+    <string name="setup_host_label">Host</string>
+    <string name="setup_client_id_label">Client ID</string>
+    <string name="setup_client_secret_label">Client Secret</string>
+
+    <string name="button_next">Next</string>
+    <string name="icon_user_profile">User profile icon</string>
+    <string name="icon_tags">tags icon</string>
+    <string name="load_error">Could not load photos</string>
+    <string name="home_title">Home</string>
+    <string name="login_title">Login</string>
+    <string name="setup_title">Setup</string>
+    <string name="help_title">Help</string>
+    <string name="photos_title">Photos</string>
+    <string name="albums_title">Albums</string>
+    <string name="details_title">Details</string>
 </resources>

@@ -1,11 +1,13 @@
 package network.photos.android.data.user.network.model
 
-import com.squareup.moshi.Json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UserResponse(
-    @field:Json(name = "id") val id: String,
-    @field:Json(name = "email") val email: String,
-    @field:Json(name = "lastname") val lastname: String,
-    @field:Json(name = "firstname") val firstname: String,
-    @field:Json(name = "lastSeen") val lastSeen: String,
+    @SerialName("id") val id: String,
+    @SerialName("email") val email: String,
+    @SerialName("lastname") val lastname: String,
+    @SerialName("firstname") val firstname: String,
+    @SerialName("lastSeen") val lastSeen: String,
 )

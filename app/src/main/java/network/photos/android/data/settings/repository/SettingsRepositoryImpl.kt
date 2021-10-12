@@ -8,13 +8,13 @@ class SettingsRepositoryImpl(
 ): SettingsRepository {
     private val currentSettings: Settings? = null
 
-    override suspend fun loadSettings(): Settings? {
+    override fun loadSettings(): Settings? {
         if (currentSettings != null) return currentSettings
 
         return settingsStore.readSettings()?.takeIf { it.host.isNotEmpty() }
     }
 
-    override suspend fun saveSettings(settings: Settings) {
+    override fun saveSettings(settings: Settings) {
         settingsStore.writeSettings(settings)
     }
 }

@@ -13,7 +13,7 @@ class UserRepositoryImpl(
 ) : UserRepository {
     private var currentUser: User? = null
 
-    override suspend fun currentUser(): User? {
+    override fun currentUser(): User? {
         if (currentUser != null) return currentUser
 
         userStorage.read()?.let {
@@ -44,5 +44,11 @@ class UserRepositoryImpl(
         userStorage.save(user)
 
         return true
+    }
+
+    override suspend fun invalidateAuthorization() {
+        Log.i("UserRepo", "delete currently logged in User.")
+        currentUser = null
+        userStorage.delete()
     }
 }
