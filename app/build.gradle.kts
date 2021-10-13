@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application") version "7.0.2"
+    id("com.android.application") version "7.0.3"
     kotlin("android") version "1.5.30"
     kotlin("kapt") version "1.5.30"
     kotlin("plugin.serialization") version "1.5.30"
