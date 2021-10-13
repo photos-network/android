@@ -27,22 +27,15 @@ class SetupViewModel @Inject constructor(
     }
 
     fun setHost(host: String) {
-        // TODO: update uiState
-        Log.e("SetupVM", "setHost(): $host")
-//        _uiState.update { it.copy(host = host) }
+        _uiState.update { it.copy(host = host) }
     }
 
     fun setClientId(clientId: String) {
-        // TODO: update uiState
-//        _uiState.update { it.copy(clientId = clientId) }
+        _uiState.update { it.copy(clientId = clientId) }
     }
 
     fun setClientSecret(clientSecret: String) {
-        // TODO: update uiState
-//        _uiState.update { it.copy(clientSecret = clientSecret) }
-//        checkConnection {
-//
-//        }
+        _uiState.update { it.copy(clientSecret = clientSecret) }
     }
 
     private fun loadSettings() {

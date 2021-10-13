@@ -1,17 +1,17 @@
 package network.photos.android.composables
 
-import androidx.activity.ComponentActivity
-import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onParent
-import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import androidx.compose.ui.test.printToLog
 import kotlinx.coroutines.flow.MutableStateFlow
-import network.photos.android.R
+import network.photos.android.MainActivity
 import network.photos.android.app.onboarding.setup.SetupScreen
+import network.photos.android.app.onboarding.setup.SetupUiState
 import network.photos.android.theme.AppTheme
 import org.junit.Before
 import org.junit.Rule
@@ -19,32 +19,35 @@ import org.junit.Test
 
 class SetupScreenTest {
     @get:Rule
-    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
-
-    private val activity by lazy { composeTestRule.activity }
+    val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     private val buttonIsTriggered = MutableStateFlow(false)
-
-    private val host: String = ""
-    private val clientId: String = ""
-    private val clientSecret: String = ""
-    private val isConnectionCheckInProgress: Boolean = false
-    private val isConnectionValid: Boolean = false
+    private var uiState by mutableStateOf(SetupUiState(loading = true))
 
     @Before
     fun setUp() {
         composeTestRule.setContent {
             AppTheme {
                 SetupScreen(
-                    host = host,
-                    clientId = clientId,
-                    clientSecret = clientSecret,
-                    isConnectionCheckInProgress = isConnectionCheckInProgress,
-                    isConnectionValid = isConnectionValid,
+                    modifier = Modifier,
+                    host = uiState.host,
+                    clientId = uiState.clientId,
+                    clientSecret = uiState.clientSecret,
+                    isConnectionCheckInProgress = uiState.isConnectionCheckInProgress,
+                    isConnectionValid = uiState.isConnectionValid,
+                    onHostChanged = {
+                        uiState = uiState.copy(host = it)
+                    },
+                    onClientIdChanged = {
+                        uiState = uiState.copy(clientId = it)
+                    },
+                    onClientSecretChanged = {
+                        uiState = uiState.copy(clientSecret = it)
+                    },
                     onNextClick = {
                         buttonIsTriggered.value = true
                     },
-                    onHelpClick = {}
+                    onHelpClick = {},
                 )
             }
         }
@@ -53,37 +56,17 @@ class SetupScreenTest {
     @Test
     fun nextButtonShouldTriggerCallback() {
         // given
-        composeTestRule.onRoot(useUnmergedTree = true).printToLog("TAG")
-
-        findTextInputFieldForHost().performTextInput("http://127.0.0.1")
-        findTextInputFieldForClientId().performTextInput("ABcdEFgh==")
-        findTextInputFieldForClientSecret().performTextInput("JKlmNO==")
+        composeTestRule.onNodeWithTag("host").performTextInput("http://127.0.0.1")
+        composeTestRule.onNodeWithTag("clientID").performTextInput("ABcdEFgh==")
+        composeTestRule.onNodeWithTag("clientSecret").performTextInput("JKlmNO==")
 
         // when
-        findNextButton().performClick()
+        composeTestRule.onNodeWithTag("buttonNext").performClick()
 
         // then
-        assert(host == "http://127.0.0.1")
-        assert(clientId == "ABcdEFgh==")
-        assert(clientSecret == "JKlmNO==")
+        assert(uiState.host == "http://127.0.0.1")
+        assert(uiState.clientId == "ABcdEFgh==")
+        assert(uiState.clientSecret == "JKlmNO==")
         assert(buttonIsTriggered.value)
     }
-
-    private fun findTextInputFieldForHost(): SemanticsNodeInteraction {
-        return composeTestRule.onNodeWithText(activity.getString(R.string.setup_host_label))
-            .onParent()
-    }
-
-    private fun findTextInputFieldForClientId(): SemanticsNodeInteraction {
-        return composeTestRule.onNodeWithText(activity.getString(R.string.setup_client_id_label))
-            .onParent()
-    }
-
-    private fun findTextInputFieldForClientSecret(): SemanticsNodeInteraction {
-        return composeTestRule.onNodeWithText(activity.getString(R.string.setup_client_secret_label))
-            .onParent()
-    }
-
-    private fun findNextButton() =
-        composeTestRule.onNodeWithText(activity.getString(R.string.button_next))
 }

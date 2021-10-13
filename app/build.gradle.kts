@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application") version "7.0.2"
+    id("com.android.application") version "7.0.3"
     kotlin("android") version "1.5.30"
     kotlin("kapt") version "1.5.30"
     kotlin("plugin.serialization") version "1.5.30"
@@ -32,6 +32,13 @@ android {
                     )
                 )
             }
+        }
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
         }
     }
 
@@ -166,5 +173,4 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.4-alpha03")
     androidTestImplementation("androidx.compose.ui:ui-test:1.0.3")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.3")
-    androidTestImplementation("org.robolectric:robolectric:4.5.1")
 }

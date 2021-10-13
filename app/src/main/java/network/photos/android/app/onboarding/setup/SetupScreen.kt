@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -102,7 +103,7 @@ fun SetupScreen(
         Spacer(Modifier.size(padding))
 
         TextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.testTag("host").fillMaxWidth(),
             enabled = !isConnectionCheckInProgress,
             label = {
                 Text(stringResource(id = R.string.setup_host_label))
@@ -113,7 +114,7 @@ fun SetupScreen(
             })
 
         TextInput(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.testTag("clientID").fillMaxWidth(),
             label = stringResource(id = R.string.setup_client_id_label),
             name = clientId ?: "",
             enabled = !isConnectionCheckInProgress,
@@ -122,7 +123,7 @@ fun SetupScreen(
             })
 
         TextInput(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.testTag("clientSecret").fillMaxWidth(),
             label = stringResource(id = R.string.setup_client_secret_label),
             name = clientSecret ?: "",
             enabled = !isConnectionCheckInProgress,
@@ -134,7 +135,7 @@ fun SetupScreen(
 
         Button(
             onClick = onNextClick,
-            modifier = Modifier.layoutId("button"),
+            modifier = Modifier.testTag("buttonNext").layoutId("button"),
             enabled = !isConnectionCheckInProgress
         ) {
             Text(text = stringResource(id = R.string.button_next))
