@@ -23,8 +23,11 @@
     <!--  use precise location coordinates  -->
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
 
+    <!-- disable backup to prevent missing keyset for encrypted storage -->
     <application
         android:name=".PhotosNetworkApplication"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
