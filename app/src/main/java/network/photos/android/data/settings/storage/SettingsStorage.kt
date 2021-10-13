@@ -6,6 +6,8 @@ import android.security.keystore.KeyProperties
 import android.util.Log
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKey
+import androidx.security.crypto.MasterKey.DEFAULT_AES_GCM_MASTER_KEY_SIZE
+import androidx.security.crypto.MasterKey.DEFAULT_MASTER_KEY_ALIAS
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import network.photos.android.data.settings.domain.Settings
@@ -19,7 +21,6 @@ import java.nio.charset.StandardCharsets
  * Read/Write settings encrypted into internal storage
  */
 class SettingsStorage(private val context: Context) {
-    private val masterKeyAlias = "settings_storage"
     private val filename = "settings_storage.txt"
     private val gson: Gson = GsonBuilder().create()
     private val secureFile = File(context.filesDir, filename)
@@ -28,15 +29,17 @@ class SettingsStorage(private val context: Context) {
 
     init {
         try {
-            val keyGenParameterSpec = KeyGenParameterSpec.Builder(
-                masterKeyAlias,
-                KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
-            ).setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+            val keyGenParameterSpec = KeyGenParameterSpec
+                .Builder(
+                    DEFAULT_MASTER_KEY_ALIAS,
+                    KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+                )
+                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .setKeySize(256)
+                .setKeySize(DEFAULT_AES_GCM_MASTER_KEY_SIZE)
                 .build()
 
-            masterKey = MasterKey.Builder(context, masterKeyAlias)
+            masterKey = MasterKey.Builder(context, DEFAULT_MASTER_KEY_ALIAS)
                 .setKeyGenParameterSpec(keyGenParameterSpec)
                 .build()
 
@@ -89,7 +92,7 @@ class SettingsStorage(private val context: Context) {
         val encryptedFile = EncryptedFile.Builder(
             secureFile,
             context.applicationContext,
-            masterKeyAlias,
+            DEFAULT_MASTER_KEY_ALIAS,
             EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
         ).build()
 

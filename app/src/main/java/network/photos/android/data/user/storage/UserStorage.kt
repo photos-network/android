@@ -14,7 +14,6 @@ import java.io.File
 import java.nio.charset.StandardCharsets
 
 class UserStorage(context: Context) {
-    private val masterKeyAlias = "user_storage"
     private val filename = "user_storage.txt"
     private val gson: Gson = GsonBuilder().create()
     private val secureFile = File(context.filesDir, filename)
@@ -23,15 +22,17 @@ class UserStorage(context: Context) {
 
     init {
         try {
-            val keyGenParameterSpec = KeyGenParameterSpec.Builder(
-                masterKeyAlias,
-                KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
-            ).setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+            val keyGenParameterSpec = KeyGenParameterSpec
+                .Builder(
+                    MasterKey.DEFAULT_MASTER_KEY_ALIAS,
+                    KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+                )
+                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .setKeySize(256)
+                .setKeySize(MasterKey.DEFAULT_AES_GCM_MASTER_KEY_SIZE)
                 .build()
 
-            masterKey = MasterKey.Builder(context, masterKeyAlias)
+            masterKey = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
                 .setKeyGenParameterSpec(keyGenParameterSpec)
                 .build()
 

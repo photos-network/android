@@ -14,7 +14,9 @@ repositories {
 android {
     compileSdk = 31
     defaultConfig {
-        applicationId = "photos.network.android"
+        applicationId = "photos.network"
+        // API 21 | required by: security-crypto library
+        // API 23 | required by: security.crypto.MasterKey
         minSdk = 23
         targetSdk = 31
         versionCode = 1
