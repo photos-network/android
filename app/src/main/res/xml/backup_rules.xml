@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
-    <exclude domain="sharedpref" path="settings_storage.txt"/>
-    <exclude domain="sharedpref" path="user_storage.txt"/>
+    <exclude domain="file" path="user_storage.txt"/>
+    <exclude domain="file" path="settings_storage.txt"/>
+    <exclude domain="sharedpref" path="__androidx_security_crypto_encrypted_file_pref__.xml"/>
 </full-backup-content>
