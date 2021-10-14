@@ -28,7 +28,6 @@ class HomeViewModel @Inject constructor(
     init {
         loadSettings()
         loadUser()
-        refreshPhotos()
     }
 
     fun loadSettings() {

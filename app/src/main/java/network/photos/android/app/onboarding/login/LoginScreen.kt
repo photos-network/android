@@ -39,7 +39,12 @@ fun LoginScreen(
             viewModel.requestAccessToken(authCode) { success ->
                 if (success) {
                     Log.i("Login", "Successfully loaded an access token.")
-                    navController.navigate(route = Destination.Home.route)
+                    navController.navigate(route = Destination.Home.route) {
+                        launchSingleTop = true
+                        popUpTo(Destination.Home.route) {
+                            inclusive = true
+                        }
+                    }
                 } else {
                     // TODO: show user facing error message
                     Log.e("Login", "Request access token failed")
