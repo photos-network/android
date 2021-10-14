@@ -111,7 +111,7 @@ fun LoginScreen(
                     }
                 }
                 webChromeClient = WebChromeClient()
-                loadUrl("${host.value}/oauth/authorize?client_id=${clientId.value}&response_type=code&redirect_uri=${redirectUri}&response_mode=query&scope=openid profile email phone library%3Awrite&response_type=code&response_mode=query&state=${nonce}")
+                loadUrl("${host.value}/api/oauth/authorize?client_id=${clientId.value}&response_type=code&redirect_uri=${redirectUri}&response_mode=query&scope=openid profile email phone library%3Awrite&response_type=code&response_mode=query&state=${nonce}")
             }
         }
     }
