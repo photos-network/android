@@ -14,14 +14,15 @@ class UserRepositoryImpl(
     private var currentUser: User? = null
 
     override fun currentUser(): User? {
-        if (currentUser != null) return currentUser
-
-        userStorage.read()?.let {
-            currentUser = it
-            return it
+        if (currentUser != null) {
+            return currentUser
         }
 
-        return null
+        currentUser = userStorage.read().takeIf {
+            it != null
+        }
+
+        return currentUser
     }
 
     override suspend fun requestAuthorization(authCode: String, clientId: String): Boolean {
