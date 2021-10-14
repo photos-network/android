@@ -1,9 +1,13 @@
 package network.photos.android.data.settings.storage
 
 import android.content.Context
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
 import android.util.Log
 import androidx.security.crypto.EncryptedFile
-import androidx.security.crypto.MasterKeys
+import androidx.security.crypto.MasterKey
+import androidx.security.crypto.MasterKey.DEFAULT_AES_GCM_MASTER_KEY_SIZE
+import androidx.security.crypto.MasterKey.DEFAULT_MASTER_KEY_ALIAS
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import network.photos.android.data.settings.domain.Settings
@@ -17,20 +21,47 @@ import java.nio.charset.StandardCharsets
  * Read/Write settings encrypted into internal storage
  */
 class SettingsStorage(private val context: Context) {
-    private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
     private val filename = "settings_storage.txt"
     private val gson: Gson = GsonBuilder().create()
     private val secureFile = File(context.filesDir, filename)
+    private lateinit var masterKey: MasterKey
+    private lateinit var encryptedFile: EncryptedFile
+
+    init {
+        try {
+            initialize(context)
+        } catch (e: Exception) {
+            Log.e("SettingsStr", "\uD83D\uDC80 EXCEPTION!!", e)
+            delete()
+            initialize(context)
+        }
+    }
+
+    private fun initialize(context: Context) {
+        val keyGenParameterSpec = KeyGenParameterSpec
+            .Builder(
+                DEFAULT_MASTER_KEY_ALIAS,
+                KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+            )
+            .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+            .setKeySize(DEFAULT_AES_GCM_MASTER_KEY_SIZE)
+            .build()
+
+        masterKey = MasterKey.Builder(context, DEFAULT_MASTER_KEY_ALIAS)
+            .setKeyGenParameterSpec(keyGenParameterSpec)
+            .build()
+
+        encryptedFile = EncryptedFile.Builder(
+            context.applicationContext,
+            secureFile,
+            masterKey,
+            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build()
+    }
 
     fun readSettings(): Settings? {
         try {
-            val encryptedFile = EncryptedFile.Builder(
-                secureFile,
-                context.applicationContext,
-                masterKeyAlias,
-                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
-            ).build()
-
             var inputStream: FileInputStream? = null
             try {
                 inputStream = encryptedFile.openFileInput()
@@ -49,11 +80,14 @@ class SettingsStorage(private val context: Context) {
                 return gson.fromJson(jsonString, Settings::class.java)
             } catch (e: Exception) {
                 // Log exceptions
+
             } finally {
                 inputStream?.close()
             }
         } catch (e: FileNotFoundException) {
             Log.w("SettingsStr", "No previous saved settings found.")
+        } catch (e: Exception) {
+            Log.e("SettingsStr", "\uD83D\uDC80 EXCEPTION!!", e)
         }
 
         return null
@@ -63,7 +97,7 @@ class SettingsStorage(private val context: Context) {
         val encryptedFile = EncryptedFile.Builder(
             secureFile,
             context.applicationContext,
-            masterKeyAlias,
+            DEFAULT_MASTER_KEY_ALIAS,
             EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
         ).build()
 
@@ -77,6 +111,12 @@ class SettingsStorage(private val context: Context) {
             write(jsonString.toByteArray(StandardCharsets.UTF_8))
             flush()
             close()
+        }
+    }
+
+    fun delete() {
+        if (secureFile.exists()) {
+            secureFile.delete()
         }
     }
 }
