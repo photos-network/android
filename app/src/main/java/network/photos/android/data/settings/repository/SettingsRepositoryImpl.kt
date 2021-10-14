@@ -6,12 +6,18 @@ import network.photos.android.data.settings.storage.SettingsStorage
 class SettingsRepositoryImpl(
     private val settingsStore: SettingsStorage
 ): SettingsRepository {
-    private val currentSettings: Settings? = null
+    private var currentSettings: Settings? = null
 
     override fun loadSettings(): Settings? {
-        if (currentSettings != null) return currentSettings
+        if (currentSettings != null) {
+            return currentSettings
+        }
 
-        return settingsStore.readSettings()?.takeIf { it.host.isNotEmpty() }
+        currentSettings = settingsStore.readSettings().takeIf {
+            it != null
+        }
+
+        return currentSettings
     }
 
     override fun saveSettings(settings: Settings) {
