@@ -23,7 +23,7 @@
     <!--  use precise location coordinates  -->
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
 
-    <!-- disable backup to prevent missing keyset for encrypted storage -->
+    <!-- exclude encrypted files from backup to prevent decryption errors like: AEADBadTagException -->
     <application
         android:name=".PhotosNetworkApplication"
         android:allowBackup="true"
