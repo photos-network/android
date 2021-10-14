@@ -9,6 +9,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.flowlayout.FlowColumn
@@ -25,14 +28,36 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
+import network.photos.android.app.home.HomeViewModel
 import network.photos.android.data.photos.domain.PhotoElement
 import network.photos.android.navigation.Destination
 
 @Composable
-fun GridScreen(
+fun PhotosScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberAnimatedNavController(),
+    viewModel: HomeViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    PhotosScreen(
+        modifier = modifier,
+        navController = navController,
+        isLoading = uiState.loading,
+        photos = uiState.photos,
+        onRefreshPhotos = {
+            viewModel.refreshPhotos()
+        },
+    )
+}
+
+@Composable
+fun PhotosScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController = rememberAnimatedNavController(),
+    isLoading: Boolean = false,
     photos: List<PhotoElement> = emptyList(),
+    onRefreshPhotos: () -> Unit = {},
 ) {
 //    Column(
 //        modifier.padding(4.dp),

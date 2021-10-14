@@ -23,8 +23,13 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -32,16 +37,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.insets.systemBarsPadding
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import network.photos.android.app.home.photos.GridScreen
+import network.photos.android.app.home.albums.AlbumsScreen
+import network.photos.android.app.home.photos.PhotosScreen
 import network.photos.android.composables.UserAvatar
-import network.photos.android.data.photos.domain.PhotoElement
 import network.photos.android.data.user.domain.User
 import network.photos.android.navigation.Destination
 import network.photos.android.theme.AppTheme
@@ -57,32 +57,31 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    viewModel.loadSettings()
     if (uiState.currentSettings == null) {
         Log.i("Home", "settings not loaded yet! => Setup")
         navController.navigate(route = Destination.Setup.route) {
             launchSingleTop = true
+            popUpTo(Destination.Setup.route) {
+                inclusive = true
+            }
         }
         return
     }
 
-    viewModel.loadUser()
     if (uiState.currentUser == null) {
         Log.i("Home", "no user logged in! => Login")
         navController.navigate(route = Destination.Login.route) {
             launchSingleTop = true
+            popUpTo(Destination.Login.route) {
+                inclusive = true
+            }
         }
         return
     } else {
         HomeScreen(
             modifier = modifier,
             navController = navController,
-            isLoading = uiState.loading,
             user = uiState.currentUser!!,
-            photos = uiState.photos,
-            onRefreshPhotos = {
-                viewModel.refreshPhotos()
-            },
             onLogout = {
                 viewModel.logout()
             }
@@ -94,19 +93,13 @@ fun HomeScreen(
 internal fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberAnimatedNavController(),
-    isLoading: Boolean = false,
     user: User,
-    photos: List<PhotoElement> = emptyList(),
-    onRefreshPhotos: () -> Unit = {},
     onLogout: () -> Unit = {},
 ) {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val scrollState: LazyListState = rememberLazyListState()
 
-    val items = listOf(
-        Destination.Photos,
-        Destination.Albums,
-    )
+    var currentTab by rememberSaveable(saver = ScreenSaver()) { mutableStateOf(Destination.Photos) }
 
     Scaffold(
         modifier = modifier
@@ -149,48 +142,58 @@ internal fun HomeScreen(
         },
         bottomBar = {
             BottomNavigation {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-                items.forEach { screen ->
-                    BottomNavigationItem(
-                        icon = { Icon(screen.icon, contentDescription = null) },
-                        label = { Text(stringResource(screen.resourceId)) },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                // Pop up to the start destination of the graph to
-                                // avoid building up a large stack of destinations
-                                // on the back stack as users select items
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                // Avoid multiple copies of the same destination when
-                                // reselecting the same item
-                                launchSingleTop = true
-                                // Restore state when reselecting a previously selected item
-                                restoreState = true
-                            }
-                        }
-                    )
-                }
+                // Photos
+                BottomNavigationItem(
+                    icon = { Icon(Destination.Photos.icon, contentDescription = null) },
+                    label = { Text(stringResource(Destination.Photos.resourceId)) },
+                    selected = currentTab == Destination.Photos,
+                    onClick = {
+                        currentTab = Destination.Photos
+                    }
+                )
+
+                // Albums
+                BottomNavigationItem(
+                    icon = { Icon(Destination.Albums.icon, contentDescription = null) },
+                    label = { Text(stringResource(Destination.Albums.resourceId)) },
+                    selected = currentTab == Destination.Albums,
+                    onClick = {
+                        currentTab = Destination.Albums
+                    }
+                )
             }
         },
         content = {
-            SwipeRefresh(
-                modifier = Modifier.fillMaxSize(),
-                state = rememberSwipeRefreshState(isLoading),
-                onRefresh = { onRefreshPhotos() },
-            ) {
-                // TODO: add bottom navigation (photos / albums)
-                GridScreen(
+            if (currentTab == Destination.Photos) {
+                PhotosScreen(
                     modifier = Modifier.fillMaxSize(),
                     navController = navController,
-                    photos = photos,
+                )
+            } else {
+                AlbumsScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    navController = navController,
                 )
             }
+
+//            SwipeRefresh(
+//                modifier = Modifier.fillMaxSize(),
+//                state = rememberSwipeRefreshState(isLoading),
+//                onRefresh = { onRefreshPhotos() },
+//            ) {
+//                // TODO: add bottom navigation (photos / albums)
+//            }
         }
     )
 }
+
+/**
+* Saver to save and restore the current tab across config change and process death.
+*/
+fun ScreenSaver(): Saver<MutableState<Destination>, *> = Saver(
+    save = { it.value.saveState() },
+    restore = { mutableStateOf(Destination.restoreState(it)) }
+)
 
 @Preview(name = "Home")
 @Preview(name = "Home · DARK", uiMode = Configuration.UI_MODE_NIGHT_YES)

@@ -1,6 +1,7 @@
 package network.photos.android.app.onboarding.setup
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.PopUpToBuilder
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import network.photos.android.R
 import network.photos.android.composables.TextInput
@@ -58,7 +60,12 @@ fun SetupScreen(
         onClientSecretChanged = { viewModel.setClientSecret(it) },
         onNextClick = {
             viewModel.checkConnection {
-                navController.navigate(Destination.Login.route)
+                navController.navigate(Destination.Login.route) {
+                    launchSingleTop = true
+                    popUpTo(Destination.Login.route) {
+                        inclusive = true
+                    }
+                }
             }
         },
         onHelpClick = {
