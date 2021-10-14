@@ -13,7 +13,7 @@ interface PhotoApi {
      * List all photos for current User has access to
      */
     @Headers("Accept: application/json")
-    @GET("v1/photos")
+    @GET("api/photos")
     suspend fun getPhotos(
         @Header("Authorization") authToken: String?,
         @Query("offset") offset: Int = 0,
@@ -26,6 +26,6 @@ interface PhotoApi {
      * @param photoId Identifier of the photo details to return
      */
     @Headers("Accept: application/json")
-    @GET("v1/photo/{photoId}")
+    @GET("api/photo/{photoId}")
     suspend fun getPhoto(photoId: String): PhotoElement
 }

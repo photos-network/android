@@ -13,7 +13,7 @@ interface UserApi {
      * @param redirectUri The redirect_uri included in the authorization request.
      */
     @FormUrlEncoded
-    @POST("/oauth/token?grant_type=authorization_code")
+    @POST("/api/oauth/token?grant_type=authorization_code")
     suspend fun accessTokenRequest(
         @Field("code") code: String,
         @Field("client_id") clientId: String,
@@ -29,7 +29,7 @@ interface UserApi {
      * @param clientSecret The client secret issued during registration process.
      * @param scope list of case-sensitive strings to grant access based on.
      */
-    @POST("/oauth/token?grant_type=refresh_token")
+    @POST("/api/oauth/token?grant_type=refresh_token")
     suspend fun refreshTokenRequest(
         @Query("refresh_token") refreshToken: String,
         @Query("client_id") clientId: String,
@@ -43,12 +43,12 @@ interface UserApi {
      * @param token The token to revoke on the oauth server.
      * @param tokenTypeHint This optional param should either be 'access_token' or 'refresh_token'.
      */
-    @POST("/revoke")
+    @POST("/api/revoke")
     suspend fun revokeTokenRequest(
         @Query("token") token: String,
         @Query("token_type_hint") tokenTypeHint: String?
     ): TokenResponse
 
-    @GET("/v1/user/")
+    @GET("/api/user/")
     suspend fun me(@Header("Authorization") token: String): UserResponse
 }
