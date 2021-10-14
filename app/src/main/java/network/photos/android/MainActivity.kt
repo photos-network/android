@@ -16,6 +16,7 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import network.photos.android.app.details.DetailScreen
+import network.photos.android.app.help.HelpScreen
 import network.photos.android.app.home.HomeScreen
 import network.photos.android.app.onboarding.login.LoginScreen
 import network.photos.android.app.onboarding.setup.SetupScreen
@@ -59,10 +60,10 @@ fun PhotosApp(
             navController = navController,
             startDestination = startDestination,
         ) {
-            Log.e("Main", "route: ${this.route}")
             composable(route = Destination.Setup.route) { SetupScreen(navController = navController) }
             composable(route = Destination.Login.route) { LoginScreen(navController = navController) }
             composable(route = Destination.Home.route) { HomeScreen(navController = navController) }
+            composable(route = Destination.Help.route) { HelpScreen(navController = navController) }
             composable(
                 route = "${Destination.Details.route}/{identifier}",
                 arguments = listOf(navArgument("identifier") {
