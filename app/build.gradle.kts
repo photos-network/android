@@ -14,8 +14,8 @@ repositories {
 android {
     compileSdk = 31
     defaultConfig {
-        applicationId = "photos.network.android"
         minSdk = 23
+        applicationId = "photos.network"
         targetSdk = 31
         versionCode = 1
         versionName = "0.1.0"
