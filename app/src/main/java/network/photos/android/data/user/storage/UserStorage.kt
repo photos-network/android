@@ -22,30 +22,35 @@ class UserStorage(context: Context) {
 
     init {
         try {
-            val keyGenParameterSpec = KeyGenParameterSpec
-                .Builder(
-                    MasterKey.DEFAULT_MASTER_KEY_ALIAS,
-                    KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
-                )
-                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .setKeySize(MasterKey.DEFAULT_AES_GCM_MASTER_KEY_SIZE)
-                .build()
-
-            masterKey = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
-                .setKeyGenParameterSpec(keyGenParameterSpec)
-                .build()
-
-            encryptedFile = EncryptedFile.Builder(
-                context.applicationContext,
-                secureFile,
-                masterKey,
-                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
-            ).build()
+            initialize(context)
         } catch (e: Exception) {
             Log.e("UserStorage", "\uD83D\uDC80 EXCEPTION!!", e)
             delete()
+            initialize(context)
         }
+    }
+
+    private fun initialize(context: Context) {
+        val keyGenParameterSpec = KeyGenParameterSpec
+            .Builder(
+                MasterKey.DEFAULT_MASTER_KEY_ALIAS,
+                KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+            )
+            .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+            .setKeySize(MasterKey.DEFAULT_AES_GCM_MASTER_KEY_SIZE)
+            .build()
+
+        masterKey = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+            .setKeyGenParameterSpec(keyGenParameterSpec)
+            .build()
+
+        encryptedFile = EncryptedFile.Builder(
+            context.applicationContext,
+            secureFile,
+            masterKey,
+            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build()
     }
 
     fun save(user: User) {
