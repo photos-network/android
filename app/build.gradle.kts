@@ -123,29 +123,28 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.6.0")
-    implementation("androidx.activity:activity-compose:1.3.1")
+    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.activity:activity-compose:1.4.0")
 
     // Compose
-    implementation("androidx.compose.runtime:runtime-livedata:1.1.0-alpha05")
-    implementation("androidx.compose.ui:ui:1.0.3")
-    implementation("androidx.compose.material:material:1.0.3")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.0.3")
+    implementation("androidx.compose.runtime:runtime-livedata:1.1.0-beta01")
+    implementation("androidx.compose.ui:ui:1.0.4")
+    implementation("androidx.compose.material:material:1.0.4")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.0.4")
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0-rc01")
-    implementation("androidx.compose.material:material-icons-extended:1.0.3")
+    implementation("androidx.compose.material:material-icons-extended:1.0.4")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
 
     // Coroutine Lifecycle Scopes
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
 
     // Hilt dependency injection
     implementation("com.google.dagger:hilt-android:2.38.1")
     kapt("com.google.dagger:hilt-android-compiler:2.38.1")
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
 
@@ -172,14 +171,14 @@ dependencies {
 
     // retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
     // serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 
     implementation("androidx.security:security-crypto:1.1.0-alpha03")
-    implementation("com.google.code.gson:gson:2.8.6")
+    implementation("com.google.code.gson:gson:2.8.7")
 
     // testing
     testImplementation("junit:junit:4.13.2")
