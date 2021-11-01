@@ -1,10 +1,12 @@
 package network.photos.android.app.home.photos
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -22,12 +24,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import com.google.accompanist.flowlayout.FlowColumn
-import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import network.photos.android.R
 import network.photos.android.app.home.HomeViewModel
 import network.photos.android.data.photos.domain.PhotoElement
 import network.photos.android.navigation.Destination
@@ -59,48 +62,40 @@ fun PhotosScreen(
     photos: List<PhotoElement> = emptyList(),
     onRefreshPhotos: () -> Unit = {},
 ) {
-//    Column(
-//        modifier.padding(4.dp),
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-    FlowRow(
-        modifier = modifier,
-        mainAxisSpacing = 1.dp,
-//        crossAxisSpacing = 1.dp,
-        content = {
-            photos.forEach { data ->
+    SwipeRefresh(
+        modifier = Modifier.fillMaxSize(),
+        state = rememberSwipeRefreshState(isLoading),
+        onRefresh = { onRefreshPhotos() },
+    ) {
+        // TODO: implement flex-box like grid layout
+        LazyColumn(
+            modifier
+                .fillMaxSize()
+                .padding(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            items(photos.size) { index: Int ->
                 Image(
                     painter = rememberImagePainter(
-                        data = data.image_url,
+                        data = photos[index].image_url,
                         builder = {
                             crossfade(true)
+                            placeholder(R.drawable.image_placeholder)
                         }
                     ),
                     contentDescription = null,
                     modifier = Modifier
-//                            .placeholder(
-//                                visible = true,
-//                                highlight = PlaceholderHighlight.shimmer(highlightColor = Color.LightGray),
-//                                color = Color.Gray
-//                            )
                         .clickable {
-                            navController.navigate("${Destination.Details.route}/${data.id}")
+                            navController.navigate("${Destination.Details.route}/${photos[index].id}")
                         }
                         .size(128.dp)
-//                        .padding(2.dp)
                         .clip(RoundedCornerShape(2.dp)),
-//                    contentScale = ContentScale.FillWidth,
+                    contentScale = ContentScale.FillWidth,
                 )
             }
         }
-    )
-//            ImageGrid(
-//                columnCount = 3
-//            ) {
-
-//            }
-//        }
     }
+}
 
 @Composable
 fun ImageGrid(
