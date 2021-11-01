@@ -3,7 +3,9 @@ package network.photos.android.app.home
 import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -99,7 +101,7 @@ internal fun HomeScreen(
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val scrollState: LazyListState = rememberLazyListState()
 
-    var currentTab by rememberSaveable(saver = ScreenSaver()) { mutableStateOf(Destination.Photos) }
+    var currentTab by rememberSaveable(saver = screenSaver()) { mutableStateOf(Destination.Photos) }
 
     Scaffold(
         modifier = modifier
@@ -163,26 +165,20 @@ internal fun HomeScreen(
                 )
             }
         },
-        content = {
-            if (currentTab == Destination.Photos) {
-                PhotosScreen(
-                    modifier = Modifier.fillMaxSize(),
-                    navController = navController,
-                )
-            } else {
-                AlbumsScreen(
-                    modifier = Modifier.fillMaxSize(),
-                    navController = navController,
-                )
+        content = { innerPadding ->
+            Box(modifier = Modifier.padding(innerPadding)) {
+                if (currentTab == Destination.Photos) {
+                    PhotosScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        navController = navController,
+                    )
+                } else {
+                    AlbumsScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        navController = navController,
+                    )
+                }
             }
-
-//            SwipeRefresh(
-//                modifier = Modifier.fillMaxSize(),
-//                state = rememberSwipeRefreshState(isLoading),
-//                onRefresh = { onRefreshPhotos() },
-//            ) {
-//                // TODO: add bottom navigation (photos / albums)
-//            }
         }
     )
 }
@@ -190,7 +186,7 @@ internal fun HomeScreen(
 /**
 * Saver to save and restore the current tab across config change and process death.
 */
-fun ScreenSaver(): Saver<MutableState<Destination>, *> = Saver(
+private fun screenSaver(): Saver<MutableState<Destination>, *> = Saver(
     save = { it.value.saveState() },
     restore = { mutableStateOf(Destination.restoreState(it)) }
 )
