@@ -16,4 +16,6 @@ data class PhotoItem(
     @SerialName("id") val id: String,
     @SerialName("name") val name: String,
     @SerialName("image_url") val imageUrl: String,
+    @SerialName("date_added") val dateAdded: String? = null,
+    @SerialName("date_taken") val dateTaken: String? = null,
 )
