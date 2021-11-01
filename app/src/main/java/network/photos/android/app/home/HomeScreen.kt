@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -29,6 +31,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -102,85 +105,123 @@ internal fun HomeScreen(
     val scrollState: LazyListState = rememberLazyListState()
 
     var currentTab by rememberSaveable(saver = screenSaver()) { mutableStateOf(Destination.Photos) }
+    val showDialog = remember { mutableStateOf(false)  }
 
-    Scaffold(
-        modifier = modifier
-            .fillMaxSize()
-            .testTag("HomeScreenTag"),
-        scaffoldState = scaffoldState,
-        snackbarHost = { SnackbarHost(hostState = it, modifier = Modifier.systemBarsPadding()) },
-        topBar = {
-            TopAppBar(
-                elevation = if (scrollState.firstVisibleItemIndex < 0 || scrollState.firstVisibleItemScrollOffset < 0) 0.dp else 4.dp,
-                title = {
-                    UserAvatar(
-                        modifier = Modifier
-                            .clickable {
-                                onLogout()
-                            }
-                            .size(32.dp),
-                        user = user
-                    )
-                },
-                actions = {
-                    IconButton(onClick = {
-                        // TODO: show notifications
-                    }) {
-                        Icon(Icons.Outlined.Notifications, null)
-                    }
-                    IconButton(onClick = {
-                        // TODO: enable/disable NSFW
-                    }) {
-                        Icon(Icons.Outlined.Shield, null)
-                    }
-                    IconButton(onClick = {
-                        // TODO: show SettingsScreen
-                    }) {
-                        Icon(Icons.Outlined.Settings, null)
-                    }
-                },
-                backgroundColor = MaterialTheme.colors.surface,
-            )
-        },
-        bottomBar = {
-            BottomNavigation {
-                // Photos
-                BottomNavigationItem(
-                    icon = { Icon(Destination.Photos.icon, contentDescription = null) },
-                    label = { Text(stringResource(Destination.Photos.resourceId)) },
-                    selected = currentTab == Destination.Photos,
+    if (showDialog.value) {
+        AlertDialog(
+            onDismissRequest = {
+                // Dismiss the dialog when clicking outside the dialog
+                showDialog.value = false
+            },
+            title = {
+                Text(text = "Logout")
+            },
+            text = {
+                Text("Are you sure you want to logout?")
+            },
+            confirmButton = {
+                Button(
                     onClick = {
-                        currentTab = Destination.Photos
-                    }
-                )
-
-                // Albums
-                BottomNavigationItem(
-                    icon = { Icon(Destination.Albums.icon, contentDescription = null) },
-                    label = { Text(stringResource(Destination.Albums.resourceId)) },
-                    selected = currentTab == Destination.Albums,
+                        showDialog.value = false
+                        onLogout()
+                    }) {
+                    Text("Log out")
+                }
+            },
+            dismissButton = {
+                Button(
                     onClick = {
-                        currentTab = Destination.Albums
-                    }
-                )
-            }
-        },
-        content = { innerPadding ->
-            Box(modifier = Modifier.padding(innerPadding)) {
-                if (currentTab == Destination.Photos) {
-                    PhotosScreen(
-                        modifier = Modifier.fillMaxSize(),
-                        navController = navController,
-                    )
-                } else {
-                    AlbumsScreen(
-                        modifier = Modifier.fillMaxSize(),
-                        navController = navController,
-                    )
+                        showDialog.value = false
+                    }) {
+                    Text("Cancel logout")
                 }
             }
-        }
-    )
+        )
+    } else {
+        Scaffold(
+            modifier = modifier
+                .fillMaxSize()
+                .testTag("HomeScreenTag"),
+            scaffoldState = scaffoldState,
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = it,
+                    modifier = Modifier.systemBarsPadding()
+                )
+            },
+            topBar = {
+                TopAppBar(
+                    elevation = if (scrollState.firstVisibleItemIndex < 0 || scrollState.firstVisibleItemScrollOffset < 0) 0.dp else 4.dp,
+                    title = {
+                        UserAvatar(
+                            modifier = Modifier
+                                .clickable {
+                                    showDialog.value = true
+                                }
+                                .size(32.dp),
+                            user = user
+                        )
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            // TODO: show notifications
+                        }) {
+                            Icon(Icons.Outlined.Notifications, null)
+                        }
+                        IconButton(onClick = {
+                            // TODO: enable/disable NSFW
+                        }) {
+                            Icon(Icons.Outlined.Shield, null)
+                        }
+                        IconButton(onClick = {
+                            // TODO: show SettingsScreen
+                        }) {
+                            Icon(Icons.Outlined.Settings, null)
+                        }
+                    },
+                    backgroundColor = MaterialTheme.colors.surface,
+                )
+            },
+            bottomBar = {
+                BottomNavigation {
+                    // Photos
+                    BottomNavigationItem(
+                        icon = { Icon(Destination.Photos.icon, contentDescription = null) },
+                        label = { Text(stringResource(Destination.Photos.resourceId)) },
+                        selected = currentTab == Destination.Photos,
+                        onClick = {
+                            currentTab = Destination.Photos
+                        }
+                    )
+
+                    // Albums
+                    BottomNavigationItem(
+                        icon = { Icon(Destination.Albums.icon, contentDescription = null) },
+                        label = { Text(stringResource(Destination.Albums.resourceId)) },
+                        selected = currentTab == Destination.Albums,
+                        onClick = {
+                            currentTab = Destination.Albums
+                        }
+                    )
+                }
+            },
+            content = { innerPadding ->
+                Box(modifier = Modifier.padding(innerPadding)) {
+                    if (currentTab == Destination.Photos) {
+                        PhotosScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            navController = navController,
+                        )
+                    } else {
+                        AlbumsScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            navController = navController,
+                        )
+                    }
+                }
+            }
+        )
+    }
 }
 
 /**
