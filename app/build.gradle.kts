@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application") version "7.0.3"
     kotlin("android") version "1.5.30"
-    kotlin("kapt") version "1.5.30"
+    kotlin("kapt") version "1.6.0"
     kotlin("plugin.serialization") version "1.5.30"
     id("marathon") version "0.6.4"
     id("dagger.hilt.android.plugin") version "2.38.1"
