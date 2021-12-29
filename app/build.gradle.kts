@@ -132,35 +132,23 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.activity:activity-compose:1.4.0")
+    api(project(":domain"))
+    androidTestImplementation(project(":data", "testArtifacts"))
 
     // Compose
-    implementation("androidx.compose.runtime:runtime-livedata:1.1.0-beta01")
-    implementation("androidx.compose.ui:ui:1.0.4")
-    implementation("androidx.compose.material:material:1.0.4")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.0.4")
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0-rc01")
-    implementation("androidx.compose.material:material-icons-extended:1.0.4")
-
-    // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
-
-    // Coroutine Lifecycle Scopes
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
-
-    // Hilt dependency injection
-    implementation("com.google.dagger:hilt-android:2.38.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.38.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
-
-    // Persistence
-    implementation("androidx.room:room-runtime:2.3.0")
-    implementation("androidx.room:room-ktx:2.3.0")
-    kapt("androidx.room:room-compiler:2.3.0")
+    implementation("androidx.activity:activity-compose:1.4.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.1.0-rc01")
+    implementation("androidx.compose.ui:ui:1.0.5")
+    implementation("androidx.compose.material:material:1.0.5")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.0.5")
+    implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0-rc02")
+    implementation("androidx.compose.material:material-icons-extended:1.0.5")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha14")
+    implementation("androidx.paging:paging-common-ktx:3.1.0")
+    androidTestApi("androidx.compose.ui:ui-test:1.0.5")
+    androidTestApi("androidx.compose.ui:ui-test-junit4:1.0.5")
+    debugApi("androidx.compose.ui:ui-tooling:1.0.5")
 
     // accompanist
     implementation("com.google.accompanist:accompanist-navigation-animation:0.19.0")
@@ -185,24 +173,6 @@ dependencies {
     // serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
-
-    implementation("androidx.security:security-crypto:1.1.0-alpha03")
-    implementation("com.google.code.gson:gson:2.8.7")
-
-    // testing
-    testImplementation("junit:junit:4.13.2")
-
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.3")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.0.3")
-
-
-    // testing
-    androidTestImplementation("androidx.test:core:1.4.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    androidTestImplementation("androidx.test:rules:1.4.0")
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.4-alpha03")
-    androidTestImplementation("androidx.compose.ui:ui-test:1.0.3")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.3")
+    // leakCanary
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
 }
