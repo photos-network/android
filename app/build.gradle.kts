@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application") version "7.0.3"
+    id("com.android.application") version "7.0.4"
     id("com.diffplug.spotless") version "6.0.4"
     kotlin("android") version "1.5.30"
     kotlin("kapt") version "1.5.30"
