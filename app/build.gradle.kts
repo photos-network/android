@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application") version "7.0.3"
+    id("com.diffplug.spotless") version "6.0.4"
     kotlin("android") version "1.5.30"
     kotlin("kapt") version "1.5.30"
     kotlin("plugin.serialization") version "1.5.30"
@@ -10,6 +11,14 @@ plugins {
 repositories {
     google()
     mavenCentral()
+}
+
+spotless {
+    kotlin {
+        target("src/*/java/**/*.kt")
+        ktlint("0.43.2")
+        licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
+    }
 }
 
 marathon {

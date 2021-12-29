@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Photos.network developers
+ * Copyright 2020-$today.year Photos.network developers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package network.photos.android.app.help
-
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-
-@Composable
-fun HelpScreen(
-    modifier: Modifier = Modifier,
-    navController: NavController = rememberAnimatedNavController(),
-) {
-    Text(text = "Help")
-}

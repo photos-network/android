@@ -35,7 +35,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build project
-        run: ./gradlew assembleDebug
+        run: ./gradlew spotlessCheck assembleDebug lintDebug --stacktrace
 
       - name: Upload build outputs (APKs)
         uses: actions/upload-artifact@v2
