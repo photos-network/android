@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Apply spotless code formatting for all changed files before commiting.
+
+CHANGED_FILES="$(git --no-pager diff --name-status --no-color --cached | awk '$1 != "D" && $2 ~ /\.kts|\.kt/ { print $2}')"
+
+if [ -z "$CHANGED_FILES" ]; then
+    echo "No Kotlin files staged."
+    exit 0
+fi;
+
+echo "Running pre-commit hook."
+
+./gradlew --quiet spotlessApply
+
+echo "Completed spotlessApply."
+
+echo "$CHANGED_FILES" | while read -r file; do
+    if [ -f $file ]; then
+        git add $file
+    fi
+done
+
+echo "Completed pre-commit hook."

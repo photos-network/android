@@ -51,4 +51,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test-reports
-          path: app/build/reports
+          path: |
+            app/build/reports
+            domain/build/reports
+            data/build/reports
