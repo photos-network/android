@@ -22,7 +22,7 @@ spotless {
 android {
     compileSdk = 31
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -66,9 +66,9 @@ dependencies {
     api("io.insert-koin:koin-androidx-compose:3.1.4")
 
     // Persistence
-    api("androidx.room:room-runtime:2.4.0")
-    api("androidx.room:room-ktx:2.4.0")
-    kapt("androidx.room:room-compiler:2.4.0")
+    api("androidx.room:room-runtime:2.4.1")
+    api("androidx.room:room-ktx:2.4.1")
+    kapt("androidx.room:room-compiler:2.4.1")
 
     // workmanager
     api("androidx.work:work-runtime-ktx:2.7.1")
@@ -90,7 +90,7 @@ dependencies {
     api("com.squareup.logcat:logcat:0.1")
 
     // serialization
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
     api("androidx.security:security-crypto:1.1.0-alpha03")
 
     // testing

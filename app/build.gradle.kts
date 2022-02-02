@@ -5,7 +5,6 @@ plugins {
     kotlin("kapt") version "1.5.30"
     kotlin("plugin.serialization") version "1.6.0"
     id("marathon") version "0.6.4"
-    id("dagger.hilt.android.plugin") version "2.38.1"
 }
 
 repositories {
@@ -48,12 +47,13 @@ android {
         // API 21 | required by: security-crypto library
         // API 23 | required by: security.crypto.MasterKey
         // API 24 | required by: networkSecurityConfig
-        minSdk = 24
+        // API 26 | required by: Java 8 Time API
+        minSdk = 26
         targetSdk = 31
         versionCode = 1
         versionName = "0.1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "photos.network.PhotosNetworkJUnitRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -98,7 +98,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = false
-        buildConfig = false
+        buildConfig = true
         aidl = false
         renderScript = false
         resValues = false
@@ -119,6 +119,7 @@ android {
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi"
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi"
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi"
+        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.ui.ExperimentalComposeUiApi"
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=com.google.accompanist.pager.ExperimentalPagerApi"
     }
     composeOptions {
@@ -126,8 +127,11 @@ android {
     }
 
     packagingOptions {
-        resources.excludes += "/META-INF/AL2.0"
-        resources.excludes += "/META-INF/LGPL2.1"
+        resources.excludes += "META-INF/AL2.0"
+        resources.excludes += "META-INF/LGPL2.1"
+        resources.excludes += "META-INF/licenses/ASM"
+        resources.pickFirsts.add("win32-x86-64/attach_hotspot_windows.dll")
+        resources.pickFirsts.add("win32-x86/attach_hotspot_windows.dll")
     }
 }
 
@@ -137,12 +141,12 @@ dependencies {
 
     // Compose
     implementation("androidx.activity:activity-compose:1.4.0")
-    implementation("androidx.compose.runtime:runtime-livedata:1.1.0-rc01")
+    implementation("androidx.compose.runtime:runtime-livedata:1.1.0")
     implementation("androidx.compose.ui:ui:1.0.5")
     implementation("androidx.compose.material:material:1.0.5")
     implementation("androidx.compose.ui:ui-tooling-preview:1.0.5")
-    implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0-rc02")
+    implementation("androidx.navigation:navigation-compose:2.4.0")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0")
     implementation("androidx.compose.material:material-icons-extended:1.0.5")
     implementation("androidx.paging:paging-compose:1.0.0-alpha14")
     implementation("androidx.paging:paging-common-ktx:3.1.0")
@@ -151,16 +155,18 @@ dependencies {
     debugApi("androidx.compose.ui:ui-tooling:1.0.5")
 
     // accompanist
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.19.0")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.19.0")
-    implementation("com.google.accompanist:accompanist-placeholder:0.19.0")
-    implementation("com.google.accompanist:accompanist-flowlayout:0.19.0")
-    implementation("com.google.accompanist:accompanist-insets:0.19.0")
-    implementation("com.google.accompanist:accompanist-pager:0.19.0")
-    implementation("com.google.accompanist:accompanist-swiperefresh:0.19.0")
+    val accompanistVersion = "0.20.3"
+    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-placeholder:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-permissions:$accompanistVersion")
 
     // design
-    implementation("com.google.android.material:material:1.4.0")
+    implementation("com.google.android.material:material:1.5.0")
 
     // Coil
     implementation("io.coil-kt:coil:1.3.2")
@@ -171,15 +177,9 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
     // serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 
     // leakCanary
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
-
-    // Hilt dependency injection
-    implementation("com.google.dagger:hilt-android:2.38.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.38.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
 }
