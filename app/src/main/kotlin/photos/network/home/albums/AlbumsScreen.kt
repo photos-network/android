@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.ui
+package photos.network.home.albums
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun AlbumsScreen(
     modifier: Modifier = Modifier,
-    navController: NavController = rememberAnimatedNavController(),
+    navController: NavController = rememberNavController(),
 ) {
     Text(text = "Albums")
 }

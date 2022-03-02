@@ -17,11 +17,10 @@ package photos.network.domain.photos.usecase
 
 import kotlinx.coroutines.flow.Flow
 import photos.network.data.Resource
-import photos.network.data.photos.entities.Photo
+import photos.network.data.photos.repository.Photo
 import photos.network.data.photos.repository.PhotoRepository
 import photos.network.data.user.repository.UserRepository
 import photos.network.domain.SupplierUseCase
-import photos.network.domain.UseCase
 
 /**
  * Load a list of phots from persistency.
@@ -29,7 +28,6 @@ import photos.network.domain.UseCase
 class GetPhotosUseCase(
     private val userRepository: UserRepository,
     private val photoRepository: PhotoRepository,
-) : SupplierUseCase<Flow<Resource<List<Photo>>>>() {
-    override suspend fun run(): Flow<Resource<List<Photo>>> =
-        photoRepository.getPhotos()
+) {
+    operator fun invoke(): Flow<List<Photo>> = photoRepository.getPhotos()
 }

@@ -42,7 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.viewModel
 import photos.network.R
 import photos.network.navigation.Destination
@@ -56,7 +56,7 @@ import photos.network.theme.AppTheme
 @Composable
 fun SetupScreen(
     modifier: Modifier = Modifier,
-    navController: NavController = rememberAnimatedNavController(),
+    navController: NavController = rememberNavController(),
 ) {
     val viewModel: SetupViewModel by viewModel()
 

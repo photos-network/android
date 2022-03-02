@@ -17,4 +17,5 @@
     <string name="albums_title">Albums</string>
     <string name="details_title">Details</string>
     <string name="search_hint">Search</string>
+    <string name="folders_title">Folders</string>
 </resources>

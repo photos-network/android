@@ -13,12 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.data.photos.entities
+package photos.network.data.photos.repository
 
+import android.net.Uri
 import java.time.Instant
+import photos.network.data.photos.persistence.Photo as DatabasePhoto
 
 data class Photo(
-    val id: Long,
+    val filename: String,
     val imageUrl: String,
-    val dateTaken: Instant
-)
+    val dateTaken: Instant,
+    val uri: Uri? = null,
+) {
+    fun toDatabasePhoto(): DatabasePhoto = DatabasePhoto(
+        filename = filename,
+        imageUrl = imageUrl,
+        dateTaken = dateTaken.toEpochMilli(),
+        uri = uri.toString(),
+    )
+}

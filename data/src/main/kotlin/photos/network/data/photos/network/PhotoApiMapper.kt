@@ -16,12 +16,12 @@
 package photos.network.data.photos.network
 
 import java.time.Instant
-import photos.network.data.photos.entities.Photo
+import photos.network.data.photos.repository.Photo
 import photos.network.data.photos.network.entity.NetworkPhoto
 
 fun NetworkPhoto.toPhoto(): Photo {
     return Photo(
-        id = -1,
+        filename = "",
         imageUrl = imageUrl,
         dateTaken = Instant.ofEpochMilli(dateTaken ?: 0L)
     )

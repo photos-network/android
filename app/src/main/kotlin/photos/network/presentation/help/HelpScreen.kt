@@ -19,12 +19,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun HelpScreen(
     modifier: Modifier = Modifier,
-    navController: NavController = rememberAnimatedNavController(),
+    navController: NavController = rememberNavController(),
 ) {
     Text(text = "Help")
 }

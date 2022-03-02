@@ -16,11 +16,11 @@
 package photos.network.data.photos.repository
 
 import kotlinx.coroutines.flow.Flow
-import photos.network.data.Resource
-import photos.network.data.photos.entities.Photo
 
 interface PhotoRepository {
-    suspend fun syncPhotos()
+    fun syncPhotos()
 
-    suspend fun getPhotos(): Flow<Resource<List<Photo>>>
+    fun getPhotos(): Flow<List<Photo>>
+
+    suspend fun addPhoto(photo: Photo)
 }

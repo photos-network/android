@@ -22,94 +22,86 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.GridItemSpan
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import java.time.Instant
 import java.time.ZoneOffset
 import logcat.logcat
-import org.koin.androidx.compose.viewModel
 import photos.network.R
-import photos.network.data.photos.entities.Photo
-import photos.network.home.HomeViewModel
-import photos.network.navigation.Destination
+import photos.network.data.photos.repository.Photo
+import photos.network.theme.AppTheme
 
 @Composable
-fun PhotosScreen(
+fun PhotoGrid(
     modifier: Modifier = Modifier,
-    navController: NavController = rememberAnimatedNavController(),
+    photos: List<Photo>,
+    onSelectItem: (id: String) -> Unit,
 ) {
-    val viewModel: HomeViewModel by viewModel()
-
-    val uiState by viewModel.uiState.collectAsState()
-
-    PhotosScreen(
-        modifier = modifier,
-        navController = navController,
-        isLoading = uiState.loading,
-        photos = uiState.photos,
-        onRefreshPhotos = {
-            viewModel.refreshPhotos()
-        },
-    )
-}
-
-@Composable
-fun PhotosScreen(
-    modifier: Modifier = Modifier,
-    navController: NavController = rememberAnimatedNavController(),
-    isLoading: Boolean = false,
-    photos: List<Photo> = emptyList(),
-    onRefreshPhotos: () -> Unit = {},
-) {
-    SwipeRefresh(
-        modifier = Modifier.fillMaxSize(),
-        state = rememberSwipeRefreshState(isLoading),
-        onRefresh = { onRefreshPhotos() },
+    LazyVerticalGrid(
+        cells = GridCells.Adaptive(90.dp),
+        modifier
+            .fillMaxSize()
+            .padding(4.dp),
     ) {
-        LazyVerticalGrid(
-            cells = GridCells.Adaptive(90.dp),
-            modifier
-                .fillMaxSize()
-                .padding(4.dp),
-        ) {
+        // group by year
+        val groupedByYear = photos.groupBy {
+            it.dateTaken.atZone(ZoneOffset.UTC).year
+        }
+
+        groupedByYear.forEach { (_, photos) ->
+            val yearOfFirst = photos[0].dateTaken.atZone(ZoneOffset.UTC).year
+            val yearNow = Instant.now().atZone(ZoneOffset.UTC).year
+
+            // add year header if necessary
+            if (yearOfFirst != yearNow) {
+                item(span = { GridItemSpan(4) }) {
+                    Text(
+                        text = yearOfFirst.toString(),
+                        style = MaterialTheme.typography.body1
+                    )
+                }
+            }
+
             // group by month
-            val groupedPhotos = photos.groupBy {
+            val groupedByMonth = photos.groupBy {
                 it.dateTaken.atZone(ZoneOffset.UTC).month
             }
 
-            groupedPhotos.forEach { (month, photos) ->
+            groupedByMonth.forEach { (month, photos) ->
                 // add year if not matching with current year
-                val yearOfFirst = photos[0].dateTaken.atZone(ZoneOffset.UTC).year
-                val yearNow = Instant.now().atZone(ZoneOffset.UTC).year
                 val title = if (yearOfFirst == yearNow) {
                     DateFormatSymbols().months[month.value - 1]
                 } else {
                     "${DateFormatSymbols().months[month.value - 1]} $yearOfFirst"
                 }
 
-                // TODO: add header instead of single item
-                item {
-                    Text(text = title)
+
+                // month header
+                item(span = { GridItemSpan(4) }) {
+                    Text(text = title, style = MaterialTheme.typography.body2)
                 }
 
                 items(photos.size) { index: Int ->
-                    logcat { "path: ${photos[index].imageUrl}, date: ${photos[index].dateTaken}" }
+                    // TODO: show always local uri?
+                    val data = if (photos[index].uri != null) {
+                        photos[index].uri
+                    } else {
+                        photos[index].imageUrl
+                    }
+
                     Image(
                         painter = rememberImagePainter(
-                            data = photos[index].imageUrl,
+                            data  = data,
                             builder = {
                                 crossfade(true)
                                 placeholder(R.drawable.image_placeholder)
@@ -119,13 +111,28 @@ fun PhotosScreen(
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .clickable {
-                                navController.navigate("${Destination.Details.route}/${photos[index].id}")
+                                onSelectItem(photos[index].filename)
                             }
+                            .padding(1.dp)
                             .clip(RoundedCornerShape(2.dp))
                             .size(128.dp),
                     )
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+internal fun PreviewPhotoGrid() {
+    val list = (0..15).map {
+        Photo(filename = it.toString(), imageUrl = "", Instant.parse("2022-01-01T13:37:00.123Z"))
+    }
+    AppTheme {
+        PhotoGrid(
+            photos = list,
+            onSelectItem = {}
+        )
     }
 }

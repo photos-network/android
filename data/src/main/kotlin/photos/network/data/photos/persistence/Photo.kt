@@ -13,24 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.data.photos.persistence.entities
+package photos.network.data.photos.persistence
 
+import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.Instant
-import photos.network.data.photos.entities.Photo
+import photos.network.data.photos.repository.Photo as RepositoryPhoto
 
 @Entity(tableName = "photos")
-data class DatabasePhoto(
-    @PrimaryKey val photoId: Long,
-    val filename: String,
-    val dateTaken: Long
-)
-
-fun DatabasePhoto.toPhoto(): Photo {
-    return Photo(
-        id = photoId,
-        imageUrl = filename,
-        dateTaken = Instant.ofEpochMilli(dateTaken)
-    )
+data class Photo(
+    @PrimaryKey val filename: String,
+    val imageUrl: String,
+    val dateTaken: Long,
+    val uri: String? = null
+) {
+    fun toPhoto(): RepositoryPhoto {
+        return RepositoryPhoto(
+            filename = filename,
+            imageUrl = imageUrl,
+            dateTaken = Instant.ofEpochMilli(dateTaken),
+            uri = uri?.let { Uri.parse(it) },
+        )
+    }
 }
