@@ -1,0 +1,10 @@
+# Find all defined configuration options in the default configuration
+# https://github.com/detekt/detekt/blob/main/detekt-core/src/main/resources/default-detekt-config.yml
+
+naming:
+  FunctionNaming:
+    # adjust pattern to support compose function naming
+    functionPattern: '([A-Za-z][a-zA-Z0-9]*)|(`.*`)'
+
+  TopLevelPropertyNaming:
+    constantPattern: '[A-Z][_A-Z0-9]*'
