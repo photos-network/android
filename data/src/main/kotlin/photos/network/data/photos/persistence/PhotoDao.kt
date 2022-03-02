@@ -19,16 +19,16 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import photos.network.data.photos.persistence.entities.DatabasePhoto
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PhotoDao {
-    @Query("SELECT * FROM photos ORDER BY photoId")
-    fun getPhotos(): List<DatabasePhoto>
+    @Query("SELECT * FROM photos ORDER BY filename")
+    fun getPhotos(): Flow<List<Photo>>
 
     @Query("DELETE FROM photos")
-    fun deleteAllPhotos()
+    suspend fun deleteAllPhotos()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPhotos(vararg photos: DatabasePhoto)
+    suspend fun insertAll(vararg photos: Photo)
 }

@@ -15,22 +15,13 @@
  */
 package photos.network.domain.user.usecase
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import photos.network.data.user.repository.UserRepository
-import photos.network.domain.UseCase
 
 /**
  * Invalidate authorization and logout current user.
  */
 class LogoutUseCase(
     private val userRepository: UserRepository
-) : UseCase<Flow<Boolean>, Unit>() {
-    override suspend fun run(params: Unit?): Flow<Boolean> = flow {
-        userRepository.invalidateAuthorization()
-
-        emit(false)
-    }.flowOn(Dispatchers.IO)
+) {
+    suspend operator fun invoke() = userRepository.invalidateAuthorization()
 }

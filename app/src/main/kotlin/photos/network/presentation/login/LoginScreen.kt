@@ -32,7 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.viewModel
 import photos.network.navigation.Destination
 
@@ -42,7 +42,7 @@ import photos.network.navigation.Destination
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    navController: NavController = rememberAnimatedNavController(),
+    navController: NavController = rememberNavController(),
 ) {
     val viewModel: LoginViewModel by viewModel()
 

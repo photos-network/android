@@ -17,11 +17,10 @@ package photos.network.data.photos.persistence
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import photos.network.data.photos.persistence.entities.DatabasePhoto
 
 @Database(
     entities = [
-        DatabasePhoto::class,
+        Photo::class,
     ],
     version = 1,
     exportSchema = false

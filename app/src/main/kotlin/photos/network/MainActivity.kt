@@ -19,26 +19,21 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import photos.network.navigation.Destination
-import photos.network.details.DetailScreen
-import photos.network.presentation.help.HelpScreen
-import photos.network.home.HomeScreen
-import photos.network.presentation.login.LoginScreen
-import photos.network.presentation.setup.SetupScreen
+import photos.network.home.Home
 import photos.network.theme.AppTheme
 import photos.network.theme.darkColors
 import photos.network.theme.lightColors
@@ -78,31 +73,10 @@ fun PhotosApp(
     CompositionLocalProvider(LocalAppVersion provides BuildConfig.VERSION_NAME) {
         AppTheme(colors = if (isSystemInDarkTheme()) darkColors() else lightColors()) {
             CurrentUserHost {
-                AnimatedNavHost(
-                    navController = navController,
-                    startDestination = startDestination,
-                ) {
-                    composable(route = Destination.Setup.route) { SetupScreen(navController = navController) }
-                    composable(route = Destination.Login.route) { LoginScreen(navController = navController) }
-                    composable(route = Destination.Home.route) { HomeScreen(navController = navController) }
-                    composable(route = Destination.Help.route) { HelpScreen(navController = navController) }
-                    composable(
-                        route = "${Destination.Details.route}/{identifier}",
-                        arguments = listOf(
-                            navArgument("identifier") {
-                                defaultValue = "-1"
-                                type = NavType.StringType
-                            }
-                        )
-                    ) { backStackEntry ->
-                        backStackEntry.arguments?.getString("identifier")?.let {
-                            DetailScreen(
-                                navController = navController,
-                                photoIdentifier = it
-                            )
-                        }
-                    }
-                }
+                Home(
+                    modifier = Modifier.fillMaxSize(),
+                    orientation = LocalConfiguration.current.orientation
+                )
             }
         }
     }

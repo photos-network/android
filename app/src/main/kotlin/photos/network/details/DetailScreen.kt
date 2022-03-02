@@ -34,13 +34,13 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.navigation.NavController
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.viewModel
 
 @Composable
 fun DetailScreen(
     modifier: Modifier = Modifier,
-    navController: NavController = rememberAnimatedNavController(),
+    navController: NavController = rememberNavController(),
     photoIdentifier: String
 ) {
     val viewModel: DetailViewModel by viewModel()

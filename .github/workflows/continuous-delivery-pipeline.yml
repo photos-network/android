@@ -123,7 +123,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api-level: [ 24, 29 ]
+        api-level: [ 26, 29 ]
     timeout-minutes: 30
 
     steps:

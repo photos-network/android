@@ -23,8 +23,6 @@ import photos.network.domain.UseCase
  */
 class StartPhotosSyncUseCase(
     private val photoRepository: PhotoRepository,
-) : UseCase<Unit, Unit>() {
-    override suspend fun run(params: Unit?) {
-        photoRepository.syncPhotos()
-    }
+) {
+    operator fun invoke(): Unit = photoRepository.syncPhotos()
 }

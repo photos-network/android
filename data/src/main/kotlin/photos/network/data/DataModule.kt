@@ -15,6 +15,8 @@
  */
 package photos.network.data
 
+import android.content.Context
+import androidx.room.Room
 import androidx.work.WorkManager
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -42,9 +44,11 @@ import org.koin.androidx.workmanager.dsl.worker
 import org.koin.dsl.module
 import photos.network.data.photos.network.PhotoApi
 import photos.network.data.photos.network.entity.TokenInfo
+import photos.network.data.photos.persistence.PhotoDao
+import photos.network.data.photos.persistence.PhotoDatabase
 import photos.network.data.photos.repository.PhotoRepository
 import photos.network.data.photos.repository.PhotoRepositoryImpl
-import photos.network.data.photos.worker.PhotosSyncWork
+import photos.network.data.photos.worker.SyncLocalPhotosWorker
 import photos.network.data.settings.persistence.SettingsStorage
 import photos.network.data.settings.repository.SettingsRepository
 import photos.network.data.settings.repository.SettingsRepositoryImpl
@@ -70,8 +74,8 @@ val dataModule = module {
     factory { WorkManager.getInstance(androidApplication()) }
 
     worker {
-        PhotosSyncWork(
-            context = get(),
+        SyncLocalPhotosWorker(
+            application = get(),
             workerParameters = get(),
             photoRepository = get(),
         )
@@ -90,9 +94,12 @@ val dataModule = module {
         PhotoRepositoryImpl(
             applicationContext = get(),
             photoApi = get(),
+            photoDao = get(),
             workManager = get()
         )
     }
+    single { providePhotoDatabase(get()) }
+    factory { providePhotoDao(get()) }
 
     single {
         SettingsStorage(context = get())
@@ -103,6 +110,17 @@ val dataModule = module {
             settingsStore = get()
         )
     }
+}
+
+private fun providePhotoDatabase(context: Context): PhotoDatabase {
+    return Room.databaseBuilder(
+        context,
+        PhotoDatabase::class.java, "photos.db"
+    ).build()
+}
+
+private fun providePhotoDao(photoDatabase: PhotoDatabase): PhotoDao {
+    return photoDatabase.photoDao()
 }
 
 class PhotosHttpClient(

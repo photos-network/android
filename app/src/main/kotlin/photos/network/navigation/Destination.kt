@@ -18,6 +18,7 @@ package photos.network.navigation
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.Lock
@@ -38,19 +39,24 @@ sealed class Destination(
 ) {
     object Home : Destination("home", R.string.home_title, Icons.Filled.House)
     object Photos : Destination("photos", R.string.photos_title, Icons.Filled.Photo)
-    object Details : Destination("details", R.string.details_title, Icons.Filled.Photo)
     object Albums : Destination("albums", R.string.albums_title, Icons.Filled.PhotoAlbum)
+    object Folders : Destination("folders", R.string.folders_title, Icons.Filled.Folder)
+    object Details : Destination("details", R.string.details_title, Icons.Filled.Photo)
     object Login : Destination("login", R.string.login_title, Icons.Filled.Lock)
     object Setup : Destination("setup", R.string.setup_title, Icons.Filled.Settings)
     object Help : Destination("help", R.string.help_title, Icons.Filled.Help)
+
+    fun isRootDestination(): Boolean {
+        return this == Home || this == Photos || this == Albums
+    }
 
     fun saveState(): Bundle {
         return bundleOf(KEY_SCREEN to route)
     }
 
     companion object {
-        fun restoreState(bundle: Bundle): Destination {
-            return when (bundle.getString(KEY_SCREEN, Home.route)) {
+        fun fromString(route: String?): Destination {
+            return when (route) {
                 Home.route -> Home
                 Photos.route -> Photos
                 Details.route -> Details
