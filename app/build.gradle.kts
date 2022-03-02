@@ -8,6 +8,12 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
 }
 
+// key.properties
+val releaseKeystore: String by project
+val releaseStorePassword: String by project
+val releaseKeyAlias: String by project
+val releaseKeyPassword: String by project
+
 repositories {
     google()
     mavenCentral()
@@ -88,16 +94,24 @@ android {
             keyAlias = "android"
             keyPassword = "android"
         }
+        create("release") {
+            storeFile = file(path = releaseKeystore)
+            storePassword = releaseStorePassword
+            keyAlias = releaseKeyAlias
+            keyPassword = releaseKeyPassword
+        }
     }
 
     buildTypes {
         debug {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("debug")
         }
         release {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
