@@ -5,11 +5,17 @@ plugins {
     kotlin("kapt") version "1.5.30"
     kotlin("plugin.serialization") version "1.6.0"
     id("marathon") version "0.6.4"
+    id("io.gitlab.arturbosch.detekt") version "1.19.0"
 }
 
 repositories {
     google()
     mavenCentral()
+}
+
+// https://detekt.dev/gradle.html
+detekt {
+    config = files("../detekt.yml")
 }
 
 spotless {
