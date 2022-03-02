@@ -13,12 +13,17 @@ Its core features are:
 - Filter / Search photos by attributes like location or date
 - Group photos by objects like people of objects
 
-## Android
+## Gitflow
+- *main:* contains production code
+- *development:* latest changes that will be included in the next release
+- *feature/:* each feature separated until it is done and merged back to development
+- *release/:* signifies an upcoming release and will be merged into main
+- *hotfix/:* urgent changes to be merged into release and development
 
-This repository contains the official android client of the project.
+## Continuous Delivery Pipeline
+The whole pipeline is automated into Github workflows.
 
-
-## Screens
-
-![Setup screen](docs/screen_setup.png)
-![Login screen](docs/screen_login.png)
+- Code checks to enforce code quality & style
+- Tests to ensure a stable and release-ready codebase
+- Deployment into a preview environment
+- Release to production
