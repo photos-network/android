@@ -213,9 +213,10 @@ jobs:
         uses: timheuer/base64-to-file@v1
         with:
           fileName: 'android_release.keystore'
+          fileDir: ${{ GITHUB_WORKSPACE }}
           encodedString: ${{ secrets.ANDROID_KEYSTORE }}
 
-      - name: Release from preview
+      - name: Build release bundle
         run: |
           ./gradlew --console=plain -PreleaseKeystore=${{ steps.decode_keystore.outputs.filePath }} -PreleaseStorePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} -PreleaseKeyAlias=${{ secrets.ANDROID_KEYSTORE_KEY_ALIAS }} -PreleaseKeyPassword=${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }} app:bundle
 
@@ -224,9 +225,10 @@ jobs:
         uses: timheuer/base64-to-file@v1
         with:
           fileName: 'gradle_playstore_publisher_credentials.json'
+          fileDir: ${{ GITHUB_WORKSPACE }}
           encodedString: ${{ secrets.PLAYSTORE_CREDENTIALS }}
 
-      - name: Build Bundle
+      - name: Publish bundle
         run: |
           ./gradlew --console=plain app:publishBundle
 
