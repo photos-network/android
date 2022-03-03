@@ -210,10 +210,10 @@ jobs:
 
       - name: Decode Android Keystore
         id: decode_keystore
-        uses: timheuer/base64-to-file@v1
+        uses: timheuer/base64-to-file@v1.1
         with:
           fileName: 'android_release.keystore'
-          fileDir: $GITHUB_WORKSPACE
+          fileDir: './'
           encodedString: ${{ secrets.ANDROID_KEYSTORE }}
 
       - name: Build release bundle
@@ -222,10 +222,10 @@ jobs:
 
       - name: Decode Gradle Play Publisher Credentials
         id: decode_play_store_credentials
-        uses: timheuer/base64-to-file@v1
+        uses: timheuer/base64-to-file@v1.1
         with:
           fileName: 'gradle_playstore_publisher_credentials.json'
-          fileDir: $GITHUB_WORKSPACE
+          fileDir: './'
           encodedString: ${{ secrets.PLAYSTORE_CREDENTIALS }}
 
       - name: Publish bundle
