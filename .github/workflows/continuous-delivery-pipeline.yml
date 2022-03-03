@@ -224,7 +224,7 @@ jobs:
         uses: timheuer/base64-to-file@v1
         with:
           fileName: 'gradle_playstore_publisher_credentials.json'
-          encodedString: ${{ secrets.ANDROID_KEYSTORE }}
+          encodedString: ${{ secrets.PLAYSTORE_CREDENTIALS }}
 
       - name: Build Bundle
         run: |
