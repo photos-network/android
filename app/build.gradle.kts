@@ -6,6 +6,7 @@ plugins {
     kotlin("plugin.serialization") version "1.6.0"
     id("marathon") version "0.6.4"
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
+    id("com.github.triplet.play") version "3.7.0"
 }
 
 // key.properties
@@ -30,6 +31,17 @@ spotless {
         ktlint("0.43.2")
         licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
     }
+}
+
+play {
+    // credentials
+    serviceAccountCredentials.set(file("../gradle_playstore_publisher_credentials.json"))
+
+    // publish defaults
+    defaultToAppBundles.set(true)
+    track.set("internal")
+    userFraction.set(0.5)
+    updatePriority.set(2)
 }
 
 marathon {
@@ -62,7 +74,7 @@ android {
         // API 26 | required by: Java 8 Time API
         minSdk = 26
         targetSdk = 31
-        versionCode = 1
+        versionCode = 2
         versionName = "0.1.0"
 
         testInstrumentationRunner = "photos.network.PhotosNetworkJUnitRunner"
