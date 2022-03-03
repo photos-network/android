@@ -35,7 +35,7 @@ spotless {
 
 play {
     // credentials
-    serviceAccountCredentials.set(file("../gradle_playstore_publisher_credentials.json"))
+    serviceAccountCredentials.set(rootProject.file("gradle_playstore_publisher_credentials.json"))
 
     // publish defaults
     defaultToAppBundles.set(true)
