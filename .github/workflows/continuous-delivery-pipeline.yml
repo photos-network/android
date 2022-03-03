@@ -213,7 +213,7 @@ jobs:
         uses: timheuer/base64-to-file@v1
         with:
           fileName: 'android_release.keystore'
-          fileDir: ${{ GITHUB_WORKSPACE }}
+          fileDir: $GITHUB_WORKSPACE
           encodedString: ${{ secrets.ANDROID_KEYSTORE }}
 
       - name: Build release bundle
@@ -225,7 +225,7 @@ jobs:
         uses: timheuer/base64-to-file@v1
         with:
           fileName: 'gradle_playstore_publisher_credentials.json'
-          fileDir: ${{ GITHUB_WORKSPACE }}
+          fileDir: $GITHUB_WORKSPACE
           encodedString: ${{ secrets.PLAYSTORE_CREDENTIALS }}
 
       - name: Publish bundle
