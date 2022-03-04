@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.theme
+package photos.network.data.photos.worker
 
-import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import android.app.Application
+import androidx.work.CoroutineWorker
+import androidx.work.WorkerParameters
 
-data class AppDimensions(
-    val paddingSmall: Dp = 4.dp,
-    val paddingMedium: Dp = 8.dp,
-    val paddingLarge: Dp = 24.dp
-)
+/**
+ * Clean local photos to reduce device disk usage
+ */
+class CleanResourcesWorker(
+    application: Application,
+    workerParameters: WorkerParameters
+) : CoroutineWorker(application.applicationContext, workerParameters) {
+    override suspend fun doWork(): Result {
+        // TODO: Not implemented yet
 
-internal val LocalDimensions = staticCompositionLocalOf { AppDimensions() }
+        return Result.failure()
+    }
+}

@@ -17,8 +17,6 @@ package photos.network.home
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import photos.network.domain.user.usecase.LogoutUseCase
 
 class HomeViewModel constructor(
@@ -28,13 +26,11 @@ class HomeViewModel constructor(
 
     fun handleEvent(event: HomeEvent) {
         when (event) {
-            HomeEvent.LogoutEvent -> logout()
+            HomeEvent.TogglePrivacyEvent -> togglePrivacyFilter()
         }
     }
 
-    private fun logout() {
-        viewModelScope.launch {
-            logoutUseCase()
-        }
+    private fun togglePrivacyFilter() {
+        uiState.value = uiState.value.copy(isPrivacyEnabled = !uiState.value.isPrivacyEnabled)
     }
 }

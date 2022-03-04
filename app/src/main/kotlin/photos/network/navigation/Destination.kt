@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoAlbum
 import androidx.compose.material.icons.filled.Settings
@@ -40,6 +41,7 @@ sealed class Destination(
     object Home : Destination("home", R.string.home_title, Icons.Filled.House)
     object Photos : Destination("photos", R.string.photos_title, Icons.Filled.Photo)
     object Albums : Destination("albums", R.string.albums_title, Icons.Filled.PhotoAlbum)
+    object Account : Destination("account", R.string.account_title, Icons.Filled.People)
     object Folders : Destination("folders", R.string.folders_title, Icons.Filled.Folder)
     object Details : Destination("details", R.string.details_title, Icons.Filled.Photo)
     object Login : Destination("login", R.string.login_title, Icons.Filled.Lock)
@@ -47,7 +49,7 @@ sealed class Destination(
     object Help : Destination("help", R.string.help_title, Icons.Filled.Help)
 
     fun isRootDestination(): Boolean {
-        return this == Home || this == Photos || this == Albums
+        return this == Photos || this == Albums || this == Folders
     }
 
     fun saveState(): Bundle {
@@ -59,8 +61,10 @@ sealed class Destination(
             return when (route) {
                 Home.route -> Home
                 Photos.route -> Photos
-                Details.route -> Details
                 Albums.route -> Albums
+                Account.route -> Account
+                Folders.route -> Folders
+                Details.route -> Details
                 Login.route -> Login
                 Setup.route -> Setup
                 Help.route -> Help

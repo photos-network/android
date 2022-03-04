@@ -26,12 +26,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -122,68 +120,53 @@ fun Searchbar(
             focusManager.clearFocus()
         }
 
-        TextField(
-            value = value,
-            onValueChange = { value ->
-                if (value.text.length <= maxLength) onValueChange(value)
-            },
-            modifier = Modifier
-                .testTag("SearchbarInput")
-                .fillMaxWidth()
-                .padding(4.dp),
-            textStyle = TextStyle(color = MaterialTheme.colors.primary, fontSize = 18.sp),
-            placeholder = { Text(text = hint) },
-            leadingIcon = {
-                Icon(
-                    Icons.Default.Search,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .padding(15.dp)
-                        .size(24.dp)
-                )
-            },
-            trailingIcon = {
-                AnimatedVisibility(
-                    visible = value.text.isNotEmpty(),
-                    enter = expandIn(expandFrom = Alignment.CenterStart),
-                    exit = shrinkOut(shrinkTowards = Alignment.CenterStart)
-                ) {
-                    UserAvatar(
-                        modifier = Modifier
-//                            .padding(15.dp)
-                            .size(32.dp),
-                        user = null)
-//                    IconButton(
-//                        onClick = {
-//                            onValueChange(TextFieldValue())
-//                        }
-//                    ) {
-//
-////                        Icon(
-////                            Icons.Default.Clear,
-////                            contentDescription = "Clear search field",
-////                            modifier = Modifier
-////                                .padding(15.dp)
-////                                .size(24.dp)
-////                        )
-//                    }
-                }
-            },
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions,
-            singleLine = true,
-            maxLines = 1,
-            shape = RoundedCornerShape(5.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = MaterialTheme.colors.primary,
-                cursorColor = MaterialTheme.colors.primary,
-                leadingIconColor = MaterialTheme.colors.primary,
-                trailingIconColor = MaterialTheme.colors.primary,
-                backgroundColor = MaterialTheme.colors.surface,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            )
-        )
+//        TextInput(
+//            name = value,
+//            onValueChanged = { value ->
+//                if (value.text.length <= maxLength) onValueChange(value)
+//            },
+//            modifier = Modifier
+//                .testTag("SearchbarInput")
+//                .fillMaxWidth()
+//                .padding(4.dp),
+//            textStyle = TextStyle(color = MaterialTheme.colors.primary, fontSize = 18.sp),
+//            placeholder = { Text(text = hint) },
+//            leadingIcon = {
+//                Icon(
+//                    Icons.Default.Search,
+//                    contentDescription = "",
+//                    modifier = Modifier
+//                        .padding(15.dp)
+//                        .size(24.dp)
+//                )
+//            },
+//            trailingIcon = {
+//                AnimatedVisibility(
+//                    visible = value.text.isNotEmpty(),
+//                    enter = expandIn(expandFrom = Alignment.CenterStart),
+//                    exit = shrinkOut(shrinkTowards = Alignment.CenterStart)
+//                ) {
+//                    UserAvatar(
+//                        modifier = Modifier
+//                            .size(32.dp),
+//                        user = null)
+//                }
+//            },
+//            keyboardOptions = keyboardOptions,
+//            keyboardActions = keyboardActions,
+//            singleLine = true,
+//            maxLines = 1,
+//            shape = RoundedCornerShape(5.dp),
+//            colors = TextFieldDefaults.textFieldColors(
+//                textColor = MaterialTheme.colors.primary,
+//                cursorColor = MaterialTheme.colors.primary,
+//                leadingIconColor = MaterialTheme.colors.primary,
+//                trailingIconColor = MaterialTheme.colors.primary,
+//                backgroundColor = MaterialTheme.colors.surface,
+//                focusedIndicatorColor = Color.Transparent,
+//                unfocusedIndicatorColor = Color.Transparent,
+//                disabledIndicatorColor = Color.Transparent
+//            )
+//        )
     }
 }

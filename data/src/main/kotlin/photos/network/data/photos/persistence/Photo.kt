@@ -23,17 +23,19 @@ import photos.network.data.photos.repository.Photo as RepositoryPhoto
 
 @Entity(tableName = "photos")
 data class Photo(
+    val uuid: String? = null, // will be generated on the backend
     @PrimaryKey val filename: String,
     val imageUrl: String,
     val dateTaken: Long,
-    val uri: String? = null
+    val thumbnailFileUri: String? = null,
+    val originalFileUri: String? = null,
 ) {
     fun toPhoto(): RepositoryPhoto {
         return RepositoryPhoto(
             filename = filename,
             imageUrl = imageUrl,
             dateTaken = Instant.ofEpochMilli(dateTaken),
-            uri = uri?.let { Uri.parse(it) },
+            uri = originalFileUri?.let { Uri.parse(it) },
         )
     }
 }

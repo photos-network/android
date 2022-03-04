@@ -15,15 +15,27 @@
  */
 package photos.network.theme
 
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 
-data class AppShapes(
-    val small: Shape = RoundedCornerShape(25, 5, 0, 0),
-    val medium: Shape = RoundedCornerShape(8.dp),
-    val large: Shape = RoundedCornerShape(0.dp)
-)
+@Composable
+fun AppTheme(
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colors = if (!useDarkTheme) {
+        lightColors
+    } else {
+        darkColors
+    }
 
-internal val LocalShapes = staticCompositionLocalOf { AppShapes() }
+    MaterialTheme(
+        colorScheme = colors,
+        typography = AppTypography,
+        content = content
+    )
+}

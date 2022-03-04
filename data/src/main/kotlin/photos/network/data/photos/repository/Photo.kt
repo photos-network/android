@@ -29,6 +29,6 @@ data class Photo(
         filename = filename,
         imageUrl = imageUrl,
         dateTaken = dateTaken.toEpochMilli(),
-        uri = uri.toString(),
+        originalFileUri = uri.toString(),
     )
 }
