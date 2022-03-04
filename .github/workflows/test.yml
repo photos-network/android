@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  promote:
+    name: Promote an release to a specific track
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Decode Gradle Play Publisher Credentials
+        id: decode_play_store_credentials
+        uses: timheuer/base64-to-file@v1.1
+        with:
+          fileName: 'gradle_playstore_publisher_credentials.json'
+          fileDir: './'
+          encodedString: ${{ secrets.PLAYSTORE_CREDENTIALS }}
+
+      - name: print dirs
+        run: ls -alh
+
+      - name: print dirs
+        run: pwd
+
+      - name: print app
+        run: ls -alh app
+
+      - name: Publish release bundle
+        run: |
+          ./gradlew --console=plain app:publishBundle --artifact-dir app/build/outputs/bundle/release/app-release.aab
