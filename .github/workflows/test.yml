@@ -35,4 +35,4 @@ jobs:
 
       - name: Publish release bundle
         run: |
-          ./gradlew --console=plain app:publishBundle --artifact-dir app/build/outputs/bundle/release/app-release.aab
+          ./gradlew --console=plain app:bootstrapReleaseListing
