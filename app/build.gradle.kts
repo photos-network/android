@@ -75,7 +75,7 @@ android {
         // API 26 | required by: Java 8 Time API
         minSdk = 26
         targetSdk = 31
-        versionCode = 3
+        versionCode = 4
         versionName = "0.1.0"
 
         testInstrumentationRunner = "photos.network.PhotosNetworkJUnitRunner"
