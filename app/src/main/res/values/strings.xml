@@ -22,8 +22,11 @@
     <string name="folders_title">Folders</string>
     <string name="account_title">Account</string>
     <string name="app_logo_description">application logo</string>
-    <string name="server_available_description">photos instance is currently available</string>
-    <string name="server_unavailable_description">photos instance is currently not available</string>
-    <string name="server_inprogress_description">photos instance is currently processing some data</string>
+    <string name="server_available_description">Communication with the configured photos.network instance is fine.</string>
+    <string name="server_unavailable_description">The configured photos.network instance is currently not available.</string>
+    <string name="server_inprogress_description">Data is being transmitted with the configured photos.network instance.</string>
+    <string name="server_unauthorized_description">Communication to the configured photos.network instance is not authorized!</string>
+    <string name="privacy_filter_enabled_description">All items labeled as private are hidden</string>
+    <string name="privacy_filter_disabled_description">Hide items labeled as private in this view</string>
 
 </resources>

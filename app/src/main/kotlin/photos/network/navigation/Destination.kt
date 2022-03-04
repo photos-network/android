@@ -49,7 +49,7 @@ sealed class Destination(
     object Help : Destination("help", R.string.help_title, Icons.Filled.Help)
 
     fun isRootDestination(): Boolean {
-        return this == Home || this == Photos || this == Albums
+        return this == Photos || this == Albums || this == Folders
     }
 
     fun saveState(): Bundle {
@@ -61,8 +61,10 @@ sealed class Destination(
             return when (route) {
                 Home.route -> Home
                 Photos.route -> Photos
-                Details.route -> Details
                 Albums.route -> Albums
+                Account.route -> Account
+                Folders.route -> Folders
+                Details.route -> Details
                 Login.route -> Login
                 Setup.route -> Setup
                 Help.route -> Help

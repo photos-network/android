@@ -1,6 +1,6 @@
-package photos.network.account
+package photos.network.settings
 
-data class AccountUiState(
+data class SettingsUiState(
     val serverStatus: ServerStatus = ServerStatus.UNAVAILABLE,
 )
 
@@ -8,4 +8,5 @@ enum class ServerStatus {
     AVAILABLE(),
     UNAVAILABLE(),
     PROGRESS(),
+    UNAUTHORIZED(),
 }

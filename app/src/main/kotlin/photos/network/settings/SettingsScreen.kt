@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.account
+package photos.network.settings
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -28,10 +28,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -47,20 +47,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.getViewModel
 import photos.network.R
 import photos.network.theme.AppTheme
+import photos.network.ui.TextInput
 import photos.network.ui.components.AppLogo
 
 @Composable
-fun AccountScreen(
+fun SettingsScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
-    val viewmodel: AccountViewModel = getViewModel()
+    val viewmodel: SettingsViewModel = getViewModel()
 
     AccountContent(
         modifier = modifier,
@@ -74,13 +74,14 @@ fun AccountScreen(
 fun AccountContent(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    uiState: AccountUiState,
-    handleEvent: (event: AccountEvent) -> Unit,
+    uiState: SettingsUiState,
+    handleEvent: (event: SettingsEvent) -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         // header + icon
         Box(
             modifier = Modifier
+                .padding(bottom = 16.dp)
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             // header gradient
@@ -88,7 +89,7 @@ fun AccountContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .background(Color(0xFF5DA6E3))
+                    .background(MaterialTheme.colorScheme.primary)
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
@@ -98,35 +99,28 @@ fun AccountContent(
                         )
                     )
             )
-            Box(
+
+            // app name
+            Text(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .padding(top = 32.dp)
+                    .fillMaxWidth(),
+                text = stringResource(id = R.string.app_name_full),
+                style = MaterialTheme.typography.headlineLarge,
+                textAlign = TextAlign.Center,
+                color = Color.White
+            )
+
+            // logo with status indicator
+            AppLogo(
+                modifier = Modifier
                     .padding(top = 125.dp)
-            ) {
-                AppLogo(
-                    modifier = Modifier.align(Alignment.Center),
-                    size = 150.dp,
-                )
-            }
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
+                size = 150.dp,
+                serverStatus = uiState.serverStatus,
+            )
         }
-
-        // app name
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(id = R.string.app_name_full),
-            style = MaterialTheme.typography.headlineMedium,
-            fontSize = 22.sp,
-            textAlign = TextAlign.Center,
-        )
-
-        // description
-        Text(
-            modifier = Modifier
-                .padding(vertical = 16.dp)
-                .fillMaxWidth(),
-            text = stringResource(id = R.string.app_description),
-            textAlign = TextAlign.Center,
-        )
 
         // buttons
         Row(
@@ -141,14 +135,23 @@ fun AccountContent(
                         // TODO: handle click
                     }
             ) {
+
+                // Sync
                 IconButton(
                     modifier = Modifier
-                        .background(Color(0xFFECEDF0), CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
                         .align(Alignment.CenterHorizontally),
+                    enabled = false,
                     onClick = {}) {
-                    Icon(Icons.Filled.Phone, null)
+                    Icon(
+                        imageVector = Icons.Filled.Sync,
+                        contentDescription = null
+                    )
                 }
-                Text("Server")
+                Text(
+                    text = "Force Sync",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
             Column(
                 modifier = Modifier
@@ -159,12 +162,16 @@ fun AccountContent(
             ) {
                 IconButton(
                     modifier = Modifier
-                        .background(Color(0xFFECEDF0), CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
                         .align(Alignment.CenterHorizontally),
                     onClick = {}) {
                     Icon(Icons.Filled.Person, null)
                 }
-                Text("Edit Profile")
+                Text(
+                    text = "Edit Profile",
+                    color = MaterialTheme.colorScheme.onBackground
+
+                )
             }
             Column(
                 modifier = Modifier
@@ -175,13 +182,62 @@ fun AccountContent(
             ) {
                 IconButton(
                     modifier = Modifier
-                        .background(Color(0xFFECEDF0), CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
                         .align(Alignment.CenterHorizontally),
-                    onClick = {}) {
-                    Icon(Icons.Filled.List, null)
+                    onClick = {},
+                    enabled = false
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.List,
+                        contentDescription = null,
+                    )
                 }
-                Text("Activity Log")
+                Text(
+                    text = "Activity Log",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
+        }
+
+        Divider(
+            modifier = Modifier
+                .padding(horizontal = 32.dp, vertical = 8.dp)
+                .fillMaxWidth(),
+            color = MaterialTheme.colorScheme.outline
+        )
+
+        Column(
+            modifier = Modifier.padding(16.dp),
+        ) {
+
+            // status
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Add a photos.network instance configuration to sync your data with.",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center,
+            )
+
+            TextInput(
+                modifier = Modifier.padding(8.dp),
+                label = "Host",
+                value = "https://",
+                onValueChanged = {}
+            )
+
+            TextInput(
+                modifier = Modifier.padding(8.dp),
+                label = "Client ID",
+                value = "",
+                onValueChanged = {}
+            )
+
+            TextInput(
+                modifier = Modifier.padding(8.dp),
+                label = "Client Secret",
+                value = "",
+                onValueChanged = {}
+            )
         }
     }
 
@@ -192,17 +248,17 @@ fun AccountContent(
     "Account",
     showSystemUi = true,
     showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
+    uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Preview(
     "Account • Dark",
     showSystemUi = true,
     showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
+    uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
 private fun PreviewAccount(
-    @PreviewParameter(PreviewAccountProvider::class) uiState: AccountUiState,
+    @PreviewParameter(PreviewAccountProvider::class) uiState: SettingsUiState,
 ) {
     AppTheme {
         AccountContent(
@@ -212,11 +268,11 @@ private fun PreviewAccount(
     }
 }
 
-internal class PreviewAccountProvider : PreviewParameterProvider<AccountUiState> {
+internal class PreviewAccountProvider : PreviewParameterProvider<SettingsUiState> {
     override val values = sequenceOf(
-        AccountUiState(serverStatus = ServerStatus.PROGRESS),
-        AccountUiState(serverStatus = ServerStatus.UNAVAILABLE),
-        AccountUiState(serverStatus = ServerStatus.AVAILABLE),
+        SettingsUiState(serverStatus = ServerStatus.PROGRESS),
+        SettingsUiState(serverStatus = ServerStatus.UNAVAILABLE),
+        SettingsUiState(serverStatus = ServerStatus.AVAILABLE),
     )
     override val count: Int = values.count()
 }

@@ -21,18 +21,17 @@ import androidx.work.WorkerParameters
 import photos.network.data.photos.repository.PhotoRepository
 
 /**
- * Synchronizes all remote photos from a photos.network instance with the local database.
- *
- * - Uploading local photos if not synced
- * * Downloading remote photos if not synced
- */
-class SyncRemotePhotosWorker(
+ * Uploading non-synced photos from the device to a photos.network instance.
+ **/
+class UploadPhotosWorker(
     application: Application,
     workerParameters: WorkerParameters,
     private val photoRepository: PhotoRepository,
 ) : CoroutineWorker(application.applicationContext, workerParameters) {
     override suspend fun doWork(): Result {
-        // TODO: Not yet implemented!
+        // TODO: iterate through all local photos without an uuid
+        // TODO: upload file
+        // TODO: update file in database (add uuid)
 
         return Result.failure()
     }

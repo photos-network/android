@@ -17,7 +17,7 @@ package photos.network
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import photos.network.account.AccountViewModel
+import photos.network.settings.SettingsViewModel
 import photos.network.details.DetailViewModel
 import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
 import photos.network.domain.user.usecase.LogoutUseCase
@@ -63,6 +63,6 @@ val appModule = module {
         )
     }
     viewModel {
-        AccountViewModel()
+        SettingsViewModel()
     }
 }

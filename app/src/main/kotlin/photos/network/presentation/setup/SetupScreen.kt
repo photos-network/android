@@ -127,7 +127,7 @@ fun SetupScreen(
             modifier = Modifier.testTag("host").fillMaxWidth(),
             enabled = !isConnectionCheckInProgress,
             label = stringResource(id = R.string.setup_host_label),
-            name = host ?: "",
+            value = host ?: "",
             onValueChanged = {
                 onHostChanged(it)
             }
@@ -136,7 +136,7 @@ fun SetupScreen(
         TextInput(
             modifier = Modifier.testTag("clientID").fillMaxWidth(),
             label = stringResource(id = R.string.setup_client_id_label),
-            name = clientId ?: "",
+            value = clientId ?: "",
             enabled = !isConnectionCheckInProgress,
             onValueChanged = { newClientId ->
                 onClientIdChanged(newClientId)
@@ -146,7 +146,7 @@ fun SetupScreen(
         TextInput(
             modifier = Modifier.testTag("clientSecret").fillMaxWidth(),
             label = stringResource(id = R.string.setup_client_secret_label),
-            name = clientSecret ?: "",
+            value = clientSecret ?: "",
             enabled = !isConnectionCheckInProgress,
             onValueChanged = { newClientSecret ->
                 onClientSecretChanged(newClientSecret)

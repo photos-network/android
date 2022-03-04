@@ -23,7 +23,7 @@ import photos.network.data.photos.repository.Photo as RepositoryPhoto
 
 @Entity(tableName = "photos")
 data class Photo(
-    // TODO: use uuid
+    val uuid: String? = null, // will be generated on the backend
     @PrimaryKey val filename: String,
     val imageUrl: String,
     val dateTaken: Long,
