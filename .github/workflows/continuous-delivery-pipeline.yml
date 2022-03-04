@@ -225,6 +225,15 @@ jobs:
           fileDir: './'
           encodedString: ${{ secrets.PLAYSTORE_CREDENTIALS }}
 
+      - name: print dirs
+        run: ls -alh
+
+      - name: print dirs
+        run: pwd
+
+      - name: print app
+        run: ls -alh app
+
       - name: Publish release bundle
         run: |
           ./gradlew --console=plain app:publishBundle --artifact-dir app/build/outputs/bundle/release/app-release.aab
