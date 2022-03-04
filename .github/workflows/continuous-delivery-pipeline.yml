@@ -229,7 +229,7 @@ jobs:
 
       - name: Publish bundle
         run: |
-          ./gradlew --console=plain app:publishBundle
+          ./gradlew --console=plain app:publishBundle --artifact-dir app/build/outputs/bundle/release/app-release.aab
 
   # Promote an already existing app to the next higher track
   release:
