@@ -1,3 +1,6 @@
+import com.github.triplet.gradle.androidpublisher.ResolutionStrategy
+import com.github.triplet.gradle.androidpublisher.ReleaseStatus
+
 plugins {
     id("com.android.application") version "7.0.4"
     id("com.diffplug.spotless") version "6.0.4"
@@ -34,14 +37,12 @@ spotless {
 }
 
 play {
-    // credentials
     serviceAccountCredentials.set(rootProject.file("gradle_playstore_publisher_credentials.json"))
-
-    // publish defaults
     defaultToAppBundles.set(true)
-    track.set("internal")
-    userFraction.set(0.5)
-    updatePriority.set(2)
+
+    promoteTrack.set("alpha")
+    resolutionStrategy.set(ResolutionStrategy.AUTO)
+    releaseStatus.set(ReleaseStatus.DRAFT)
 }
 
 marathon {
@@ -74,7 +75,7 @@ android {
         // API 26 | required by: Java 8 Time API
         minSdk = 26
         targetSdk = 31
-        versionCode = 2
+        versionCode = 3
         versionName = "0.1.0"
 
         testInstrumentationRunner = "photos.network.PhotosNetworkJUnitRunner"
@@ -89,13 +90,6 @@ android {
                     )
                 )
             }
-        }
-    }
-
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-            isReturnDefaultValues = true
         }
     }
 
@@ -116,12 +110,15 @@ android {
 
     buildTypes {
         debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-DEBUG"
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("debug")
         }
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("release")
         }
@@ -135,6 +132,9 @@ android {
         renderScript = false
         resValues = false
         shaders = false
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.1.0-alpha04"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -154,8 +154,12 @@ android {
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.ui.ExperimentalComposeUiApi"
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=com.google.accompanist.pager.ExperimentalPagerApi"
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.0-alpha04"
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
     }
 
     packagingOptions {
