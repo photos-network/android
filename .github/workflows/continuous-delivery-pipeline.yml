@@ -213,10 +213,6 @@ jobs:
           fileName: 'android_release.keystore'
           encodedString: ${{ secrets.ANDROID_KEYSTORE }}
 
-      - name: Build release bundle
-        run: |
-          ./gradlew --console=plain -PreleaseKeystore=${{ steps.decode_keystore.outputs.filePath }} -PreleaseStorePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} -PreleaseKeyAlias=${{ secrets.ANDROID_KEYSTORE_KEY_ALIAS }} -PreleaseKeyPassword=${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }} app:bundle
-
       - name: Decode Gradle Play Publisher Credentials
         id: decode_play_store_credentials
         uses: timheuer/base64-to-file@v1.1
@@ -225,14 +221,9 @@ jobs:
           fileDir: './'
           encodedString: ${{ secrets.PLAYSTORE_CREDENTIALS }}
 
-      - name: print dirs
-        run: ls -alh
-
-      - name: print dirs
-        run: pwd
-
-      - name: print app
-        run: ls -alh app
+      - name: Build release bundle
+        run: |
+          ./gradlew --console=plain -PreleaseKeystore=${{ steps.decode_keystore.outputs.filePath }} -PreleaseStorePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} -PreleaseKeyAlias=${{ secrets.ANDROID_KEYSTORE_KEY_ALIAS }} -PreleaseKeyPassword=${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }} app:bundle
 
       - name: Publish release bundle
         run: |
