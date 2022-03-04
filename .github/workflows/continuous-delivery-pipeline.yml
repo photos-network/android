@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    tags:
-      - '*'
   pull_request:
     types: [opened, synchronize, reopened, edited]
 
@@ -230,40 +228,3 @@ jobs:
       - name: Publish bundle
         run: |
           ./gradlew --console=plain app:publishBundle --artifact-dir app/build/outputs/bundle/release/app-release.aab
-
-  # Promote an already existing app to the next higher track
-  release:
-    needs: [ unit_tests, android_tests ]
-    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-
-      - name: Cache between builds
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Decode Gradle Play Publisher Credentials
-        id: decode_play_store_credentials
-        uses: timheuer/base64-to-file@v1
-        with:
-          fileName: 'gradle_playstore_publisher_credentials.json'
-          encodedString: ${{ secrets.PLAYSTORE_CREDENTIALS }}
-
-      - name: Build Bundle
-        run: |
-          ./gradlew --console=plain app:promoteArtifact
