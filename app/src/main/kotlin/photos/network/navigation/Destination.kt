@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoAlbum
 import androidx.compose.material.icons.filled.Settings
@@ -40,6 +41,7 @@ sealed class Destination(
     object Home : Destination("home", R.string.home_title, Icons.Filled.House)
     object Photos : Destination("photos", R.string.photos_title, Icons.Filled.Photo)
     object Albums : Destination("albums", R.string.albums_title, Icons.Filled.PhotoAlbum)
+    object Account : Destination("account", R.string.account_title, Icons.Filled.People)
     object Folders : Destination("folders", R.string.folders_title, Icons.Filled.Folder)
     object Details : Destination("details", R.string.details_title, Icons.Filled.Photo)
     object Login : Destination("login", R.string.login_title, Icons.Filled.Lock)

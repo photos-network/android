@@ -71,7 +71,7 @@ fun PhotosApp(
     }
 
     CompositionLocalProvider(LocalAppVersion provides BuildConfig.VERSION_NAME) {
-        AppTheme(colors = if (isSystemInDarkTheme()) darkColors() else lightColors()) {
+        AppTheme {
             CurrentUserHost {
                 Home(
                     modifier = Modifier.fillMaxSize(),

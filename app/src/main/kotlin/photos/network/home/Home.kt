@@ -23,22 +23,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Shield
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
@@ -63,6 +63,7 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.insets.systemBarsPadding
 import org.koin.androidx.compose.getViewModel
+import photos.network.account.AccountScreen
 import photos.network.details.DetailScreen
 import photos.network.home.photos.PhotosScreen
 import photos.network.navigation.Destination
@@ -87,7 +88,7 @@ fun Home(
     val currentDestination by derivedStateOf {
         Destination.fromString(navBackStackEntry.value?.destination?.route)
     }
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
+//    val scaffoldState: ScaffoldState = rememberScaffoldState()
     val scrollState: LazyListState = rememberLazyListState()
 
     val viewmodel: HomeViewModel = getViewModel()
@@ -98,36 +99,35 @@ fun Home(
             .statusBarsPadding()
             .navigationBarsPadding()
             .testTag("HomeScreenTag"),
-        scaffoldState = scaffoldState,
+//        scaffoldState = scaffoldState,
         snackbarHost = {
-            SnackbarHost(
-                hostState = it,
-                modifier = Modifier.systemBarsPadding()
-            )
+//            SnackbarHost(
+//                hostState = it,
+//                modifier = Modifier.systemBarsPadding()
+//            )
         },
         topBar = {
-            TopAppBar(
+            MediumTopAppBar(
                 modifier = Modifier.padding(top = 36.dp),
-                elevation = if (scrollState.firstVisibleItemIndex < 0 || scrollState.firstVisibleItemScrollOffset < 0) 0.dp else 4.dp,
+                //elevation = if (scrollState.firstVisibleItemIndex < 0 || scrollState.firstVisibleItemScrollOffset < 0) 0.dp else 4.dp,
                 title = {
                     UserAvatar(
                         modifier = Modifier
                             .clickable {
-                                viewmodel.handleEvent(HomeEvent.LoginEvent)
-                                // TODO: open account sheet
+                                navController.navigate(Destination.Account.route)
                             }
                             .size(32.dp),
                         user = null
                     )
                 },
                 actions = {
-                    IconButton(
-                        onClick = {
-                            // TODO: show notifications
-                        }
-                    ) {
-                        Icon(Icons.Outlined.Search, null)
-                    }
+//                    IconButton(
+//                        onClick = {
+//                            // TODO: show notifications
+//                        }
+//                    ) {
+//                        Icon(Icons.Outlined.Search, null)
+//                    }
                     IconButton(
                         onClick = {
                             viewmodel.handleEvent(HomeEvent.TogglePrivacyEvent)
@@ -139,22 +139,22 @@ fun Home(
                             Icon(Icons.Default.Shield, null)
                         }
                     }
-                    IconButton(
-                        onClick = {
-                            // TODO: show SettingsScreen
-                        }
-                    ) {
-                        Icon(Icons.Outlined.MoreVert, null)
-                    }
+//                    IconButton(
+//                        onClick = {
+//                            // TODO: show SettingsScreen
+//                        }
+//                    ) {
+//                        Icon(Icons.Outlined.MoreVert, null)
+//                    }
                 },
-                backgroundColor = MaterialTheme.colors.surface,
+//                backgroundColor = MaterialTheme.colors.surface,
             )
         },
         bottomBar = {
             if (currentDestination.isRootDestination()) {
-                BottomNavigation(modifier = Modifier.padding(bottom = 48.dp)) {
+                NavigationBar(modifier = Modifier.padding(bottom = 48.dp)) {
                     // Photos
-                    BottomNavigationItem(
+                    NavigationBarItem(
                         icon = { Icon(Destination.Photos.icon, contentDescription = null) },
                         label = { Text(stringResource(Destination.Photos.resourceId)) },
                         selected = currentDestination == Destination.Photos,
@@ -164,7 +164,7 @@ fun Home(
                     )
 
                     // Albums
-                    BottomNavigationItem(
+                    NavigationBarItem(
                         icon = { Icon(Destination.Albums.icon, contentDescription = null) },
                         label = { Text(stringResource(Destination.Albums.resourceId)) },
                         selected = currentDestination == Destination.Albums,
@@ -174,7 +174,7 @@ fun Home(
                     )
 
                     // Folders
-                    BottomNavigationItem(
+                    NavigationBarItem(
                         icon = { Icon(Destination.Albums.icon, contentDescription = null) },
                         label = { Text(stringResource(Destination.Folders.resourceId)) },
                         selected = currentDestination == Destination.Folders,
@@ -194,6 +194,7 @@ fun Home(
                     composable(route = Destination.Photos.route) { PhotosScreen(navController = navController) }
                     composable(route = Destination.Albums.route) { AlbumsScreen(navController = navController) }
                     composable(route = Destination.Folders.route) { FoldersScreen(navController = navController) }
+                    composable(route = Destination.Account.route) { AccountScreen(navController = navController) }
                     composable(route = Destination.Setup.route) { SetupScreen(navController = navController) }
                     composable(route = Destination.Login.route) { LoginScreen(navController = navController) }
                     composable(route = Destination.Help.route) { HelpScreen(navController = navController) }

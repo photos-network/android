@@ -24,8 +24,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,7 +49,7 @@ import photos.network.theme.AppTheme
 fun UserAvatar(
     modifier: Modifier = Modifier,
     user: User?,
-    color: Color = MaterialTheme.colors.primary
+    color: Color = MaterialTheme.colorScheme.primary
 ) {
     Box(
         modifier = modifier
@@ -87,8 +87,8 @@ fun UserAvatar(
                         .padding(6.dp),
                     textAlign = TextAlign.Center,
                     text = textContent,
-                    color = MaterialTheme.colors.onPrimary,
-                    style = MaterialTheme.typography.subtitle2
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    style = MaterialTheme.typography.headlineSmall
                 )
             }
         } else {
@@ -99,8 +99,8 @@ fun UserAvatar(
                     .padding(6.dp),
                 textAlign = TextAlign.Center,
                 text = "--",
-                color = MaterialTheme.colors.onPrimary,
-                style = MaterialTheme.typography.subtitle2
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.headlineSmall
             )
         }
     }

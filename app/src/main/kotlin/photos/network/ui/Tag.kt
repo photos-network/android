@@ -22,9 +22,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.runtime.Composable
@@ -47,7 +47,7 @@ fun Tag(
     Row(
         modifier = Modifier
             .background(
-                color = MaterialTheme.colors.secondaryVariant,
+                color = MaterialTheme.colorScheme.secondaryContainer,
                 shape = RoundedCornerShape(topStartPercent = 50, bottomStartPercent = 1)
             )
             .clip(RoundedCornerShape(topStartPercent = 50))
@@ -65,8 +65,8 @@ fun Tag(
         Text(
             modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
             text = tag,
-            fontSize = MaterialTheme.typography.caption.fontSize,
-            color = MaterialTheme.colors.onSecondary
+            fontSize = MaterialTheme.typography.labelSmall.fontSize,
+            color = MaterialTheme.colorScheme.onSecondary
         )
     }
 }

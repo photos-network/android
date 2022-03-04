@@ -17,8 +17,7 @@ package photos.network.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -32,12 +31,12 @@ fun TextInput(
     onValueChanged: (String) -> Unit /* event */
 ) {
     Column {
-        TextField(
+        TextInput(
             modifier = modifier.padding(vertical = 8.dp),
             enabled = enabled,
-            value = name,
-            onValueChange = onValueChanged,
-            label = { Text(label ?: "") }
+            name = name,
+            onValueChanged = onValueChanged,
+            label = label ?: ""
         )
     }
 }

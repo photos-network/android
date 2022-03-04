@@ -29,6 +29,9 @@ interface PhotoDao {
     @Query("DELETE FROM photos")
     suspend fun deleteAllPhotos()
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(vararg photos: Photo)
+
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun updatePhoto(photo: Photo)
 }

@@ -23,10 +23,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Button
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -111,26 +111,24 @@ fun SetupScreen(
 
         Text(
             text = "Welcome",
-            style = AppTheme.typography.h1
+            style = MaterialTheme.typography.headlineLarge
         )
 
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),
             textAlign = TextAlign.Center,
             text = "Please enter the connection details of your photos.network instance.",
-            style = AppTheme.typography.body
+            style = MaterialTheme.typography.bodyMedium
         )
 
         Spacer(Modifier.size(padding))
 
-        TextField(
+        TextInput(
             modifier = Modifier.testTag("host").fillMaxWidth(),
             enabled = !isConnectionCheckInProgress,
-            label = {
-                Text(stringResource(id = R.string.setup_host_label))
-            },
-            value = host ?: "",
-            onValueChange = {
+            label = stringResource(id = R.string.setup_host_label),
+            name = host ?: "",
+            onValueChanged = {
                 onHostChanged(it)
             }
         )
@@ -175,7 +173,7 @@ fun SetupScreen(
         Text(
             modifier = Modifier.clickable(onClick = onHelpClick),
             text = "Where to find these informations?",
-            style = AppTheme.typography.subtitle
+            style = MaterialTheme.typography.labelSmall
         )
     }
 }

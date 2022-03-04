@@ -24,9 +24,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.GridItemSpan
 import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import java.time.Instant
 import java.time.ZoneOffset
+import logcat.LogPriority
 import logcat.logcat
 import photos.network.R
 import photos.network.data.photos.repository.Photo
@@ -47,11 +49,14 @@ fun PhotoGrid(
     photos: List<Photo>,
     onSelectItem: (id: String) -> Unit,
 ) {
+    val lazyListState = rememberLazyListState()
+
     LazyVerticalGrid(
-        cells = GridCells.Adaptive(90.dp),
-        modifier
+        state = lazyListState,
+        modifier = modifier
             .fillMaxSize()
             .padding(4.dp),
+        cells = GridCells.Adaptive(90.dp),
     ) {
         // group by year
         val groupedByYear = photos.groupBy {
@@ -67,7 +72,7 @@ fun PhotoGrid(
                 item(span = { GridItemSpan(4) }) {
                     Text(
                         text = yearOfFirst.toString(),
-                        style = MaterialTheme.typography.body1
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
@@ -88,7 +93,7 @@ fun PhotoGrid(
 
                 // month header
                 item(span = { GridItemSpan(4) }) {
-                    Text(text = title, style = MaterialTheme.typography.body2)
+                    Text(text = title, style = MaterialTheme.typography.bodyLarge)
                 }
 
                 items(photos.size) { index: Int ->
