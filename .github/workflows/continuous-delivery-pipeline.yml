@@ -213,7 +213,6 @@ jobs:
         uses: timheuer/base64-to-file@v1.1
         with:
           fileName: 'android_release.keystore'
-          fileDir: './'
           encodedString: ${{ secrets.ANDROID_KEYSTORE }}
 
       - name: Build release bundle
