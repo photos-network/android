@@ -24,7 +24,8 @@ class PhotosViewModel(
             getPhotosUseCase().collect { photos ->
 
                 uiState.value = uiState.value.copy(
-                    photos = photos
+                    photos = photos,
+                    isLoading = false
                 )
             }
         }

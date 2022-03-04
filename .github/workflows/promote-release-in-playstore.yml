@@ -1,6 +1,9 @@
 name: Promote release version within Google Play
 
 on:
+  push:
+    tags:
+      - '*'
   workflow_dispatch:
     inputs:
       fromTrack:
@@ -34,7 +37,7 @@ jobs:
     name: Promote an release to a specific track
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up JDK 11
@@ -49,6 +52,6 @@ jobs:
           fileName: 'gradle_playstore_publisher_credentials.json'
           encodedString: ${{ secrets.ANDROID_KEYSTORE }}
 
-      - name: Build Bundle
+      - name: Promote release artifact
         run: |
           ./gradlew --console=plain app:promoteArtifact --from-track ${{ github.event.inputs.fromTrack }} --promote-track ${{ github.event.inputs.promoteTrack }} --user-fraction ${{ github.event.inputs.userFraction }}

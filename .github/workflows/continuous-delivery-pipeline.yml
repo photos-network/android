@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    tags:
-      - '*'
   pull_request:
     types: [opened, synchronize, reopened, edited]
 
@@ -15,7 +13,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up JDK 11
@@ -40,7 +38,7 @@ jobs:
         run: |
           ./gradlew --console=plain detekt
 
-      - name: Upload reports
+      - name: Upload detekt reports
         uses: actions/upload-artifact@v2
         with:
           name: detekt
@@ -51,7 +49,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up JDK 11
@@ -73,7 +71,7 @@ jobs:
         run: |
           ./gradlew --console=plain lint
 
-      - name: Upload reports
+      - name: Upload lint reports
         uses: actions/upload-artifact@v2
         with:
           name: lint
@@ -88,7 +86,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up JDK 11
@@ -106,11 +104,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: QA
+      - name: Run debug unit tests
         run: |
-          ./gradlew --console=plain test
+          ./gradlew --console=plain testDebugUnitTest
 
-      - name: Upload reports
+      - name: Upload test reports
         uses: actions/upload-artifact@v2
         with:
           name: tests
@@ -190,7 +188,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up JDK 11
@@ -210,59 +208,23 @@ jobs:
 
       - name: Decode Android Keystore
         id: decode_keystore
-        uses: timheuer/base64-to-file@v1
+        uses: timheuer/base64-to-file@v1.1
         with:
           fileName: 'android_release.keystore'
           encodedString: ${{ secrets.ANDROID_KEYSTORE }}
 
-      - name: Release from preview
+      - name: Decode Gradle Play Publisher Credentials
+        id: decode_play_store_credentials
+        uses: timheuer/base64-to-file@v1.1
+        with:
+          fileName: 'gradle_playstore_publisher_credentials.json'
+          fileDir: './'
+          encodedString: ${{ secrets.PLAYSTORE_CREDENTIALS }}
+
+      - name: Build release bundle
         run: |
           ./gradlew --console=plain -PreleaseKeystore=${{ steps.decode_keystore.outputs.filePath }} -PreleaseStorePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} -PreleaseKeyAlias=${{ secrets.ANDROID_KEYSTORE_KEY_ALIAS }} -PreleaseKeyPassword=${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }} app:bundle
 
-      - name: Decode Gradle Play Publisher Credentials
-        id: decode_play_store_credentials
-        uses: timheuer/base64-to-file@v1
-        with:
-          fileName: 'gradle_playstore_publisher_credentials.json'
-          encodedString: ${{ secrets.PLAYSTORE_CREDENTIALS }}
-
-      - name: Build Bundle
+      - name: Publish release bundle
         run: |
-          ./gradlew --console=plain app:publishBundle
-
-  # Promote an already existing app to the next higher track
-  release:
-    needs: [ unit_tests, android_tests ]
-    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-
-      - name: Cache between builds
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Decode Gradle Play Publisher Credentials
-        id: decode_play_store_credentials
-        uses: timheuer/base64-to-file@v1
-        with:
-          fileName: 'gradle_playstore_publisher_credentials.json'
-          encodedString: ${{ secrets.PLAYSTORE_CREDENTIALS }}
-
-      - name: Build Bundle
-        run: |
-          ./gradlew --console=plain app:promoteArtifact
+          ./gradlew --console=plain app:publishBundle --artifact-dir app/build/outputs/bundle/release/app-release.aab
