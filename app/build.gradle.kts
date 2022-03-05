@@ -42,7 +42,7 @@ play {
 
     promoteTrack.set("alpha")
     resolutionStrategy.set(ResolutionStrategy.AUTO)
-    releaseStatus.set(ReleaseStatus.DRAFT)
+    releaseStatus.set(ReleaseStatus.COMPLETED)
 }
 
 marathon {
