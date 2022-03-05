@@ -37,11 +37,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -54,6 +59,7 @@ import photos.network.R
 import photos.network.theme.AppTheme
 import photos.network.ui.TextInput
 import photos.network.ui.components.AppLogo
+import photos.network.ui.components.DecoratedTextField
 
 @Composable
 fun SettingsScreen(
@@ -218,25 +224,34 @@ fun AccountContent(
                 textAlign = TextAlign.Center,
             )
 
-            TextInput(
-                modifier = Modifier.padding(8.dp),
+            DecoratedTextField(
+                modifier = Modifier.padding(vertical = 8.dp),
                 label = "Host",
-                value = "https://",
-                onValueChanged = {}
+                value = uiState.host,
+                hint = "https://",
+                onValueChanged = {
+                    handleEvent(SettingsEvent.HostChanged(it))
+                }
             )
 
-            TextInput(
-                modifier = Modifier.padding(8.dp),
+            DecoratedTextField(
+                modifier = Modifier.padding(vertical = 8.dp),
                 label = "Client ID",
-                value = "",
-                onValueChanged = {}
+                value = uiState.clientId,
+                onValueChanged = {
+                    handleEvent(SettingsEvent.ClientIdChanged(it))
+                },
+                visualTransformation = PasswordVisualTransformation()
             )
 
-            TextInput(
-                modifier = Modifier.padding(8.dp),
+            DecoratedTextField(
+                modifier = Modifier.padding(vertical = 8.dp),
                 label = "Client Secret",
-                value = "",
-                onValueChanged = {}
+                value = uiState.clientSecret,
+                onValueChanged = {
+                    handleEvent(SettingsEvent.ClientSecretChanged(it))
+                },
+                visualTransformation = PasswordVisualTransformation()
             )
         }
     }

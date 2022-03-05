@@ -8,11 +8,30 @@ class SettingsViewModel: ViewModel() {
 
     fun handleEvent(event: SettingsEvent) {
         when (event) {
-            SettingsEvent.ForceSync -> forceSync()
+            SettingsEvent.ForceSync -> {}
+            SettingsEvent.EditProfile -> {}
+            is SettingsEvent.HostChanged -> updateHost(event.newHost)
+            is SettingsEvent.ClientIdChanged -> updateHost(event.newId)
+            is SettingsEvent.ClientSecretChanged -> updateHost(event.newSecret)
+            SettingsEvent.Login -> {}
+            SettingsEvent.ToggleActivityLog -> {}
         }
     }
 
-    private fun forceSync() {
+    private fun updateHost(host: String) {
+        uiState.value = uiState.value.copy(
+            host = host
+        )
+    }
 
+    private fun updateClientId(clientId: String) {
+        uiState.value = uiState.value.copy(
+            clientId = clientId
+        )
+    }
+    private fun updateClientSecret(clientSecret: String) {
+        uiState.value = uiState.value.copy(
+            clientSecret = clientSecret
+        )
     }
 }
