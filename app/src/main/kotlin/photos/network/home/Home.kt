@@ -99,6 +99,7 @@ fun Home(
                     navigationIcon = {
                         AppLogo(
                             modifier = Modifier
+                                .padding(horizontal = 8.dp)
                                 .clickable {
                                     navController.navigate(Destination.Account.route)
                                 },
