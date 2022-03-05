@@ -153,6 +153,7 @@ android {
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api"
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.ui.ExperimentalComposeUiApi"
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=com.google.accompanist.pager.ExperimentalPagerApi"
+        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi"
     }
 
     testOptions {

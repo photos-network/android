@@ -15,16 +15,41 @@
  */
 package photos.network.home.photos
 
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.PermissionRequired
+import com.google.accompanist.permissions.rememberPermissionState
 import java.time.Instant
 import org.koin.androidx.compose.getViewModel
 import photos.network.data.photos.repository.Photo
@@ -37,13 +62,75 @@ fun PhotosScreen(
     navController: NavHostController = rememberNavController(),
 ) {
     val viewmodel: PhotosViewModel = getViewModel()
+    val context = LocalContext.current
+    val permissionState = rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
 
-    PhotosContent(
-        modifier = modifier,
-        navController = navController,
-        uiState = viewmodel.uiState.value,
-        handleEvent = viewmodel::handleEvent,
-    )
+    // Track if the user doesn't want to see the rationale any more.
+    var doNotShowRationale by rememberSaveable { mutableStateOf(false) }
+
+    PermissionRequired(
+        permissionState = permissionState,
+        permissionNotGrantedContent = {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    text = "To show images stored on this device, the permission to read external storage is mandatory. Please grant the permission."
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { permissionState.launchPermissionRequest() }) {
+                    Text("Grant access")
+                }
+            }
+        },
+        permissionNotAvailableContent = {
+            // permission denied. Please, grant access on the Settings screen.
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    text = "Read external storage is important to show images on this device. Please grant the permission."
+                )
+                Button(onClick = { navigateToPermissionSettings(context) }) {
+                    Text("Open system settings")
+                }
+            }
+        }
+    ) {
+        PhotosContent(
+            modifier = modifier,
+            navController = navController,
+            uiState = viewmodel.uiState.value,
+            handleEvent = viewmodel::handleEvent,
+        )
+    }
+}
+
+/**
+ * Open app settings screen to adjust permissions
+ */
+private fun navigateToPermissionSettings(context: Context) {
+    val intent = Intent(
+        ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.parse("package:${context.packageName}")
+    ).apply {
+        addCategory(Intent.CATEGORY_DEFAULT)
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+    }
+    startActivity(context, intent, null)
 }
 
 @Composable
@@ -53,6 +140,10 @@ fun PhotosContent(
     uiState: PhotosUiState,
     handleEvent: (event: PhotosEvent) -> Unit,
 ) {
+    // TODO: check permission first
+    handleEvent(PhotosEvent.StartLocalPhotoSyncEvent)
+
+
     if (uiState.isLoading) {
         Text(
             modifier = Modifier.testTag("LOADING_SPINNER"),
