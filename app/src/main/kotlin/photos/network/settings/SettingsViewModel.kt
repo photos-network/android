@@ -11,8 +11,8 @@ class SettingsViewModel: ViewModel() {
             SettingsEvent.ForceSync -> {}
             SettingsEvent.EditProfile -> {}
             is SettingsEvent.HostChanged -> updateHost(event.newHost)
-            is SettingsEvent.ClientIdChanged -> updateHost(event.newId)
-            is SettingsEvent.ClientSecretChanged -> updateHost(event.newSecret)
+            is SettingsEvent.ClientIdChanged -> updateClientId(event.newId)
+            is SettingsEvent.ClientSecretChanged -> updateClientSecret(event.newSecret)
             SettingsEvent.Login -> {}
             SettingsEvent.ToggleActivityLog -> {}
         }
