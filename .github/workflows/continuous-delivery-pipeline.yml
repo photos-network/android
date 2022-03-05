@@ -184,7 +184,7 @@ jobs:
   # upload an android bundle to google play store into the internal test track
   deployment:
     needs: [ unit_tests, android_tests ]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/development'
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
