@@ -7,33 +7,37 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import photos.network.domain.photos.usecase.GetPhotosUseCase
 import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
 
 class PhotosViewModel(
     application: Application,
     getPhotosUseCase: GetPhotosUseCase,
-    startPhotosSyncUseCase: StartPhotosSyncUseCase,
+    private val startPhotosSyncUseCase: StartPhotosSyncUseCase,
 ) : AndroidViewModel(application) {
     val uiState = mutableStateOf(PhotosUiState())
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            startPhotosSyncUseCase()
-
             getPhotosUseCase().collect { photos ->
-
-                uiState.value = uiState.value.copy(
-                    photos = photos,
-                    isLoading = false
-                )
+                withContext(Dispatchers.Main) {
+                    uiState.value = uiState.value.copy(
+                        photos = photos,
+                        isLoading = false
+                    )
+                }
             }
         }
     }
 
     fun handleEvent(event: PhotosEvent) {
         when (event) {
-            PhotosEvent.DeletePhotoEvent -> TODO()
+            PhotosEvent.StartLocalPhotoSyncEvent -> startLocalPhotoSync()
         }
+    }
+
+    private fun startLocalPhotoSync() {
+        startPhotosSyncUseCase()
     }
 }
