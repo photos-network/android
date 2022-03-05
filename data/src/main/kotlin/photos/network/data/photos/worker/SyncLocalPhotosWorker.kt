@@ -104,15 +104,15 @@ class SyncLocalPhotosWorker(
             val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)
             val dateTakenColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
 
-            val latColumn = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val latColumn = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
                 cursor.getColumnIndexOrThrow(MediaStore.Images.Media.LATITUDE)
             } else {
                 -1
             }
-            val longColumn = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                -1
-            } else {
+            val longColumn = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
                 cursor.getColumnIndexOrThrow(MediaStore.Images.Media.LONGITUDE)
+            } else {
+                -1
             }
 
 
@@ -169,19 +169,21 @@ class SyncLocalPhotosWorker(
                 // Image location
                 var latLong = FloatArray(2)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    photoUri = MediaStore.setRequireOriginal(photoUri)
-                    val stream: InputStream? =
-                        applicationContext.contentResolver.openInputStream(photoUri)
-                    if (stream == null) {
-                        logcat(LogPriority.WARN) { "Got a null input stream for $photoUri" }
-                        continue
-                    }
-
-                    val exifInterface = ExifInterface(stream)
-                    // If it returns null, fall back to {0.0, 0.0}.
-                    exifInterface.getLatLong(latLong)
-
-                    stream.close()
+                    // TODO: ACCESS_MEDIA_LOCATION permission required
+                    logcat(LogPriority.WARN) { "Implement ACCESS_MEDIA_LOCATION permission for exif location" }
+//                    photoUri = MediaStore.setRequireOriginal(photoUri)
+//                    val stream: InputStream? =
+//                        applicationContext.contentResolver.openInputStream(photoUri)
+//                    if (stream == null) {
+//                        logcat(LogPriority.WARN) { "Got a null input stream for $photoUri" }
+//                        continue
+//                    }
+//
+//                    val exifInterface = ExifInterface(stream)
+//                    // If it returns null, fall back to {0.0, 0.0}.
+//                    exifInterface.getLatLong(latLong)
+//
+//                    stream.close()
                 } else {
                     if (latColumn != -1 && longColumn != -1) {
                         latLong = floatArrayOf(
