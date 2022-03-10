@@ -21,6 +21,7 @@ interface PhotoRepository {
     fun syncPhotos()
 
     fun getPhotos(): Flow<List<Photo>>
+    fun getPhoto(identifier: String): Flow<Photo?>
 
     suspend fun addPhoto(photo: Photo)
 }

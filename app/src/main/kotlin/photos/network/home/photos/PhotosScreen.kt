@@ -53,6 +53,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import java.time.Instant
 import org.koin.androidx.compose.getViewModel
 import photos.network.data.photos.repository.Photo
+import photos.network.navigation.Destination
 import photos.network.theme.AppTheme
 import photos.network.ui.PhotoGrid
 
@@ -156,7 +157,7 @@ fun PhotosContent(
         photos = uiState.photos,
         onSelectItem = {
             // Handle selection
-            // navController.navigate("${Destination.Details.route}/${photos[index].id}")
+            navController.navigate("${Destination.Details.route}/$it")
         }
     )
     // TODO: add fast-scroll

@@ -26,6 +26,9 @@ interface PhotoDao {
     @Query("SELECT * FROM photos ORDER BY filename")
     fun getPhotos(): Flow<List<Photo>>
 
+    @Query("SELECT * FROM photos WHERE filename = :name LIMIT 1")
+    fun getPhoto(name: String): Flow<Photo?>
+
     @Query("DELETE FROM photos")
     suspend fun deleteAllPhotos()
 

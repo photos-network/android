@@ -16,12 +16,19 @@
 package photos.network.domain
 
 import org.koin.dsl.module
+import photos.network.domain.photos.usecase.GetPhotoUseCase
 import photos.network.domain.photos.usecase.GetPhotosUseCase
 
 val domainModule = module {
     factory {
         GetPhotosUseCase(
             userRepository = get(),
+            photoRepository = get()
+        )
+    }
+
+    factory {
+        GetPhotoUseCase(
             photoRepository = get()
         )
     }

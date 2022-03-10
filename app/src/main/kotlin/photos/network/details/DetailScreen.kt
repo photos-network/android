@@ -16,26 +16,39 @@
 package photos.network.details
 
 import android.content.res.Configuration
-import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetState
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.Divider
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberImagePainter
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.viewModel
+import photos.network.R
+import photos.network.theme.AppTheme
 
 @Composable
 fun DetailScreen(
@@ -43,54 +56,129 @@ fun DetailScreen(
     navController: NavController = rememberNavController(),
     photoIdentifier: String
 ) {
-    val viewModel: DetailViewModel by viewModel()
+    val viewmodel: DetailViewModel by viewModel()
 
-    // Change configuration to landscape
-    val configuration = LocalConfiguration.current
+    viewmodel.handleEvent(DetailEvent.SetIdentifier(photoIdentifier))
 
-    when (configuration.orientation) {
-        Configuration.ORIENTATION_LANDSCAPE -> {
-            Log.v("Details", "orientation: LANDSCAPE")
-        }
-        Configuration.ORIENTATION_PORTRAIT -> {
-            Log.v("Details", "orientation: PORTRAIT")
-        }
-        Configuration.ORIENTATION_SQUARE -> {
-            Log.v("Details", "orientation: SQUARE")
-        }
-        Configuration.ORIENTATION_UNDEFINED -> {
-            Log.v("Details", "orientation: UNDEFINED")
-        }
-    }
+    DetailContent(
+        modifier = modifier,
+        navController = navController,
+        uiState = viewmodel.uiState.value,
+        handleEvent = viewmodel::handleEvent,
+    )
+}
 
-    Column(
-        modifier = Modifier
-            .background(Color(0xFFFF00FF))
-            .wrapContentSize()
-            .rotate(90f),
+@Composable
+fun DetailContent(
+    modifier: Modifier = Modifier,
+    navController: NavController = rememberNavController(),
+    uiState: DetailUiState,
+    handleEvent: (event: DetailEvent) -> Unit,
+) {
+    val scope = rememberCoroutineScope()
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+    )
+
+    BottomSheetScaffold(
+        modifier = Modifier.testTag("DETAIL_BOTTOM_SHEET"),
+        sheetBackgroundColor = MaterialTheme.colorScheme.primaryContainer,
+        scaffoldState = bottomSheetScaffoldState,
+        sheetElevation = 16.dp,
+        sheetShape = RoundedCornerShape(
+            bottomStart = 0.dp,
+            bottomEnd = 0.dp,
+            topStart = 12.dp,
+            topEnd = 12.dp
+        ),
+        sheetGesturesEnabled = true,
+        sheetContent = {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Divider(
+                    modifier = Modifier.padding(horizontal = 50.dp),
+                    color = MaterialTheme.colorScheme.outline,
+                    thickness = 4.dp
+                )
+                Text(
+                    modifier = Modifier.padding(top = 10.dp),
+                    text = "Identifier",
+                    style = MaterialTheme.typography.labelLarge
+                )
+                Text(
+                    text = uiState.photoIdentifier,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.heightIn(240.dp))
+            }
+        },
+        sheetPeekHeight = 125.dp
     ) {
+        val data = uiState.uri ?: uiState.imageUrl
 
-        // Observe configuration changes
-        var orientation by remember { mutableStateOf(Configuration.ORIENTATION_PORTRAIT) }
-
-//        LaunchedEffect(configuration) {
-//            // Save any changes to the orientation value on the configuration object
-//            snapshotFlow { configuration.orientation }
-//                .collect { orientation = it }
-//        }
-
-        when (orientation) {
-            Configuration.ORIENTATION_LANDSCAPE -> {
-                //            LandscapeContent()
-            }
-            else -> {
-                //            PortraitContent()
+        Column(
+            modifier = modifier
+                .clickable {
+                    scope.launch {
+                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                            bottomSheetScaffoldState.bottomSheetState.expand()
+                        } else {
+                            bottomSheetScaffoldState.bottomSheetState.collapse()
+                        }
+                    }
+                }
+                .background(MaterialTheme.colorScheme.outline)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            if (uiState.isLoading) {
+                Text(
+                    modifier = Modifier.testTag("LOADING_SPINNER"),
+                    text = "Loading"
+                )
+            } else {
+                Image(
+                    painter = rememberImagePainter(
+                        data = data,
+                        builder = {
+                            crossfade(true)
+                            placeholder(R.drawable.image_placeholder)
+                        }
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(1.dp)
+                )
             }
         }
-
-        Text(
-            modifier = Modifier.fillMaxSize(),
-            text = "DetailScreen for $photoIdentifier"
-        )
     }
+}
+
+@Preview(
+    "Details",
+    showSystemUi = true,
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    "Details • Dark",
+    showSystemUi = true,
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+internal fun PreviewDetailScreen(
+    @PreviewParameter(PreviewDetailsProvider::class) uiState: DetailUiState,
+) {
+    AppTheme {
+        DetailContent(uiState = uiState, handleEvent = {})
+    }
+}
+
+internal class PreviewDetailsProvider : PreviewParameterProvider<DetailUiState> {
+    override val values = sequenceOf(
+        DetailUiState(isLoading = true),
+        DetailUiState(isLoading = false),
+    )
+    override val count: Int = values.count()
 }

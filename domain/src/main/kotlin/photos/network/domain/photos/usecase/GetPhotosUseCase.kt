@@ -16,11 +16,9 @@
 package photos.network.domain.photos.usecase
 
 import kotlinx.coroutines.flow.Flow
-import photos.network.data.Resource
 import photos.network.data.photos.repository.Photo
 import photos.network.data.photos.repository.PhotoRepository
 import photos.network.data.user.repository.UserRepository
-import photos.network.domain.SupplierUseCase
 
 /**
  * Load a list of phots from persistency.

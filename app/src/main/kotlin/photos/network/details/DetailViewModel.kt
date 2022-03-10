@@ -15,6 +15,38 @@
  */
 package photos.network.details
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import photos.network.domain.photos.usecase.GetPhotoUseCase
 
-class DetailViewModel : ViewModel()
+class DetailViewModel(
+    private val getPhotoUseCase: GetPhotoUseCase
+) : ViewModel() {
+    val uiState = mutableStateOf(DetailUiState())
+
+    fun handleEvent(event: DetailEvent) {
+        when (event) {
+            is DetailEvent.SetIdentifier -> {
+                setIdentifier(event.identifier)
+            }
+            is DetailEvent.Delete -> {}
+            is DetailEvent.Share -> {}
+        }
+    }
+
+    private fun setIdentifier(identifier: String) {
+        uiState.value = uiState.value.copy(photoIdentifier = identifier)
+        viewModelScope.launch {
+            getPhotoUseCase(identifier).collect { photo ->
+                uiState.value = uiState.value.copy(
+                    uri = photo?.uri,
+                    imageUrl = photo?.imageUrl,
+                    isLoading = false
+                )
+            }
+        }
+    }
+}
