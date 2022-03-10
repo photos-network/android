@@ -25,6 +25,23 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments(
+                    mapOf(
+                        "room.schemaLocation" to "$projectDir/schemas",
+                        "room.incremental" to "true",
+                        "room.expandProjection" to "true"
+                    )
+                )
+            }
+        }
+    }
+
+    sourceSets {
+        // Adds exported schema location as test app assets.
+        getByName("androidTest").assets.srcDir("$projectDir/schemas")
     }
 
     kotlinOptions {
@@ -69,6 +86,7 @@ dependencies {
     api("androidx.room:room-runtime:2.4.1")
     api("androidx.room:room-ktx:2.4.1")
     kapt("androidx.room:room-compiler:2.4.1")
+    androidTestImplementation("androidx.room:room-testing:2.4.1")
 
     // workmanager
     api("androidx.work:work-runtime-ktx:2.7.1")

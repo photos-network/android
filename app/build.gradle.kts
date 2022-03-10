@@ -79,18 +79,6 @@ android {
         versionName = "0.1.0"
 
         testInstrumentationRunner = "photos.network.PhotosNetworkJUnitRunner"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments(
-                    mapOf(
-                        "room.schemaLocation" to "$projectDir/schemas",
-                        "room.incremental" to "true",
-                        "room.expandProjection" to "true"
-                    )
-                )
-            }
-        }
     }
 
     signingConfigs {

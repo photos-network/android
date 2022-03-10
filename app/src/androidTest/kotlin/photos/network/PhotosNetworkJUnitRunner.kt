@@ -22,6 +22,7 @@ import androidx.test.runner.AndroidJUnitRunner
 /**
  * Custom JUnit runner to inject a TestApplication
  */
+@Suppress("unused")
 class PhotosNetworkJUnitRunner : AndroidJUnitRunner() {
 
     override fun newApplication(
