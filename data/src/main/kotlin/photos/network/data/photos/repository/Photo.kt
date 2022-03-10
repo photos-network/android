@@ -22,13 +22,17 @@ import photos.network.data.photos.persistence.Photo as DatabasePhoto
 data class Photo(
     val filename: String,
     val imageUrl: String,
-    val dateTaken: Instant,
+    val dateAdded: Instant,
+    val dateTaken: Instant?,
+    val dateModified: Instant? = null,
     val uri: Uri? = null,
 ) {
     fun toDatabasePhoto(): DatabasePhoto = DatabasePhoto(
         filename = filename,
         imageUrl = imageUrl,
-        dateTaken = dateTaken.toEpochMilli(),
+        dateAdded = dateAdded.toEpochMilli(),
+        dateTaken = dateTaken?.toEpochMilli(),
+        dateModified = dateTaken?.toEpochMilli(),
         originalFileUri = uri.toString(),
     )
 }

@@ -59,6 +59,9 @@ android {
 
 configurations {
     create("testArtifacts"){
+        extendsFrom(configurations.testApi.get())
+    }
+    create("androidTestArtifacts"){
         extendsFrom(configurations.androidTestApi.get())
     }
 }
@@ -112,6 +115,13 @@ dependencies {
     api("androidx.security:security-crypto:1.1.0-alpha03")
 
     // testing
+    testApi("androidx.test.ext:junit-ktx:1.1.3")
+    testApi("junit:junit:4.13.2")
+    testApi("com.google.truth:truth:1.1.3")
+    testApi("io.mockk:mockk:1.12.3")
+    testApi("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
+    testApi("androidx.arch.core:core-testing:2.1.0")
+
     androidTestApi("androidx.test:core:1.4.0")
     androidTestApi("androidx.test:core-ktx:1.4.0")
     androidTestApi("androidx.test.ext:junit:1.1.3")

@@ -39,6 +39,6 @@ android {
 
 dependencies {
     api(project(":data"))
-
-    androidTestImplementation(project(":data", "testArtifacts"))
+    testImplementation(project(":data", "testArtifacts"))
+    androidTestImplementation(project(":data", "androidTestArtifacts"))
 }

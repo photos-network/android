@@ -199,6 +199,7 @@ class SyncLocalPhotosWorker(
                     filename = name,
                     imageUrl = name,
                     dateTaken = Instant.ofEpochMilli(dateTaken),
+                    dateAdded = Instant.now(),
                     uri = photoUri,
 //                    details = TechnicalDetails(
 //                        exposure = exposure,

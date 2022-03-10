@@ -39,7 +39,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                 `filename` TEXT PRIMARY KEY NOT NULL, 
                 `imageUrl` TEXT NOT NULL,
                 `dateTaken` INTEGER,
-                `dateAdded` INTEGER,
+                `dateAdded` INTEGER NOT NULL,
                 `dateModified` INTEGER,
                 `thumbnailFileUri` TEXT,
                 `originalFileUri` TEXT
@@ -49,7 +49,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
 
         database.execSQL("""
                 INSERT INTO photos_new (uuid, filename, imageUrl, dateTaken, dateAdded, dateModified, thumbnailFileUri, originalFileUri)
-                SELECT uuid, filename, imageUrl, dateTaken, NULL, NULL, thumbnailFileUri, originalFileUri FROM photos
+                SELECT uuid, filename, imageUrl, dateTaken, strftime('%s', 'now'), NULL, thumbnailFileUri, originalFileUri FROM photos
                 """.trimIndent())
         database.execSQL("DROP TABLE photos")
         database.execSQL("ALTER TABLE photos_new RENAME TO photos")

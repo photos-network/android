@@ -162,7 +162,8 @@ android {
 
 dependencies {
     api(project(":domain"))
-    androidTestImplementation(project(":data", "testArtifacts"))
+    testImplementation(project(":data", "testArtifacts"))
+    androidTestImplementation(project(":data", "androidTestArtifacts"))
 
     // Compose
     implementation("androidx.activity:activity-compose:1.4.0")
