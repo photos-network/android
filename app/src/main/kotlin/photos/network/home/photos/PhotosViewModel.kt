@@ -1,8 +1,7 @@
 package photos.network.home.photos
 
-import android.app.Application
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -12,13 +11,16 @@ import photos.network.domain.photos.usecase.GetPhotosUseCase
 import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
 
 class PhotosViewModel(
-    application: Application,
-    getPhotosUseCase: GetPhotosUseCase,
+    private val getPhotosUseCase: GetPhotosUseCase,
     private val startPhotosSyncUseCase: StartPhotosSyncUseCase,
-) : AndroidViewModel(application) {
+) : ViewModel() {
     val uiState = mutableStateOf(PhotosUiState())
 
     init {
+        loadPhotos()
+    }
+
+    internal fun loadPhotos() {
         viewModelScope.launch(Dispatchers.IO) {
             getPhotosUseCase().collect { photos ->
                 withContext(Dispatchers.Main) {

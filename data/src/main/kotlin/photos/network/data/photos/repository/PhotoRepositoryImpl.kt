@@ -71,6 +71,10 @@ class PhotoRepositoryImpl(
         }
     }
 
+    override fun getPhoto(identifier: String): Flow<Photo?> = photoDao.getPhoto(identifier).mapNotNull {
+        it?.toPhoto()
+    }
+
     override suspend fun addPhoto(photo: Photo) {
         photoDao.insertAll(photos = arrayOf(photo.toDatabasePhoto()))
     }

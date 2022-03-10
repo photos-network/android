@@ -16,7 +16,6 @@
 package photos.network.domain.photos.usecase
 
 import photos.network.data.photos.repository.PhotoRepository
-import photos.network.domain.UseCase
 
 /**
  * Start synchronisation of local images with photos.network instance.

@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.domain.user.usecase
+package photos.network.data.user.network.entity
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import photos.network.data.user.persistence.entities.DatabaseUser
-import photos.network.data.user.repository.UserRepository
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-/**
- * Get currently logged in User if available.
- */
-class GetCurrentUserUseCase(
-    private val userRepository: UserRepository
-) {
-    suspend operator fun invoke(): Flow<DatabaseUser?> = flow {
-        emit(userRepository.currentUser())
-    }.flowOn(Dispatchers.IO)
-}
+@Serializable
+data class TokenResponse(
+    @SerialName("access_token") val accessToken: String,
+    @SerialName("token_type") val tokenType: String? = null,
+    @SerialName("expires_in") val expiresIn: Long,
+    @SerialName("refresh_token") val refreshToken: String
+)

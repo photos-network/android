@@ -13,22 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.domain.user.usecase
+package photos.network.domain.photos.usecase
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import photos.network.data.user.persistence.entities.DatabaseUser
-import photos.network.data.user.repository.UserRepository
+import photos.network.data.photos.repository.Photo
+import photos.network.data.photos.repository.PhotoRepository
 
 /**
- * Get currently logged in User if available.
+ * Load a list of phots from persistency.
  */
-class GetCurrentUserUseCase(
-    private val userRepository: UserRepository
+class GetPhotoUseCase(
+    private val photoRepository: PhotoRepository,
 ) {
-    suspend operator fun invoke(): Flow<DatabaseUser?> = flow {
-        emit(userRepository.currentUser())
-    }.flowOn(Dispatchers.IO)
+    operator fun invoke(identifier: String): Flow<Photo?> = photoRepository.getPhoto(identifier)
 }
