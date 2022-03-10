@@ -138,6 +138,7 @@ android {
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi"
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi"
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi"
+        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi"
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api"
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.ui.ExperimentalComposeUiApi"
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=com.google.accompanist.pager.ExperimentalPagerApi"
@@ -170,8 +171,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:1.1.1")
     implementation("androidx.compose.ui:ui:1.1.1")
     implementation("androidx.compose.material3:material3:1.0.0-alpha06")
-
-    //implementation("androidx.compose.material:material:1.1.1")
+    implementation("androidx.compose.material:material:1.1.1")
     implementation("androidx.compose.ui:ui-tooling-preview:1.1.1")
     implementation("androidx.navigation:navigation-compose:2.4.1")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0")
