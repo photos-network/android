@@ -44,6 +44,7 @@ import org.koin.androidx.workmanager.dsl.worker
 import org.koin.dsl.module
 import photos.network.data.photos.network.PhotoApi
 import photos.network.data.photos.network.entity.TokenInfo
+import photos.network.data.photos.persistence.MIGRATION_1_2
 import photos.network.data.photos.persistence.PhotoDao
 import photos.network.data.photos.persistence.PhotoDatabase
 import photos.network.data.photos.repository.PhotoRepository
@@ -116,7 +117,9 @@ private fun providePhotoDatabase(context: Context): PhotoDatabase {
     return Room.databaseBuilder(
         context,
         PhotoDatabase::class.java, "photos.db"
-    ).build()
+    )
+        .addMigrations(MIGRATION_1_2)
+        .build()
 }
 
 private fun providePhotoDao(photoDatabase: PhotoDatabase): PhotoDao {

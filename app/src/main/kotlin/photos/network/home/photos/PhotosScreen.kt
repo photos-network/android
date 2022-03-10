@@ -191,7 +191,12 @@ internal class PreviewPhotosProvider : PreviewParameterProvider<PhotosUiState> {
         PhotosUiState(photos = emptyList(), isLoading = true, hasError = false),
         PhotosUiState(photos = emptyList(), isLoading = false, hasError = true),
         PhotosUiState(
-            photos = listOf(Photo("0L", "", Instant.parse("2022-01-01T13:37:00.123Z"))),
+            photos = listOf(Photo(
+                filename = "0L",
+                imageUrl = "",
+                dateAdded = Instant.parse("2022-01-01T13:37:00.123Z"),
+                dateTaken = Instant.parse("2022-01-01T13:37:00.123Z")
+            )),
             isLoading = false,
             hasError = false
         ),

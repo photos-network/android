@@ -79,18 +79,6 @@ android {
         versionName = "0.1.0"
 
         testInstrumentationRunner = "photos.network.PhotosNetworkJUnitRunner"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments(
-                    mapOf(
-                        "room.schemaLocation" to "$projectDir/schemas",
-                        "room.incremental" to "true",
-                        "room.expandProjection" to "true"
-                    )
-                )
-            }
-        }
     }
 
     signingConfigs {
@@ -174,7 +162,8 @@ android {
 
 dependencies {
     api(project(":domain"))
-    androidTestImplementation(project(":data", "testArtifacts"))
+    testImplementation(project(":data", "testArtifacts"))
+    androidTestImplementation(project(":data", "androidTestArtifacts"))
 
     // Compose
     implementation("androidx.activity:activity-compose:1.4.0")

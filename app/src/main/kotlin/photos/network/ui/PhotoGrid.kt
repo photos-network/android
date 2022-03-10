@@ -60,11 +60,11 @@ fun PhotoGrid(
     ) {
         // group by year
         val groupedByYear = photos.groupBy {
-            it.dateTaken.atZone(ZoneOffset.UTC).year
+            it.dateAdded.atZone(ZoneOffset.UTC).year
         }
 
         groupedByYear.forEach { (_, photos) ->
-            val yearOfFirst = photos[0].dateTaken.atZone(ZoneOffset.UTC).year
+            val yearOfFirst = photos[0].dateAdded.atZone(ZoneOffset.UTC).year
             val yearNow = Instant.now().atZone(ZoneOffset.UTC).year
 
             // add year header if necessary
@@ -79,7 +79,7 @@ fun PhotoGrid(
 
             // group by month
             val groupedByMonth = photos.groupBy {
-                it.dateTaken.atZone(ZoneOffset.UTC).month
+                it.dateAdded.atZone(ZoneOffset.UTC).month
             }
 
             groupedByMonth.forEach { (month, photos) ->
@@ -132,7 +132,12 @@ fun PhotoGrid(
 @Composable
 internal fun PreviewPhotoGrid() {
     val list = (0..15).map {
-        Photo(filename = it.toString(), imageUrl = "", Instant.parse("2022-01-01T13:37:00.123Z"))
+        Photo(
+            filename = it.toString(),
+            imageUrl = "",
+            dateAdded = Instant.parse("2022-01-01T13:37:00.123Z"),
+            dateTaken = Instant.parse("2022-01-01T13:37:00.123Z")
+        )
     }
     AppTheme {
         PhotoGrid(

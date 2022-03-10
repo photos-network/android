@@ -26,7 +26,9 @@ data class Photo(
     val uuid: String? = null, // will be generated on the backend
     @PrimaryKey val filename: String,
     val imageUrl: String,
-    val dateTaken: Long,
+    val dateAdded: Long,
+    val dateTaken: Long? = null,
+    val dateModified: Long? = null,
     val thumbnailFileUri: String? = null,
     val originalFileUri: String? = null,
 ) {
@@ -34,7 +36,8 @@ data class Photo(
         return RepositoryPhoto(
             filename = filename,
             imageUrl = imageUrl,
-            dateTaken = Instant.ofEpochMilli(dateTaken),
+            dateAdded = Instant.ofEpochMilli(dateAdded),
+            dateTaken = Instant.ofEpochMilli(dateTaken ?: 0L),
             uri = originalFileUri?.let { Uri.parse(it) },
         )
     }

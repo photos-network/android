@@ -25,6 +25,23 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments(
+                    mapOf(
+                        "room.schemaLocation" to "$projectDir/schemas",
+                        "room.incremental" to "true",
+                        "room.expandProjection" to "true"
+                    )
+                )
+            }
+        }
+    }
+
+    sourceSets {
+        // Adds exported schema location as test app assets.
+        getByName("androidTest").assets.srcDir("$projectDir/schemas")
     }
 
     kotlinOptions {
@@ -42,6 +59,9 @@ android {
 
 configurations {
     create("testArtifacts"){
+        extendsFrom(configurations.testApi.get())
+    }
+    create("androidTestArtifacts"){
         extendsFrom(configurations.androidTestApi.get())
     }
 }
@@ -69,6 +89,7 @@ dependencies {
     api("androidx.room:room-runtime:2.4.1")
     api("androidx.room:room-ktx:2.4.1")
     kapt("androidx.room:room-compiler:2.4.1")
+    androidTestImplementation("androidx.room:room-testing:2.4.1")
 
     // workmanager
     api("androidx.work:work-runtime-ktx:2.7.1")
@@ -94,6 +115,13 @@ dependencies {
     api("androidx.security:security-crypto:1.1.0-alpha03")
 
     // testing
+    testApi("androidx.test.ext:junit-ktx:1.1.3")
+    testApi("junit:junit:4.13.2")
+    testApi("com.google.truth:truth:1.1.3")
+    testApi("io.mockk:mockk:1.12.3")
+    testApi("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
+    testApi("androidx.arch.core:core-testing:2.1.0")
+
     androidTestApi("androidx.test:core:1.4.0")
     androidTestApi("androidx.test:core-ktx:1.4.0")
     androidTestApi("androidx.test.ext:junit:1.1.3")
