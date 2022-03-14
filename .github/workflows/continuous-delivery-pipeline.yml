@@ -183,9 +183,10 @@ jobs:
           path: app/build/reports/androidTests
 
       - name: Run testCoverage
-        run: ./gradlew --console=plain testCoverage
+        run: ./gradlew --console=plain testCoverage --stacktrace
 
       - name: Jacoco Report to PR
+        if: matrix.api-level == 29
         id: jacoco
         uses: madrapps/jacoco-report@v1.2
         with:
