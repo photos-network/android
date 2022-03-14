@@ -48,7 +48,7 @@ jacoco {
 
 project.afterEvaluate {
     tasks.create<JacocoReport>(name = "testCoverage") {
-        dependsOn("testDebugUnitTest", "connectedDebugAndroidTest")
+        dependsOn("testDebugUnitTest")
         group = "Reporting"
         description = "Generate jacoco coverage reports"
 
