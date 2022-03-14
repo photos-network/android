@@ -10,6 +10,7 @@ plugins {
     id("marathon") version "0.6.4"
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
     id("com.github.triplet.play") version "3.7.0"
+    id("jacoco")
 }
 
 spotless {
@@ -34,6 +35,73 @@ play {
     promoteTrack.set("alpha")
     resolutionStrategy.set(ResolutionStrategy.AUTO)
     releaseStatus.set(ReleaseStatus.COMPLETED)
+}
+
+// https://detekt.dev/gradle.html
+detekt {
+    config = files("../detekt.yml")
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+project.afterEvaluate {
+    tasks.create<JacocoReport>(name = "testCoverage") {
+        dependsOn("testDebugUnitTest", "connectedDebugAndroidTest")
+        group = "Reporting"
+        description = "Generate jacoco coverage reports"
+
+        reports {
+            html.required.set(true)
+            xml.required.set(true)
+            csv.required.set(true)
+        }
+
+        val excludes = listOf<String>(
+            // android
+            "**/R.class",
+            "**/R$*.class",
+            "**/BuildConfig.*",
+            "**/Manifest*.*",
+            "**/*Test*.*",
+            "android/**/*.*",
+            // kotlin
+            "**/*MapperImpl*.*",
+            "**/*\$ViewInjector*.*",
+            "**/*\$ViewBinder*.*",
+            "**/BuildConfig.*",
+            "**/*Component*.*",
+            "**/*BR*.*",
+            "**/Manifest*.*",
+            "**/*\$Lambda$*.*",
+            "**/*Companion*.*",
+            "**/*Module*.*",
+            "**/*Dagger*.*",
+            "**/*Hilt*.*",
+            "**/*MembersInjector*.*",
+            "**/*_MembersInjector.class",
+            "**/*_Factory*.*",
+            "**/*_Provide*Factory*.*",
+            "**/*Extensions*.*",
+            // sealed and data classes
+            "**/*$Result.*",
+            "**/*$Result$*.*"
+        )
+
+        val kotlinClasses = fileTree(baseDir = "$buildDir/tmp/kotlin-classes/debug") {
+            exclude(excludes)
+        }
+
+        classDirectories.setFrom(kotlinClasses)
+
+        val androidTestData = fileTree(baseDir = "$buildDir/outputs/code_coverage/debugAndroidTest/connected/")
+
+        executionData(files(
+            "${project.buildDir}/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",
+            androidTestData
+        ))
+    }
 }
 
 // https://detekt.dev/gradle.html
@@ -77,6 +145,11 @@ android {
         testInstrumentationRunner = "photos.network.PhotosNetworkJUnitRunner"
     }
 
+    // needs to be added for jacoco
+    testCoverage {
+        version = "0.8.7"
+    }
+
     signingConfigs {
         named("debug") {
             storeFile = file("../android_debug.keystore")
@@ -99,6 +172,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("debug")
+            isTestCoverageEnabled = true
         }
         release {
             isMinifyEnabled = true
