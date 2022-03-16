@@ -37,11 +37,6 @@ play {
     releaseStatus.set(ReleaseStatus.COMPLETED)
 }
 
-// https://detekt.dev/gradle.html
-detekt {
-    config = files("../detekt.yml")
-}
-
 jacoco {
     toolVersion = "0.8.7"
 }
