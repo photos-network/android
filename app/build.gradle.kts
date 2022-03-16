@@ -140,8 +140,9 @@ android {
         testInstrumentationRunner = "photos.network.PhotosNetworkJUnitRunner"
     }
 
-    // needs to be added for jacoco
     testCoverage {
+        // needed to force the jacoco version
+        jacocoVersion = "0.8.7"
         version = "0.8.7"
     }
 
