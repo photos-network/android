@@ -174,7 +174,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew connectedAndroidTest
+          script: ./gradlew --console=plain connectedAndroidTest --stacktrace
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1
