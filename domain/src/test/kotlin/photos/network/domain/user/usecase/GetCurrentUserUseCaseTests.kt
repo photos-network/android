@@ -28,7 +28,6 @@ class GetCurrentUserUseCaseTests {
         )
     }
 
-    @Ignore
     @Test
     fun `use case should return user if available`(): Unit = runBlocking {
         // given
@@ -40,28 +39,28 @@ class GetCurrentUserUseCaseTests {
             token = "access_token"
         )
 
-//        every { userRepository.currentUser() } answers {
-//            flowOf(
-//                user
-//            )
-//        }
+        every { userRepository.currentUser() } answers {
+            user.toDatabaseUser()
+        }
 
         // when
-        val result = getCurrentUserUseCase.invoke()
+        val result = getCurrentUserUseCase().first()
 
         // then
-        Truth.assertThat(result.first()).isEqualTo(user)
+        Truth.assertThat(result).isNotNull()
+        Truth.assertThat(result?.id).isEqualTo(user.id)
+        Truth.assertThat(result?.lastname).isEqualTo(user.lastname)
+        Truth.assertThat(result?.firstname).isEqualTo(user.firstname)
+        Truth.assertThat(result?.profileImageUrl).isEqualTo(user.profileImageUrl)
+        Truth.assertThat(result?.token).isEqualTo(user.token)
     }
 
-    @Ignore
     @Test
     fun `use case should return null if no user is available`(): Unit = runBlocking {
         // given
-//        every { userRepository.currentUser() } answers {
-//            flowOf(
-//                null
-//            )
-//        }
+        every { userRepository.currentUser() } answers {
+            null
+        }
 
         // when
         val result = getCurrentUserUseCase.invoke()

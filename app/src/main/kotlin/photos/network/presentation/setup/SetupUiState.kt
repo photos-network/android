@@ -15,13 +15,13 @@
  */
 package photos.network.presentation.setup
 
-import photos.network.data.user.persistence.entities.DatabaseUser
+import photos.network.data.user.persistence.User as DatabaseUser
 
 data class SetupUiState(
     val currentUser: DatabaseUser? = null,
-    val host: String? = "https://photos.stuermer.pro",
-    val clientId: String? = "1803463f-c10f-4a65-aa15-b2e39be9f14d",
-    val clientSecret: String? = "1TmlFYywRd7MwlbRNiePjQ",
+    val host: String? = null,
+    val clientId: String? = null,
+    val clientSecret: String? = null,
     val isConnectionCheckInProgress: Boolean = false,
     val isConnectionValid: Boolean = false,
     val loading: Boolean = false,

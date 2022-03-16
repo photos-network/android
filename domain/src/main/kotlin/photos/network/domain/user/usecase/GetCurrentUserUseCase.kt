@@ -19,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import photos.network.data.user.persistence.entities.DatabaseUser
+import photos.network.data.user.persistence.User as DatabaseUser
 import photos.network.data.user.repository.UserRepository
 
 /**

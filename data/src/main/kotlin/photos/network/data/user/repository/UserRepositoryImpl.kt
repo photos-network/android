@@ -20,7 +20,7 @@ import logcat.LogPriority
 import logcat.logcat
 import photos.network.data.user.network.UserApi
 import photos.network.data.user.persistence.UserStorage
-import photos.network.data.user.persistence.entities.DatabaseUser
+import photos.network.data.user.persistence.User as DatabaseUser
 
 class UserRepositoryImpl(
     private val userApi: UserApi,

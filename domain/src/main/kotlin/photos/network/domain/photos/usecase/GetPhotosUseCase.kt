@@ -24,7 +24,6 @@ import photos.network.data.user.repository.UserRepository
  * Load a list of phots from persistency.
  */
 class GetPhotosUseCase(
-    private val userRepository: UserRepository,
     private val photoRepository: PhotoRepository,
 ) {
     operator fun invoke(): Flow<List<Photo>> = photoRepository.getPhotos()
