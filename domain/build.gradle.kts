@@ -6,11 +6,6 @@ plugins {
     kotlin("plugin.serialization") version "1.5.30"
 }
 
-repositories {
-    google()
-    mavenCentral()
-}
-
 spotless {
     kotlin {
         target("src/*/java/**/*.kt")
@@ -35,6 +30,11 @@ android {
         resources.excludes += "META-INF/AL2.0"
         resources.excludes += "META-INF/LGPL2.1"
     }
+}
+
+repositories {
+    google()
+    mavenCentral()
 }
 
 dependencies {

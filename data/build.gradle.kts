@@ -6,11 +6,6 @@ plugins {
     kotlin("plugin.serialization") version "1.5.30"
 }
 
-repositories {
-    google()
-    mavenCentral()
-}
-
 spotless {
     kotlin {
         target("src/*/java/**/*.kt")
@@ -64,6 +59,11 @@ configurations {
     create("androidTestArtifacts"){
         extendsFrom(configurations.androidTestApi.get())
     }
+}
+
+repositories {
+    google()
+    mavenCentral()
 }
 
 dependencies {

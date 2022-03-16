@@ -12,22 +12,6 @@ plugins {
     id("com.github.triplet.play") version "3.7.0"
 }
 
-// key.properties
-val releaseKeystore: String by project
-val releaseStorePassword: String by project
-val releaseKeyAlias: String by project
-val releaseKeyPassword: String by project
-
-repositories {
-    google()
-    mavenCentral()
-}
-
-// https://detekt.dev/gradle.html
-detekt {
-    config = files("../detekt.yml")
-}
-
 spotless {
     kotlin {
         target("src/*/java/**/*.kt")
@@ -36,6 +20,13 @@ spotless {
     }
 }
 
+// key.properties
+val releaseKeystore: String by project
+val releaseStorePassword: String by project
+val releaseKeyAlias: String by project
+val releaseKeyPassword: String by project
+
+// deployment
 play {
     serviceAccountCredentials.set(rootProject.file("gradle_playstore_publisher_credentials.json"))
     defaultToAppBundles.set(true)
@@ -43,6 +34,11 @@ play {
     promoteTrack.set("alpha")
     resolutionStrategy.set(ResolutionStrategy.AUTO)
     releaseStatus.set(ReleaseStatus.COMPLETED)
+}
+
+// https://detekt.dev/gradle.html
+detekt {
+    config = files("../detekt.yml")
 }
 
 marathon {
@@ -159,6 +155,11 @@ android {
         resources.pickFirsts.add("win32-x86-64/attach_hotspot_windows.dll")
         resources.pickFirsts.add("win32-x86/attach_hotspot_windows.dll")
     }
+}
+
+repositories {
+    google()
+    mavenCentral()
 }
 
 dependencies {
