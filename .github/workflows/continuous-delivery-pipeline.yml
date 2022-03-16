@@ -174,13 +174,36 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew connectedAndroidTest
+          script: ./gradlew --console=plain connectedAndroidTest --stacktrace
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
           name: androidTests
           path: app/build/reports/androidTests
+
+      - name: Run testCoverage
+        run: ./gradlew --console=plain testCoverage --stacktrace
+
+      - name: Jacoco Report to PR
+        if: matrix.api-level == 29
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.2
+        with:
+          paths: |
+            ${{ github.workspace }}/app/build/reports/jacoco/testCoverage/testCoverage.xml,
+            ${{ github.workspace }}/domain/build/reports/jacoco/testCoverage/testCoverage.xml,
+            ${{ github.workspace }}/data/build/reports/jacoco/testCoverage/testCoverage.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 1
+          min-coverage-changed-files: 10
+          title: Code Coverage
+          debug-mode: false
+
+      - name: Get the Coverage info
+        run: |
+          echo "Total coverage ${{ steps.jacoco.outputs.coverage-overall }}"
+          echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
 
   # upload an android bundle to google play store into the internal test track
   deployment:
