@@ -8,7 +8,7 @@ plugins {
 
 spotless {
     kotlin {
-        target("src/*/java/**/*.kt")
+        target("src/*/kotlin/**/*.kt")
         ktlint("0.43.2")
         licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
     }
