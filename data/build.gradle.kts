@@ -6,14 +6,9 @@ plugins {
     kotlin("plugin.serialization") version "1.5.30"
 }
 
-repositories {
-    google()
-    mavenCentral()
-}
-
 spotless {
     kotlin {
-        target("src/*/java/**/*.kt")
+        target("src/*/kotlin/**/*.kt")
         ktlint("0.43.2")
         licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
     }
@@ -64,6 +59,11 @@ configurations {
     create("androidTestArtifacts"){
         extendsFrom(configurations.androidTestApi.get())
     }
+}
+
+repositories {
+    google()
+    mavenCentral()
 }
 
 dependencies {
