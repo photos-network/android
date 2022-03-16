@@ -22,7 +22,6 @@ import photos.network.domain.photos.usecase.GetPhotosUseCase
 val domainModule = module {
     factory {
         GetPhotosUseCase(
-            userRepository = get(),
             photoRepository = get()
         )
     }

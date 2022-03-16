@@ -1,7 +1,7 @@
 package photos.network.domain.photos.usecase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
 import java.time.Instant
@@ -20,11 +20,9 @@ class GetPhotosUseCaseTests {
     val rule = InstantTaskExecutorRule()
 
     private val photoRepository = mockk<PhotoRepository>()
-    private val userRepository = mockk<UserRepository>()
 
     private val getPhotosUseCase by lazy {
         GetPhotosUseCase(
-            userRepository = userRepository,
             photoRepository = photoRepository
         )
     }
@@ -48,9 +46,9 @@ class GetPhotosUseCaseTests {
         }
 
         // when
-        val result = getPhotosUseCase.invoke()
+        val result = getPhotosUseCase()
 
         // then
-        assertThat(result.first()).isEqualTo(listOf(testPhoto))
+        Truth.assertThat(result.first()).isEqualTo(listOf(testPhoto))
     }
 }

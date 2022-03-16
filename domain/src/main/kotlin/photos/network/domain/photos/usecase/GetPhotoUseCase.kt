@@ -25,5 +25,7 @@ import photos.network.data.photos.repository.PhotoRepository
 class GetPhotoUseCase(
     private val photoRepository: PhotoRepository,
 ) {
-    operator fun invoke(identifier: String): Flow<Photo?> = photoRepository.getPhoto(identifier)
+    operator fun invoke(identifier: String): Flow<Photo?> {
+        return photoRepository.getPhoto(identifier)
+    }
 }

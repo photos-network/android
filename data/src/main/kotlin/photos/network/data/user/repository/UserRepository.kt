@@ -15,10 +15,10 @@
  */
 package photos.network.data.user.repository
 
-import photos.network.data.user.persistence.entities.DatabaseUser
+import photos.network.data.user.persistence.User
 
 interface UserRepository {
-    fun currentUser(): DatabaseUser?
+    fun currentUser(): User?
 
     suspend fun invalidateAuthorization()
 

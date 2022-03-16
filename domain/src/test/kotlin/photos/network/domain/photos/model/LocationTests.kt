@@ -13,19 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.domain.photos
+package photos.network.domain.photos.model
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
-import org.junit.Ignore
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.google.common.truth.Truth
+import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
-class FailingTest {
+class LocationTests {
+
+    @Rule
+    @JvmField
+    val rule = InstantTaskExecutorRule()
+
     @Test
-    fun failingTest() = runBlocking {
-        assertEquals(true, true)
+    fun `test location dataclass`() {
+        // given
+        // when
+        val location = Location(
+            longitude = 180f,
+            latitude = 90f,
+            altitude = 200
+        )
+        // then
+        Truth.assertThat(location.longitude).isEqualTo(180f)
+        Truth.assertThat(location.latitude).isEqualTo(90f)
+        Truth.assertThat(location.altitude).isEqualTo(200)
     }
 }
