@@ -32,8 +32,8 @@ class SettingsRepositoryTests {
                 redirectUri = "photos://network",
                 clientId =     "1234567a-b89c-0d12-ef34-g5h67ij8k90l",
                 clientSecret = "1AbcDEfgHi1JlmnOPqrStU",
-                authCode = "",
-                scope = "",
+                authCode = "4cea-82c5",
+                scope = "openid profile email phone library:read",
                 useSSL = false
             )
         }
@@ -44,5 +44,10 @@ class SettingsRepositoryTests {
         // then
         Truth.assertThat(settings).isNotNull()
         Truth.assertThat(settingRepository.privacyState.first()).isEqualTo(PrivacyState.NONE)
+        Truth.assertThat(settingRepository.redirectUri).isEqualTo("photos://network")
+        Truth.assertThat(settingRepository.clientId).isEqualTo("1234567a-b89c-0d12-ef34-g5h67ij8k90l")
+        Truth.assertThat(settingRepository.clientSecret).isEqualTo("1AbcDEfgHi1JlmnOPqrStU")
+        Truth.assertThat(settingRepository.authCode).isEqualTo("4cea-82c5")
+        Truth.assertThat(settingRepository.scope).isEqualTo("openid profile email phone library:read")
     }
 }
