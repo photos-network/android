@@ -13,30 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.domain
+package photos.network.domain.settings.usecase
 
-import org.koin.dsl.module
-import photos.network.domain.photos.usecase.GetPhotoUseCase
-import photos.network.domain.photos.usecase.GetPhotosUseCase
-import photos.network.domain.settings.usecase.GetPrivacyStateUseCase
+import photos.network.data.settings.repository.SettingsRepository
 
-val domainModule = module {
-    factory {
-        GetPhotosUseCase(
-            photoRepository = get(),
-            settingsRepository = get(),
-        )
-    }
-
-    factory {
-        GetPhotoUseCase(
-            photoRepository = get()
-        )
-    }
-
-    factory {
-        GetPrivacyStateUseCase(
-            settingsRepository = get()
-        )
-    }
+/**
+ * Toggle privacy setting
+ */
+class TogglePrivacyStateUseCase(
+    private val settingsRepository: SettingsRepository
+) {
+    operator fun invoke(): Unit = settingsRepository.togglePrivacy()
 }

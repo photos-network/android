@@ -27,6 +27,8 @@ interface SettingsRepository {
     val scope: String?
     val host: String?
 
+    fun togglePrivacy(): Unit
+
     fun loadSettings(): SettingsDto?
 
     fun saveSettings(settings: SettingsDto)

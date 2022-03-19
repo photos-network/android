@@ -17,6 +17,7 @@ package photos.network.data.settings.repository
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import photos.network.data.settings.persistence.SettingsStorage
 import photos.network.data.settings.persistence.entities.SettingsDto
@@ -48,6 +49,10 @@ class SettingsRepositoryImpl(
 
     companion object {
         private const val POLL_INTERVAL = 10_000L
+    }
+
+    override fun togglePrivacy() {
+        // TODO: flip state
     }
 
     override fun loadSettings(): SettingsDto? {
