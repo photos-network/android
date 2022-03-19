@@ -12,7 +12,8 @@ import org.junit.Rule
 import org.junit.Test
 import photos.network.data.photos.repository.Photo
 import photos.network.data.photos.repository.PhotoRepository
-import photos.network.data.user.repository.UserRepository
+import photos.network.data.settings.repository.PrivacyState
+import photos.network.data.settings.repository.SettingsRepository
 
 class GetPhotosUseCaseTests {
     @Rule
@@ -20,35 +21,71 @@ class GetPhotosUseCaseTests {
     val rule = InstantTaskExecutorRule()
 
     private val photoRepository = mockk<PhotoRepository>()
+    private val settingsRepository = mockk<SettingsRepository>()
 
     private val getPhotosUseCase by lazy {
         GetPhotosUseCase(
-            photoRepository = photoRepository
+            photoRepository = photoRepository,
+            settingsRepository = settingsRepository,
         )
     }
 
     @Test
-    fun `use case should return list of photos as flow`(): Unit = runBlocking {
+    fun `should return an unfiltered list of photos by default`(): Unit = runBlocking {
         // given
-        val testPhoto = Photo(
-            filename = "foo.raw",
-            imageUrl = "http://localhost/foo/raw",
-            dateTaken = Instant.parse("2020-02-02T20:20:20Z"),
-            dateAdded = Instant.parse("2020-02-02T20:20:20Z"),
-            uri = null,
-        )
+        val photos = createTestdata()
+        every { settingsRepository.privacyState } answers {
+            flowOf(PrivacyState.NONE)
+        }
         every { photoRepository.getPhotos() } answers {
-            flowOf(
-                listOf(
-                    testPhoto
-                )
-            )
+            flowOf(photos)
+        }
+
+
+        // when
+        val result = getPhotosUseCase()
+
+        // then
+        Truth.assertThat(result.first().size).isEqualTo(2)
+        Truth.assertThat(result.first()).isEqualTo(photos)
+    }
+
+    @Test
+    fun `should return non-privacy marked photos only`(): Unit = runBlocking {
+        // given
+        val photos = createTestdata()
+        every { settingsRepository.privacyState } answers {
+            flowOf(PrivacyState.ACTIVE)
+        }
+        every { photoRepository.getPhotos() } answers {
+            flowOf(photos)
         }
 
         // when
         val result = getPhotosUseCase()
 
         // then
-        Truth.assertThat(result.first()).isEqualTo(listOf(testPhoto))
+        Truth.assertThat(result.first().size).isEqualTo(1)
+        Truth.assertThat(result.first()).isEqualTo(photos.filter { it.isPrivate })
+    }
+
+    private fun createTestdata(): List<Photo> {
+        return listOf(
+            Photo(
+                filename = "foo.raw",
+                imageUrl = "http://localhost/foo/raw",
+                dateTaken = Instant.parse("2020-02-02T20:20:20Z"),
+                dateAdded = Instant.parse("2020-02-02T20:20:20Z"),
+                uri = null,
+            ),
+            Photo(
+                filename = "foo.raw",
+                imageUrl = "http://localhost/foo/raw",
+                dateTaken = Instant.parse("2020-02-02T20:20:20Z"),
+                dateAdded = Instant.parse("2020-02-02T20:20:20Z"),
+                isPrivate = true,
+                uri = null,
+            )
+        )
     }
 }

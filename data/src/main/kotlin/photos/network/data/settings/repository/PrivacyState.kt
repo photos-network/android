@@ -13,23 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.domain
+package photos.network.data.settings.repository
 
-import org.koin.dsl.module
-import photos.network.domain.photos.usecase.GetPhotoUseCase
-import photos.network.domain.photos.usecase.GetPhotosUseCase
-
-val domainModule = module {
-    factory {
-        GetPhotosUseCase(
-            photoRepository = get(),
-            settingsRepository = get(),
-        )
-    }
-
-    factory {
-        GetPhotoUseCase(
-            photoRepository = get()
-        )
-    }
+enum class PrivacyState {
+    NONE,
+    ACTIVE,
 }

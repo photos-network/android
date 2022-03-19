@@ -15,9 +15,11 @@
  */
 package photos.network.data.settings.repository
 
+import kotlinx.coroutines.flow.Flow
 import photos.network.data.settings.persistence.entities.SettingsDto
 
 interface SettingsRepository {
+    val privacyState: Flow<PrivacyState>
     val authCode: String?
     val clientId: String?
     val clientSecret: String?
