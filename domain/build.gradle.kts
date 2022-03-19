@@ -32,6 +32,13 @@ project.afterEvaluate {
         }
 
         val excludes = listOf<String>(
+            "**/*\$*\$*.class",
+            "**/DomainModule*",
+            "**/photos/network/domain/DomainModuleKt.class",
+            "photos/network/domain/DomainModuleKt.class",
+            "photos/network/domain/DomainModuleKt\$domainModule\$1.class",
+            "photos/network/domain/DomainModuleKt\$domainModule\$1\$1.class",
+            "photos/network/domain/DomainModuleKt\$domainModule\$1\$2.class",
         )
 
         val kotlinClasses = fileTree(baseDir = "$buildDir/tmp/kotlin-classes/debug") {

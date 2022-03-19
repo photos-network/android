@@ -41,7 +41,6 @@ class GetPhotosUseCaseTests {
             flowOf(photos)
         }
 
-
         // when
         val result = getPhotosUseCase()
 
@@ -79,8 +78,8 @@ class GetPhotosUseCaseTests {
                 uri = null,
             ),
             Photo(
-                filename = "foo.raw",
-                imageUrl = "http://localhost/foo/raw",
+                filename = "bar.raw",
+                imageUrl = "http://localhost/bar/raw",
                 dateTaken = Instant.parse("2020-02-02T20:20:20Z"),
                 dateAdded = Instant.parse("2020-02-02T20:20:20Z"),
                 isPrivate = true,
