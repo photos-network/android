@@ -65,7 +65,7 @@ class GetPhotosUseCaseTests {
 
         // then
         Truth.assertThat(result.first().size).isEqualTo(1)
-        Truth.assertThat(result.first()).isEqualTo(photos.filter { it.isPrivate })
+        Truth.assertThat(result.first()).isEqualTo(photos.filterNot { it.isPrivate })
     }
 
     private fun createTestdata(): List<Photo> {
