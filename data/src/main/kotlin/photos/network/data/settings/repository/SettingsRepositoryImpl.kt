@@ -42,6 +42,10 @@ class SettingsRepositoryImpl(
         }
     }
 
+    init {
+        loadSettings()
+    }
+
     override val authCode: String?
         get() = currentSettings?.authCode
     override val clientId: String?
@@ -56,11 +60,28 @@ class SettingsRepositoryImpl(
         get() = currentSettings?.host
 
     companion object {
-        private const val POLL_INTERVAL = 10_000L
+        private const val POLL_INTERVAL = 500L
     }
 
     override fun togglePrivacy() {
-        // TODO: flip state
+        currentSettings?.let {
+            val newValue = if (it.privacyState == PrivacyState.NONE.value) {
+                PrivacyState.ACTIVE.value
+            } else {
+                PrivacyState.NONE.value
+            }
+            val new = SettingsDto(
+                host = it.host,
+                redirectUri = it.redirectUri,
+                authCode = it.authCode,
+                clientId = it.clientId,
+                clientSecret = it.clientSecret,
+                scope = it.scope,
+                useSSL = it.useSSL,
+                privacyState = newValue,
+            )
+            currentSettings = new
+        }
     }
 
     override fun loadSettings(): SettingsDto? {
@@ -70,6 +91,11 @@ class SettingsRepositoryImpl(
 
         currentSettings = settingsStore.read().takeIf {
             it != null
+        }
+
+
+        if (currentSettings == null) {
+            currentSettings = SettingsDto()
         }
 
         return currentSettings

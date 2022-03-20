@@ -75,6 +75,7 @@ class SettingsRepositoryTests {
         // given
         val setting = createTestdata()
         every { settingsStorage.save(any()) } returns Unit
+        every { settingsStorage.read() } answers { SettingsDto() }
 
         // when
         settingRepository.saveSettings(setting)
@@ -82,7 +83,7 @@ class SettingsRepositoryTests {
 
         // then
         verify(exactly = 1) { settingsStorage.save(any()) }
-        verify(exactly = 0) { settingsStorage.read() }
+        verify(exactly = 1) { settingsStorage.read() }
     }
 
     private fun createTestdata(): SettingsDto {

@@ -52,7 +52,11 @@ class HomeViewModel constructor(
 
     fun handleEvent(event: HomeEvent) {
         when (event) {
-            HomeEvent.TogglePrivacyEvent -> togglePrivacyStateUseCase()
+            HomeEvent.TogglePrivacyEvent -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    togglePrivacyStateUseCase()
+                }
+            }
         }
     }
 }

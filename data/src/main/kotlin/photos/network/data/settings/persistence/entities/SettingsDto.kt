@@ -16,15 +16,16 @@
 package photos.network.data.settings.persistence.entities
 
 import kotlinx.serialization.Serializable
+import photos.network.data.settings.repository.PrivacyState
 
 @Serializable
 class SettingsDto(
-    val host: String,
-    val redirectUri: String,
-    val authCode: String,
-    val clientId: String,
-    val clientSecret: String,
-    val scope: String,
+    val host: String? = null,
+    val redirectUri: String? = null,
+    val authCode: String? = null,
+    val clientId: String? = null,
+    val clientSecret: String? = null,
+    val scope: String? = null,
     val useSSL: Boolean = false,
-    val privacyState: String,
+    val privacyState: String = PrivacyState.NONE.value,
 )

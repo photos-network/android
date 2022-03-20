@@ -38,7 +38,7 @@ class GetPhotosUseCase(
         ) { photos, filter ->
             if (filter == PrivacyState.ACTIVE) {
                 photos.filterNot {
-                    !it.isPrivate
+                    it.isPrivate
                 }
             } else {
                 photos

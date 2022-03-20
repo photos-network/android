@@ -38,9 +38,9 @@ class LoginViewModel(
             val settings = settingsRepository.loadSettings()
             settings?.let {
                 logcat(LogPriority.WARN) { "update LoginVM from loaded settings." }
-                host.value = settings.host
-                clientId.value = settings.clientId
-                clientSecret.value = settings.clientSecret
+                host.value = settings.host ?: ""
+                clientId.value = settings.clientId ?: ""
+                clientSecret.value = settings.clientSecret ?: ""
             }
         }
     }
