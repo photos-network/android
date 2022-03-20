@@ -28,8 +28,13 @@ class SettingsRepositoryImpl(
     private var currentSettings: SettingsDto? = null
     override var privacyState: Flow<PrivacyState> = flow {
         while (true) {
-            // TODO: check privacy state in app settings
-            emit(PrivacyState.NONE)
+            if (currentSettings == null) {
+                currentSettings = settingsStore.read().takeIf {
+                    it != null
+                }
+            }
+
+            emit(currentSettings?.privacyState)
             delay(POLL_INTERVAL)
         }
     }

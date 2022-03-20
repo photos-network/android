@@ -32,6 +32,7 @@ class DetailScreenTests {
         composeTestRule.onNodeWithTag("DETAIL_BOTTOM_SHEET").assertIsNotDisplayed()
     }
 
+    @Ignore
     @Test
     fun detail_bottom_sheet_should_be_half_open_initially() {
         // given
