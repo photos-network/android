@@ -40,6 +40,6 @@ class PhotosViewModel(
     }
 
     private fun startLocalPhotoSync() {
-        startPhotosSyncUseCase()
+            startPhotosSyncUseCase()
+        }
     }
-}

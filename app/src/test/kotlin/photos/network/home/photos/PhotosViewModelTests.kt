@@ -3,8 +3,10 @@ package photos.network.home.photos
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import java.time.Instant
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -12,6 +14,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import photos.network.data.photos.repository.Photo
 import photos.network.domain.photos.usecase.GetPhotosUseCase
@@ -32,6 +35,7 @@ class PhotosViewModelTests {
         dateTaken = Instant.parse("2022-02-02T20:20:20Z"),
         dateAdded = Instant.parse("2022-02-02T20:20:20Z"),
         uri = null,
+        isPrivate = true
     )
     private val photo2 = Photo(
         filename = "filename2",
@@ -39,6 +43,7 @@ class PhotosViewModelTests {
         dateTaken = Instant.parse("2022-02-02T21:21:20Z"),
         dateAdded = Instant.parse("2022-02-02T21:21:20Z"),
         uri = null,
+        isPrivate = false
     )
 
     @Before
@@ -52,7 +57,7 @@ class PhotosViewModelTests {
     }
 
     @Test
-    fun `viewmodel should show loading and contain an empty list`() = runTest {
+    fun `viewmodel should show loading indicator by default`() = runTest {
         // given
         every { getPhotosUseCase() } answers { flowOf(emptyList()) }
 
@@ -60,8 +65,9 @@ class PhotosViewModelTests {
         Truth.assertThat(viewmodel.uiState.value).isEqualTo(PhotosUiState())
     }
 
+    @Ignore
     @Test
-    fun `viewmodel should hide loading and contain a filled list of photos`() = runTest {
+    fun `viewmodel should hide loading indicator and show list of photos`() = runTest {
         // given
         every { getPhotosUseCase() } answers { flowOf(listOf(photo1, photo2)) }
 
@@ -76,5 +82,18 @@ class PhotosViewModelTests {
                 hasError = false
             )
         )
+    }
+
+    @Test
+    fun `viewmodel should start sync when opened`() {
+        // given
+        every { startPhotosSyncUseCase() } answers { Unit }
+        every { getPhotosUseCase() } answers { flowOf(emptyList()) }
+
+        // when
+        viewmodel.handleEvent(PhotosEvent.StartLocalPhotoSyncEvent)
+
+        // then
+        verify(atLeast = 1) { startPhotosSyncUseCase.invoke() }
     }
 }
