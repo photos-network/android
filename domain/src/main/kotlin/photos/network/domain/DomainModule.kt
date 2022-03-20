@@ -19,6 +19,7 @@ import org.koin.dsl.module
 import photos.network.domain.photos.usecase.GetPhotoUseCase
 import photos.network.domain.photos.usecase.GetPhotosUseCase
 import photos.network.domain.settings.usecase.GetPrivacyStateUseCase
+import photos.network.domain.settings.usecase.TogglePrivacyStateUseCase
 
 val domainModule = module {
     factory {
@@ -36,6 +37,12 @@ val domainModule = module {
 
     factory {
         GetPrivacyStateUseCase(
+            settingsRepository = get()
+        )
+    }
+
+    factory {
+        TogglePrivacyStateUseCase(
             settingsRepository = get()
         )
     }

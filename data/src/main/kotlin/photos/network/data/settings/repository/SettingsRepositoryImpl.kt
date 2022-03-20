@@ -34,9 +34,9 @@ class SettingsRepositoryImpl(
             }
 
             emit(
-                PrivacyState.values().first {
-                    it.value == currentSettings?.privacyState ?: PrivacyState.NONE
-                }
+                PrivacyState.values().firstOrNull {
+                    it.value == currentSettings?.privacyState
+                } ?: PrivacyState.NONE
             )
             delay(POLL_INTERVAL)
         }
