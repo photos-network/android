@@ -35,7 +35,8 @@ class SettingsRepositoryTests {
                 clientSecret = "1AbcDEfgHi1JlmnOPqrStU",
                 authCode = "4cea-82c5",
                 scope = "openid profile email phone library:read",
-                useSSL = false
+                useSSL = false,
+                privacyState = "none"
             )
         }
 
@@ -92,7 +93,8 @@ class SettingsRepositoryTests {
             clientSecret = "1AbcDEfgHi1JlmnOPqrStU",
             authCode = "4cea-82c5",
             scope = "openid profile email phone library:read",
-            useSSL = false
+            useSSL = false,
+            privacyState = "none"
         )
     }
 }

@@ -15,7 +15,7 @@
  */
 package photos.network.data.settings.repository
 
-enum class PrivacyState {
-    NONE,
-    ACTIVE,
+enum class PrivacyState(val value: String) {
+    NONE("none"),
+    ACTIVE("active"),
 }

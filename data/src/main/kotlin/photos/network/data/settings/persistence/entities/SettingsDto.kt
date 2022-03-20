@@ -25,5 +25,6 @@ class SettingsDto(
     val clientId: String,
     val clientSecret: String,
     val scope: String,
-    val useSSL: Boolean = false
+    val useSSL: Boolean = false,
+    val privacyState: String,
 )
