@@ -17,18 +17,18 @@ class PhotosViewModel(
     val uiState = mutableStateOf(PhotosUiState())
 
     init {
-        loadPhotos()
+        viewModelScope.launch(Dispatchers.IO) {
+            loadPhotos()
+        }
     }
 
-    internal fun loadPhotos() {
-        viewModelScope.launch(Dispatchers.IO) {
-            getPhotosUseCase().collect { photos ->
-                withContext(Dispatchers.Main) {
-                    uiState.value = uiState.value.copy(
-                        photos = photos,
-                        isLoading = false
-                    )
-                }
+    internal suspend fun loadPhotos() {
+        getPhotosUseCase().collect { photos ->
+            withContext(Dispatchers.Main) {
+                uiState.value = uiState.value.copy(
+                    photos = photos,
+                    isLoading = false
+                )
             }
         }
     }
@@ -40,6 +40,6 @@ class PhotosViewModel(
     }
 
     private fun startLocalPhotoSync() {
-            startPhotosSyncUseCase()
-        }
+        startPhotosSyncUseCase()
     }
+}

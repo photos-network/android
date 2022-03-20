@@ -65,7 +65,6 @@ class PhotosViewModelTests {
         Truth.assertThat(viewmodel.uiState.value).isEqualTo(PhotosUiState())
     }
 
-    @Ignore
     @Test
     fun `viewmodel should hide loading indicator and show list of photos`() = runTest {
         // given
