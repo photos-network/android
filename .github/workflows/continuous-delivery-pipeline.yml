@@ -110,6 +110,7 @@ jobs:
           ./gradlew --console=plain testDebugUnitTest --stacktrace
 
       - name: Upload test reports
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: tests
@@ -177,6 +178,7 @@ jobs:
           script: ./gradlew --console=plain connectedAndroidTest --stacktrace
 
       - name: Upload artifact
+        if: always()
         uses: actions/upload-artifact@v1
         with:
           name: androidTests
