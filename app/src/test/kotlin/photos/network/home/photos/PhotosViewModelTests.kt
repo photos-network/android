@@ -57,15 +57,6 @@ class PhotosViewModelTests {
     }
 
     @Test
-    fun `viewmodel should show loading indicator by default`() = runTest {
-        // given
-        every { getPhotosUseCase() } answers { flowOf(emptyList()) }
-
-        // then
-        Truth.assertThat(viewmodel.uiState.value.isLoading).isEqualTo(true)
-    }
-
-    @Test
     fun `viewmodel should hide loading indicator and show list of photos`() = runTest {
         // given
         every { getPhotosUseCase() } answers { flowOf(listOf(photo1, photo2)) }
