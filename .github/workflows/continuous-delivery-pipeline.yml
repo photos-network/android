@@ -107,7 +107,7 @@ jobs:
 
       - name: Run debug unit tests
         run: |
-          ./gradlew --console=plain testDebugUnitTest
+          ./gradlew --console=plain testDebugUnitTest --stacktrace
 
       - name: Upload test reports
         uses: actions/upload-artifact@v2

@@ -62,7 +62,7 @@ class PhotosViewModelTests {
         every { getPhotosUseCase() } answers { flowOf(emptyList()) }
 
         // then
-        Truth.assertThat(viewmodel.uiState.value).isEqualTo(PhotosUiState())
+        Truth.assertThat(viewmodel.uiState.value.isLoading).isEqualTo(true)
     }
 
     @Test
