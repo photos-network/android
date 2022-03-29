@@ -50,8 +50,6 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import org.koin.androidx.compose.getViewModel
 import photos.network.R
-import photos.network.settings.SettingsScreen
-import photos.network.settings.ServerStatus
 import photos.network.details.DetailScreen
 import photos.network.home.albums.AlbumsScreen
 import photos.network.home.folders.FoldersScreen
@@ -60,6 +58,8 @@ import photos.network.navigation.Destination
 import photos.network.presentation.help.HelpScreen
 import photos.network.presentation.login.LoginScreen
 import photos.network.presentation.setup.SetupScreen
+import photos.network.settings.ServerStatus
+import photos.network.settings.SettingsScreen
 import photos.network.theme.AppTheme
 import photos.network.ui.components.AppLogo
 

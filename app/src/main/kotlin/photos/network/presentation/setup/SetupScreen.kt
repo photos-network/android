@@ -46,8 +46,8 @@ import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.viewModel
 import photos.network.R
 import photos.network.navigation.Destination
-import photos.network.ui.TextInput
 import photos.network.theme.AppTheme
+import photos.network.ui.TextInput
 
 /**
  * Initial app screen to setup photos network instance and client secrets used for

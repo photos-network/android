@@ -16,18 +16,16 @@
 package photos.network.data.photos.worker
 
 import android.app.Application
-import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import java.io.InputStream
-import java.time.Instant
 import logcat.LogPriority
 import logcat.logcat
 import photos.network.data.photos.repository.Photo
 import photos.network.data.photos.repository.PhotoRepository
+import java.time.Instant
 
 /**
  * Synchronizes all local photos from androids media store with the local database.
@@ -114,7 +112,6 @@ class SyncLocalPhotosWorker(
             } else {
                 -1
             }
-
 
             val fnumberColumn = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 cursor.getColumnIndexOrThrow(MediaStore.Images.Media.F_NUMBER)

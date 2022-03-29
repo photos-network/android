@@ -32,11 +32,9 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import photos.network.navigation.Destination
 import photos.network.home.Home
+import photos.network.navigation.Destination
 import photos.network.theme.AppTheme
-import photos.network.theme.darkColors
-import photos.network.theme.lightColors
 import photos.network.user.CurrentUserHost
 
 /**

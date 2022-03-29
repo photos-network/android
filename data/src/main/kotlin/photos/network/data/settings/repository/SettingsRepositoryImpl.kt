@@ -93,7 +93,6 @@ class SettingsRepositoryImpl(
             it != null
         }
 
-
         if (currentSettings == null) {
             currentSettings = SettingsDto()
         }

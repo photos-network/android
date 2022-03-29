@@ -17,12 +17,10 @@ package photos.network.domain.photos.usecase
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.mapNotNull
 import photos.network.data.photos.repository.Photo
 import photos.network.data.photos.repository.PhotoRepository
 import photos.network.data.settings.repository.PrivacyState
 import photos.network.data.settings.repository.SettingsRepository
-import photos.network.data.user.repository.UserRepository
 
 /**
  * Load a list of photos, filtered based on the users privacy filter.
