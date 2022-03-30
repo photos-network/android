@@ -22,13 +22,11 @@ import android.net.Uri
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,12 +48,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberPermissionState
-import java.time.Instant
 import org.koin.androidx.compose.getViewModel
 import photos.network.data.photos.repository.Photo
 import photos.network.navigation.Destination
 import photos.network.theme.AppTheme
 import photos.network.ui.PhotoGrid
+import java.time.Instant
 
 @Composable
 fun PhotosScreen(
@@ -129,7 +127,6 @@ private fun navigateToPermissionSettings(context: Context) {
     ).apply {
         addCategory(Intent.CATEGORY_DEFAULT)
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
     }
     startActivity(context, intent, null)
 }
@@ -143,7 +140,6 @@ fun PhotosContent(
 ) {
     // TODO: check permission first
     handleEvent(PhotosEvent.StartLocalPhotoSyncEvent)
-
 
     if (uiState.isLoading) {
         Text(
@@ -192,12 +188,14 @@ internal class PreviewPhotosProvider : PreviewParameterProvider<PhotosUiState> {
         PhotosUiState(photos = emptyList(), isLoading = true, hasError = false),
         PhotosUiState(photos = emptyList(), isLoading = false, hasError = true),
         PhotosUiState(
-            photos = listOf(Photo(
-                filename = "0L",
-                imageUrl = "",
-                dateAdded = Instant.parse("2022-01-01T13:37:00.123Z"),
-                dateTaken = Instant.parse("2022-01-01T13:37:00.123Z")
-            )),
+            photos = listOf(
+                Photo(
+                    filename = "0L",
+                    imageUrl = "",
+                    dateAdded = Instant.parse("2022-01-01T13:37:00.123Z"),
+                    dateTaken = Instant.parse("2022-01-01T13:37:00.123Z")
+                )
+            ),
             isLoading = false,
             hasError = false
         ),

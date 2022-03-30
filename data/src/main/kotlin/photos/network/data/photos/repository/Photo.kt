@@ -25,6 +25,7 @@ data class Photo(
     val dateAdded: Instant,
     val dateTaken: Instant?,
     val dateModified: Instant? = null,
+    val isPrivate: Boolean = false,
     val uri: Uri? = null,
 ) {
     fun toDatabasePhoto(): DatabasePhoto = DatabasePhoto(

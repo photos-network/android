@@ -35,13 +35,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import java.time.Instant
-import java.time.ZoneOffset
-import logcat.LogPriority
-import logcat.logcat
 import photos.network.R
 import photos.network.data.photos.repository.Photo
 import photos.network.theme.AppTheme
+import java.time.Instant
+import java.time.ZoneOffset
 
 @Composable
 fun PhotoGrid(
@@ -90,7 +88,6 @@ fun PhotoGrid(
                     "${DateFormatSymbols().months[month.value - 1]} $yearOfFirst"
                 }
 
-
                 // month header
                 item(span = { GridItemSpan(4) }) {
                     Text(text = title, style = MaterialTheme.typography.bodyLarge)
@@ -106,7 +103,7 @@ fun PhotoGrid(
 
                     Image(
                         painter = rememberImagePainter(
-                            data  = data,
+                            data = data,
                             builder = {
                                 crossfade(true)
                                 placeholder(R.drawable.image_placeholder)

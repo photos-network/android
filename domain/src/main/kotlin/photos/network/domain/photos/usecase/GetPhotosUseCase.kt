@@ -16,15 +16,31 @@
 package photos.network.domain.photos.usecase
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import photos.network.data.photos.repository.Photo
 import photos.network.data.photos.repository.PhotoRepository
-import photos.network.data.user.repository.UserRepository
+import photos.network.data.settings.repository.PrivacyState
+import photos.network.data.settings.repository.SettingsRepository
 
 /**
- * Load a list of phots from persistency.
+ * Load a list of photos, filtered based on the users privacy filter.
  */
 class GetPhotosUseCase(
     private val photoRepository: PhotoRepository,
+    private val settingsRepository: SettingsRepository,
 ) {
-    operator fun invoke(): Flow<List<Photo>> = photoRepository.getPhotos()
+    operator fun invoke(): Flow<List<Photo>> {
+        return combine(
+            photoRepository.getPhotos(),
+            settingsRepository.privacyState,
+        ) { photos, filter ->
+            if (filter == PrivacyState.ACTIVE) {
+                photos.filterNot {
+                    it.isPrivate
+                }
+            } else {
+                photos
+            }
+        }
+    }
 }

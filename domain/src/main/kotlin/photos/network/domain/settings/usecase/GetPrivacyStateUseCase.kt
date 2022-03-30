@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.settings
+package photos.network.domain.settings.usecase
 
-sealed class SettingsEvent {
-    class HostChanged(val newHost: String) : SettingsEvent()
-    class ClientIdChanged(val newId: String) : SettingsEvent()
-    class ClientSecretChanged(val newSecret: String) : SettingsEvent()
-    object ForceSync : SettingsEvent()
-    object EditProfile : SettingsEvent()
-    object ToggleActivityLog : SettingsEvent()
-    object Login : SettingsEvent()
+import kotlinx.coroutines.flow.Flow
+import photos.network.data.settings.repository.PrivacyState
+import photos.network.data.settings.repository.SettingsRepository
+
+class GetPrivacyStateUseCase(
+    private val settingsRepository: SettingsRepository,
+) {
+    operator fun invoke(): Flow<PrivacyState> {
+        return settingsRepository.privacyState
+    }
 }

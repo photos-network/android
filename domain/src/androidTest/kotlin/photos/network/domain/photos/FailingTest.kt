@@ -18,7 +18,6 @@ package photos.network.domain.photos
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 

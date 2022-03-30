@@ -17,20 +17,46 @@ package photos.network.home
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import photos.network.domain.user.usecase.LogoutUseCase
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import photos.network.data.settings.repository.PrivacyState
+import photos.network.domain.settings.usecase.GetPrivacyStateUseCase
+import photos.network.domain.settings.usecase.TogglePrivacyStateUseCase
 
 class HomeViewModel constructor(
-    private val logoutUseCase: LogoutUseCase,
+    private val getPrivacyStateUseCase: GetPrivacyStateUseCase,
+    private val togglePrivacyStateUseCase: TogglePrivacyStateUseCase,
 ) : ViewModel() {
     val uiState = mutableStateOf(HomeUiState())
 
-    fun handleEvent(event: HomeEvent) {
-        when (event) {
-            HomeEvent.TogglePrivacyEvent -> togglePrivacyFilter()
+    init {
+        loadInitialPrivacyState()
+    }
+
+    private fun loadInitialPrivacyState() {
+        viewModelScope.launch(Dispatchers.IO) {
+            getPrivacyStateUseCase().collect { privacyState ->
+                withContext(Dispatchers.Main) {
+                    if (privacyState == PrivacyState.ACTIVE) {
+                        uiState.value = uiState.value.copy(isPrivacyEnabled = true)
+                    } else {
+                        uiState.value = uiState.value.copy(isPrivacyEnabled = false)
+                    }
+                }
+            }
         }
     }
 
-    private fun togglePrivacyFilter() {
-        uiState.value = uiState.value.copy(isPrivacyEnabled = !uiState.value.isPrivacyEnabled)
+    fun handleEvent(event: HomeEvent) {
+        when (event) {
+            HomeEvent.TogglePrivacyEvent -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    togglePrivacyStateUseCase()
+                }
+            }
+        }
     }
 }

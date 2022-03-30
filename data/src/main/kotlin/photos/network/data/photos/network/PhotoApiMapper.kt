@@ -15,9 +15,9 @@
  */
 package photos.network.data.photos.network
 
-import java.time.Instant
-import photos.network.data.photos.repository.Photo
 import photos.network.data.photos.network.entity.NetworkPhoto
+import photos.network.data.photos.repository.Photo
+import java.time.Instant
 
 fun NetworkPhoto.toPhoto(): Photo {
     return Photo(

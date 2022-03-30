@@ -13,14 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.settings
+package photos.network.data.settings.repository
 
-sealed class SettingsEvent {
-    class HostChanged(val newHost: String) : SettingsEvent()
-    class ClientIdChanged(val newId: String) : SettingsEvent()
-    class ClientSecretChanged(val newSecret: String) : SettingsEvent()
-    object ForceSync : SettingsEvent()
-    object EditProfile : SettingsEvent()
-    object ToggleActivityLog : SettingsEvent()
-    object Login : SettingsEvent()
+enum class PrivacyState(val value: String) {
+    NONE("none"),
+    ACTIVE("active"),
 }

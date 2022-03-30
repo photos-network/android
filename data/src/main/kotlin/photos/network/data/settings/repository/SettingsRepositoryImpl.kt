@@ -15,6 +15,9 @@
  */
 package photos.network.data.settings.repository
 
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import photos.network.data.settings.persistence.SettingsStorage
 import photos.network.data.settings.persistence.entities.SettingsDto
 
@@ -22,6 +25,26 @@ class SettingsRepositoryImpl(
     private val settingsStore: SettingsStorage
 ) : SettingsRepository {
     private var currentSettings: SettingsDto? = null
+    override var privacyState: Flow<PrivacyState> = flow {
+        while (true) {
+            if (currentSettings == null) {
+                currentSettings = settingsStore.read().takeIf {
+                    it != null
+                }
+            }
+
+            emit(
+                PrivacyState.values().firstOrNull {
+                    it.value == currentSettings?.privacyState
+                } ?: PrivacyState.NONE
+            )
+            delay(POLL_INTERVAL)
+        }
+    }
+
+    init {
+        loadSettings()
+    }
 
     override val authCode: String?
         get() = currentSettings?.authCode
@@ -36,6 +59,31 @@ class SettingsRepositoryImpl(
     override val host: String?
         get() = currentSettings?.host
 
+    companion object {
+        private const val POLL_INTERVAL = 500L
+    }
+
+    override fun togglePrivacy() {
+        currentSettings?.let {
+            val newValue = if (it.privacyState == PrivacyState.NONE.value) {
+                PrivacyState.ACTIVE.value
+            } else {
+                PrivacyState.NONE.value
+            }
+            val new = SettingsDto(
+                host = it.host,
+                redirectUri = it.redirectUri,
+                authCode = it.authCode,
+                clientId = it.clientId,
+                clientSecret = it.clientSecret,
+                scope = it.scope,
+                useSSL = it.useSSL,
+                privacyState = newValue,
+            )
+            currentSettings = new
+        }
+    }
+
     override fun loadSettings(): SettingsDto? {
         if (currentSettings != null) {
             return currentSettings
@@ -43,6 +91,10 @@ class SettingsRepositoryImpl(
 
         currentSettings = settingsStore.read().takeIf {
             it != null
+        }
+
+        if (currentSettings == null) {
+            currentSettings = SettingsDto()
         }
 
         return currentSettings

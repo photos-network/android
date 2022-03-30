@@ -19,7 +19,6 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import photos.network.details.DetailViewModel
 import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
-import photos.network.domain.user.usecase.LogoutUseCase
 import photos.network.home.HomeViewModel
 import photos.network.home.photos.PhotosViewModel
 import photos.network.presentation.login.LoginViewModel
@@ -60,9 +59,8 @@ val appModule = module {
     }
     viewModel {
         HomeViewModel(
-            logoutUseCase = LogoutUseCase(
-                userRepository = get()
-            ),
+            getPrivacyStateUseCase = get(),
+            togglePrivacyStateUseCase = get()
         )
     }
     viewModel {

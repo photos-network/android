@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.settings
+package photos.network.domain.settings.usecase
 
-sealed class SettingsEvent {
-    class HostChanged(val newHost: String) : SettingsEvent()
-    class ClientIdChanged(val newId: String) : SettingsEvent()
-    class ClientSecretChanged(val newSecret: String) : SettingsEvent()
-    object ForceSync : SettingsEvent()
-    object EditProfile : SettingsEvent()
-    object ToggleActivityLog : SettingsEvent()
-    object Login : SettingsEvent()
+import photos.network.data.settings.repository.SettingsRepository
+
+/**
+ * Toggle privacy setting
+ */
+class TogglePrivacyStateUseCase(
+    private val settingsRepository: SettingsRepository
+) {
+    operator fun invoke(): Unit = settingsRepository.togglePrivacy()
 }

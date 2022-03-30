@@ -16,25 +16,17 @@
 package photos.network.data.photos.repository
 
 import android.content.Context
-import android.util.Log
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
-import java.util.concurrent.TimeUnit
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.withContext
-import photos.network.data.Resource
 import photos.network.data.photos.network.PhotoApi
 import photos.network.data.photos.persistence.PhotoDao
 import photos.network.data.photos.worker.SyncLocalPhotosWorker
+import java.util.concurrent.TimeUnit
 
 class PhotoRepositoryImpl(
     private val applicationContext: Context,

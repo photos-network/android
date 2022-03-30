@@ -97,6 +97,7 @@ class SetupViewModel(
                         clientId = uiState.value.clientId!!,
                         clientSecret = uiState.value.clientSecret!!,
                         scope = "",
+                        privacyState = "none"
                     )
                 )
                 logcat { "new Host: ${settingsRepository.host}" }

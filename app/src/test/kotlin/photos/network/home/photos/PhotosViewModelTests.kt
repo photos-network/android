@@ -1,9 +1,24 @@
+/*
+ * Copyright 2020-2022 Photos.network developers
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package photos.network.home.photos
 
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
-import java.time.Instant
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -16,6 +31,7 @@ import org.junit.Test
 import photos.network.data.photos.repository.Photo
 import photos.network.domain.photos.usecase.GetPhotosUseCase
 import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
+import java.time.Instant
 
 class PhotosViewModelTests {
     private val getPhotosUseCase = mockk<GetPhotosUseCase>()
@@ -32,6 +48,7 @@ class PhotosViewModelTests {
         dateTaken = Instant.parse("2022-02-02T20:20:20Z"),
         dateAdded = Instant.parse("2022-02-02T20:20:20Z"),
         uri = null,
+        isPrivate = true
     )
     private val photo2 = Photo(
         filename = "filename2",
@@ -39,6 +56,7 @@ class PhotosViewModelTests {
         dateTaken = Instant.parse("2022-02-02T21:21:20Z"),
         dateAdded = Instant.parse("2022-02-02T21:21:20Z"),
         uri = null,
+        isPrivate = false
     )
 
     @Before
@@ -52,16 +70,7 @@ class PhotosViewModelTests {
     }
 
     @Test
-    fun `viewmodel should show loading and contain an empty list`() = runTest {
-        // given
-        every { getPhotosUseCase() } answers { flowOf(emptyList()) }
-
-        // then
-        Truth.assertThat(viewmodel.uiState.value).isEqualTo(PhotosUiState())
-    }
-
-    @Test
-    fun `viewmodel should hide loading and contain a filled list of photos`() = runTest {
+    fun `viewmodel should hide loading indicator and show list of photos`() = runTest {
         // given
         every { getPhotosUseCase() } answers { flowOf(listOf(photo1, photo2)) }
 
@@ -76,5 +85,18 @@ class PhotosViewModelTests {
                 hasError = false
             )
         )
+    }
+
+    @Test
+    fun `viewmodel should start sync when opened`() {
+        // given
+        every { startPhotosSyncUseCase() } answers { Unit }
+        every { getPhotosUseCase() } answers { flowOf(emptyList()) }
+
+        // when
+        viewmodel.handleEvent(PhotosEvent.StartLocalPhotoSyncEvent)
+
+        // then
+        verify(atLeast = 1) { startPhotosSyncUseCase.invoke() }
     }
 }

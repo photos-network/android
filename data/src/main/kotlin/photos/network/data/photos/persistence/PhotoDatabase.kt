@@ -33,7 +33,8 @@ abstract class PhotoDatabase : RoomDatabase() {
 
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("""
+        database.execSQL(
+            """
             CREATE TABLE `photos_new` (
                 `uuid` TEXT, 
                 `filename` TEXT PRIMARY KEY NOT NULL, 
@@ -47,10 +48,12 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             """.trimIndent()
         )
 
-        database.execSQL("""
+        database.execSQL(
+            """
                 INSERT INTO photos_new (uuid, filename, imageUrl, dateTaken, dateAdded, dateModified, thumbnailFileUri, originalFileUri)
                 SELECT uuid, filename, imageUrl, dateTaken, strftime('%s', 'now'), NULL, thumbnailFileUri, originalFileUri FROM photos
-                """.trimIndent())
+            """.trimIndent()
+        )
         database.execSQL("DROP TABLE photos")
         database.execSQL("ALTER TABLE photos_new RENAME TO photos")
     }
