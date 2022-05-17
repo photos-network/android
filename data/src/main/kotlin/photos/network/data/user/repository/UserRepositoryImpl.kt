@@ -15,6 +15,8 @@
  */
 package photos.network.data.user.repository
 
+import io.ktor.client.plugins.ServerResponseException
+import java.net.ConnectException
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.logcat
@@ -49,7 +51,6 @@ class UserRepositoryImpl(
                     lastname = it.lastname,
                     firstname = it.firstname,
                     profileImageUrl = "",
-                    token = "",
                 )
                 currentUser = user
                 userStorage.save(user)
@@ -69,10 +70,23 @@ class UserRepositoryImpl(
         userStorage.delete()
     }
 
-    override suspend fun requestAuthorization(authCode: String, clientId: String): Boolean {
-        logcat(LogPriority.INFO) { "requestAuthorization done! authCode: $authCode" }
-        userApi.requestAutorization(authCode, clientId)
+    override suspend fun accessTokenRequest(authCode: String): Boolean {
+        return userApi.accessTokenRequest(authCode)
+    }
 
-        return true
+    override suspend fun verifyServerHost(host: String): Boolean {
+        try {
+            return userApi.verifyServerHost(host)
+        } catch (exception: ServerResponseException) {
+            logcat(LogPriority.WARN) { "verifyServerHost() failed" }
+        } catch (exception: ConnectException) {
+            logcat(LogPriority.WARN) { "verifyServerHost() failed" }
+        }
+
+        return false
+    }
+
+    override suspend fun verifyClientId(clientId: String): Boolean {
+        return userApi.verifyClientId(clientId)
     }
 }

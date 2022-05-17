@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.data.settings.persistence.entities
+package photos.network.data.settings.persistence
 
 import kotlinx.serialization.Serializable
-import photos.network.data.settings.repository.PrivacyState
 
 @Serializable
-class SettingsDto(
+class Settings(
     val host: String? = null,
-    val redirectUri: String? = null,
-    val authCode: String? = null,
+    val port: Int = 443,
     val clientId: String? = null,
-    val clientSecret: String? = null,
-    val scope: String? = null,
-    val useSSL: Boolean = false,
-    val privacyState: String = PrivacyState.NONE.value,
+    val privacyState: String = "NONE",
 )

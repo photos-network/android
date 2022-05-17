@@ -16,13 +16,15 @@
 package photos.network.data.photos.network
 
 import io.ktor.client.HttpClient
-import io.ktor.client.request.get
+import io.ktor.client.call.body
 import io.ktor.client.request.parameter
-import photos.network.data.photos.network.entity.NetworkPhoto
-import photos.network.data.photos.network.entity.NetworkPhotos
+import io.ktor.client.request.request
+import kotlinx.coroutines.flow.first
+import photos.network.data.settings.repository.SettingsRepository
 
 class PhotoApi(
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
+    private val settingsRepository: SettingsRepository,
 ) {
     /**
      * List all photos for current User has access to
@@ -30,12 +32,12 @@ class PhotoApi(
     suspend fun getPhotos(
         offset: Int = 0,
         limit: Int = 0,
-    ): NetworkPhotos = httpClient.get {
-        url {
-            encodedPath = "/api/photos"
-        }
-        parameter("offset", offset)
-        parameter("limit", limit)
+    ): Photos {
+        val host = settingsRepository.settings.first().host
+        return httpClient.request(urlString = "$host/api/photos") {
+            parameter("offset", offset)
+            parameter("limit", limit)
+        }.body()
     }
 
     /**
@@ -43,9 +45,6 @@ class PhotoApi(
      *
      * @param photoId Identifier of the photo details to return
      */
-    suspend fun getPhoto(photoId: String): NetworkPhoto = httpClient.get {
-        url {
-            encodedPath = "/api/photo/$photoId"
-        }
-    }
+    suspend fun getPhoto(photoId: String): Photo =
+        httpClient.request(urlString = "/api/photo/$photoId").body()
 }

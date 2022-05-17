@@ -22,5 +22,8 @@ interface UserRepository {
 
     suspend fun invalidateAuthorization()
 
-    suspend fun requestAuthorization(authCode: String, clientId: String): Boolean
+    suspend fun accessTokenRequest(authCode: String): Boolean
+
+    suspend fun verifyServerHost(host: String): Boolean
+    suspend fun verifyClientId(clientId: String): Boolean
 }

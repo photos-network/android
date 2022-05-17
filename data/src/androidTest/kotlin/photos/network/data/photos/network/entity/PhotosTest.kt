@@ -23,12 +23,14 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import photos.network.data.PhotosNetworkMockFileReader
+import photos.network.data.photos.network.Photo
+import photos.network.data.photos.network.Photos
 
 /**
  * Test (de)serializing photos responses.
  */
 @RunWith(AndroidJUnit4::class)
-class NetworkPhotosTest {
+class PhotosTest {
 
     @Test
     fun testDeserialization() = runBlocking {
@@ -37,7 +39,7 @@ class NetworkPhotosTest {
             PhotosNetworkMockFileReader.readStringFromFile("photos_response_success.json")
 
         // when
-        val response = Json.decodeFromString<NetworkPhotos>(jsonString)
+        val response = Json.decodeFromString<Photos>(jsonString)
 
         // then
         Assert.assertEquals(13, response.offset)
@@ -45,8 +47,8 @@ class NetworkPhotosTest {
         Assert.assertEquals(2, response.size)
         Assert.assertEquals(
             listOf(
-                NetworkPhoto("a1", "xy", "https://photos.network/foo.raw", null, null),
-                NetworkPhoto("b2", "yz", "https://photos.network/bar.raw", null, null),
+                Photo("a1", "xy", "https://photos.network/foo.raw", null, null),
+                Photo("b2", "yz", "https://photos.network/bar.raw", null, null),
             ),
             response.results
         )

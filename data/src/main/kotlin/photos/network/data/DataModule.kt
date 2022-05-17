@@ -19,31 +19,30 @@ import android.content.Context
 import androidx.room.Room
 import androidx.work.WorkManager
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.features.HttpTimeout
-import io.ktor.client.features.auth.Auth
-import io.ktor.client.features.auth.providers.BearerTokens
-import io.ktor.client.features.auth.providers.bearer
-import io.ktor.client.features.defaultRequest
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.features.logging.DEFAULT
-import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.features.logging.Logger
-import io.ktor.client.features.logging.Logging
+import io.ktor.client.call.body
+import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BearerTokens
+import io.ktor.client.plugins.auth.providers.bearer
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.observer.ResponseObserver
 import io.ktor.client.request.forms.submitForm
-import io.ktor.client.request.host
-import io.ktor.client.statement.HttpResponse
-import io.ktor.http.HttpMethod
+import io.ktor.client.statement.request
 import io.ktor.http.Parameters
-import io.ktor.http.URLProtocol
+import io.ktor.http.encodedPath
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import logcat.LogPriority
 import logcat.logcat
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.workmanager.dsl.worker
 import org.koin.dsl.module
 import photos.network.data.photos.network.PhotoApi
-import photos.network.data.photos.network.entity.TokenInfo
+import photos.network.data.photos.network.TokenInfo
 import photos.network.data.photos.persistence.MIGRATION_1_2
 import photos.network.data.photos.persistence.PhotoDao
 import photos.network.data.photos.persistence.PhotoDatabase
@@ -54,19 +53,17 @@ import photos.network.data.settings.persistence.SettingsStorage
 import photos.network.data.settings.repository.SettingsRepository
 import photos.network.data.settings.repository.SettingsRepositoryImpl
 import photos.network.data.user.network.UserApi
+import photos.network.data.user.persistence.User
 import photos.network.data.user.persistence.UserStorage
 import photos.network.data.user.repository.UserRepository
 import photos.network.data.user.repository.UserRepositoryImpl
 
 val dataModule = module {
-    factory { PhotosHttpClient(settingsRepository = get()) }
-
     single {
         UserApi(
-            httpClient = PhotosHttpClient(
-                settingsRepository = get()
-            ).httpClient,
-            settingsRepository = get()
+            httpClient = get(),
+            settingsRepository = get(),
+            userStorage = get(),
         )
     }
 
@@ -89,14 +86,26 @@ val dataModule = module {
         )
     }
 
-    single { PhotoApi(httpClient = PhotosHttpClient(settingsRepository = get()).httpClient) }
+    single {
+        provideKtorClient(
+            userStorage = get(),
+            settingsStore = get(),
+        )
+    }
+
+    single {
+        PhotoApi(
+            httpClient = get(),
+            settingsRepository = get(),
+        )
+    }
 
     single<PhotoRepository> {
         PhotoRepositoryImpl(
             applicationContext = get(),
             photoApi = get(),
             photoDao = get(),
-            workManager = get()
+            workManager = get(),
         )
     }
     single { providePhotoDatabase(get()) }
@@ -108,7 +117,7 @@ val dataModule = module {
 
     single<SettingsRepository> {
         SettingsRepositoryImpl(
-            settingsStore = get()
+            settingsStore = get(),
         )
     }
 }
@@ -126,146 +135,106 @@ private fun providePhotoDao(photoDatabase: PhotoDatabase): PhotoDao {
     return photoDatabase.photoDao()
 }
 
-class PhotosHttpClient(
-    val settingsRepository: SettingsRepository
-) {
-    private val authCode: String
-        get() = settingsRepository.authCode ?: ""
-    private val clientId: String
-        get() = settingsRepository.clientId ?: ""
-    private val clientSecret: String
-        get() = settingsRepository.clientSecret ?: ""
-    private val redirectUri: String
-        get() = settingsRepository.redirectUri ?: ""
-    private val scope: String
-        get() = settingsRepository.scope ?: ""
-    private val host: String
-        get() = settingsRepository.host ?: "photos.network"
-
-    init {
-        logcat { "DataModule init" }
-        settingsRepository.loadSettings()
-    }
-
-    val httpClient = HttpClient(CIO) {
+private fun provideKtorClient(
+    userStorage: UserStorage,
+    settingsStore: SettingsStorage,
+): HttpClient {
+    val client = HttpClient(Android) {
         expectSuccess = false
         followRedirects = true
 
-//        defaultRequest {
-//            method = HttpMethod.Get
-//            host = settingsRepository.host ?: "https://photos.network"
-//            url {
-//                protocol = URLProtocol.HTTPS
-//            }
-//        }
+        engine {
+            threadsCount = 1_000
+        }
+
+        install(Logging) {
+            logger = object : Logger {
+                override fun log(message: String) {
+                    logcat(LogPriority.INFO) { message }
+                }
+            }
+            level = LogLevel.ALL
+        }
+
+        install(ResponseObserver) {
+            onResponse {
+                logcat(LogPriority.INFO) { "<== ${it.status} ${it.request.url}" }
+            }
+        }
+
+        install(ContentNegotiation) {
+            json(
+                Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                }
+            )
+        }
 
         install(Auth) {
-            lateinit var tokenInfo: TokenInfo
-            var refreshTokenInfo: TokenInfo
-
             bearer {
-                // called to get an initial token
                 loadTokens {
-                    logcat { "install(Auth) loadTokens" }
-                    /**
-                     * OAuth token request based on [RFC6749](https://tools.ietf.org/html/rfc6749#section-4.1.3)
-                     *
-                     * @param code The authorization code received from the authorization server.
-                     * @param clientId The client identifier issued by the authorization server.
-                     * @param redirectUri The redirect_uri included in the authorization request.
-                     */
-                    tokenInfo = tokenClient.submitForm(
-                        formParameters = Parameters.build {
-                            append("grant_type", "authorization_code")
-                            append("code", this@PhotosHttpClient.authCode)
-                            append("client_id", this@PhotosHttpClient.clientId)
-                            append("redirect_uri", this@PhotosHttpClient.redirectUri)
-                        },
-                        path = "/api/oauth/token"
-                    )
+                    val accessToken = userStorage.read()?.accessToken ?: ""
+                    val refreshToken = userStorage.read()?.refreshToken ?: ""
+
                     BearerTokens(
-                        accessToken = tokenInfo.accessToken,
-                        refreshToken = tokenInfo.refreshToken
+                        accessToken = accessToken,
+                        refreshToken = refreshToken
                     )
                 }
 
                 // called after receiving a 401 (Unauthorized) response with the WWW-Authenticate header
-                refreshTokens { unauthorizedResponse: HttpResponse ->
+                refreshTokens {
+                    val refreshToken = userStorage.read()?.refreshToken ?: ""
+                    val host = settingsStore.read()?.host ?: ""
+                    val clientId = settingsStore.read()?.clientId ?: ""
+
                     /**
                      * OAuth refresh token request based on [RFC6749](https://tools.ietf.org/html/rfc6749#section-6)
                      *
                      * @param refreshToken The refresh token issued to the client.
                      * @param clientId The client identifier issued by the authorization server.
-                     * @param clientSecret The client secret issued during registration process.
                      * @param scope list of case-sensitive strings to grant access based on.
                      */
-                    refreshTokenInfo = tokenClient.submitForm(
+                    val refreshTokenInfo: TokenInfo = client.submitForm(
+                        url = "$host/api/oauth/token",
                         formParameters = Parameters.build {
                             append("grant_type", "refresh_token")
-                            append("refresh_token", tokenInfo.refreshToken)
-                            append("client_id", this@PhotosHttpClient.clientId)
-                            append("client_secret", this@PhotosHttpClient.clientSecret)
-                            append("scope", this@PhotosHttpClient.scope)
+                            append("refresh_token", refreshToken)
+                            append("client_id", clientId)
+                            append("scope", "openid profile email phone library:read library:write")
                         },
-                        path = "/api/oauth/token"
-                    )
+                    ).body()
+
+                    logcat(LogPriority.ERROR) { "refreshTokenInfo=${refreshTokenInfo.accessToken}" }
+
+                    val user = userStorage.read()
+                    user?.let {
+                        val tmpUser = User(
+                            id = it.id,
+                            lastname = it.lastname,
+                            firstname = it.firstname,
+                            profileImageUrl = it.profileImageUrl,
+                            accessToken = refreshTokenInfo.accessToken,
+                            refreshToken = refreshTokenInfo.refreshToken
+                        )
+                        userStorage.save(tmpUser)
+                    }
 
                     BearerTokens(
                         accessToken = refreshTokenInfo.accessToken,
-                        refreshToken = tokenInfo.refreshToken
+                        refreshToken = refreshTokenInfo.refreshToken
                     )
                 }
 
-                // add calls
+                // always send credentials when predicate fulfilled
                 sendWithoutRequest { request ->
-                    false
+                    request.url.encodedPath.endsWith("/protected")
                 }
             }
         }
-
-        install(HttpTimeout) {
-            requestTimeoutMillis = 10_000
-            connectTimeoutMillis = 60_000
-            socketTimeoutMillis = 60_000
-        }
-
-        engine {
-            requestTimeout = 60_000
-            maxConnectionsCount = 1_000
-        }
-
-        install(Logging) {
-            logger = Logger.DEFAULT
-            level = LogLevel.ALL
-        }
-
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(
-                Json {
-                    ignoreUnknownKeys = true
-                    encodeDefaults = true
-                    prettyPrint = true
-                }
-            )
-        }
     }
 
-    private val tokenClient = HttpClient(CIO) {
-        defaultRequest {
-            method = HttpMethod.Get
-            host = this@PhotosHttpClient.host
-            url {
-                protocol = URLProtocol.HTTPS
-            }
-        }
-
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(
-                Json {
-                    ignoreUnknownKeys = true
-                    encodeDefaults = true
-                }
-            )
-        }
-    }
+    return client
 }

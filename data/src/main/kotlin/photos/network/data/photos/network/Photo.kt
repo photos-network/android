@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.data.photos.network.entity
+package photos.network.data.photos.network
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NetworkPhotos(
-    @SerialName("offset") val offset: Int,
-    @SerialName("limit") val limit: Int,
-    @SerialName("size") val size: Int,
-    @SerialName("results") val results: List<NetworkPhoto>,
+data class Photo(
+    @SerialName("id") val id: String,
+    @SerialName("name") val name: String,
+    @SerialName("image_url") val imageUrl: String,
+    @SerialName("date_added") val dateAdded: String? = null,
+    @SerialName("date_taken") val dateTaken: Long? = null,
 )

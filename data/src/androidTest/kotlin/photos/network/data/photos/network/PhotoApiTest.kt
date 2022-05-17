@@ -31,7 +31,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Test
 import org.junit.runner.RunWith
 import photos.network.data.PhotosNetworkMockFileReader
-import photos.network.data.photos.network.entity.NetworkPhotos
 
 /**
  * Test the REST interface to the photos.network core instance.
@@ -54,7 +53,7 @@ class PhotoApiTest {
         val photoApi = PhotoApi(httpClient)
 
         // when
-        val result: NetworkPhotos = photoApi.getPhotos()
+        val result: Photos = photoApi.getPhotos()
 
         // then
         assertEquals(result.size, 2)

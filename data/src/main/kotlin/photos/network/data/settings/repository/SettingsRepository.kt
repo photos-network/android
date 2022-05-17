@@ -16,20 +16,17 @@
 package photos.network.data.settings.repository
 
 import kotlinx.coroutines.flow.Flow
-import photos.network.data.settings.persistence.entities.SettingsDto
 
 interface SettingsRepository {
-    val privacyState: Flow<PrivacyState>
-    val authCode: String?
-    val clientId: String?
-    val clientSecret: String?
-    val redirectUri: String?
-    val scope: String?
-    val host: String?
+    val settings: Flow<Settings>
 
-    fun togglePrivacy(): Unit
+    suspend fun updateHost(newHost: String)
 
-    fun loadSettings(): SettingsDto?
+    suspend fun updateClientId(newClientId: String)
 
-    fun saveSettings(settings: SettingsDto)
+    suspend fun togglePrivacy()
+
+    suspend fun updateSettings(newSettings: Settings): Unit
+
+    suspend fun deleteSettings(): Unit
 }
