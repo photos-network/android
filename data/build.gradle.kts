@@ -117,8 +117,8 @@ dependencies {
     api("androidx.core:core-ktx:1.7.0")
 
     // Coroutines
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
 
     // Coroutine Lifecycle Scopes
     api("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
@@ -146,13 +146,15 @@ dependencies {
     api("androidx.exifinterface:exifinterface:1.3.3")
 
     // httpclient
-    api("io.ktor:ktor-client-core:1.6.7")
-    api("io.ktor:ktor-client-android:1.6.6")
-    api("io.ktor:ktor-client-cio:1.6.7")
-    api("io.ktor:ktor-client-auth:1.6.6")
-    api("io.ktor:ktor-client-serialization:1.6.6")
-    api("io.ktor:ktor-client-logging-jvm:1.6.6")
-    androidTestApi("io.ktor:ktor-client-mock-jvm:1.6.6")
+    implementation("io.ktor:ktor-client-core:2.0.1")
+    implementation("io.ktor:ktor-client-android:2.0.1")
+    implementation("io.ktor:ktor-client-cio:2.0.1")
+    implementation("io.ktor:ktor-client-auth:2.0.1")
+    implementation("io.ktor:ktor-client-serialization:2.0.1")
+    implementation("io.ktor:ktor-client-content-negotiation:2.0.1")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.1")
+    implementation("io.ktor:ktor-client-logging-jvm:2.0.1")
+    androidTestApi("io.ktor:ktor-client-mock-jvm:2.0.1")
 
     // logging
     api("com.squareup.logcat:logcat:0.1")
