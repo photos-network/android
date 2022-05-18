@@ -16,9 +16,14 @@
 package photos.network.settings
 
 import android.content.res.Configuration
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,25 +31,31 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -54,9 +65,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.getViewModel
 import photos.network.R
+import photos.network.navigation.Destination
 import photos.network.theme.AppTheme
+import photos.network.ui.components.ActivityLog
 import photos.network.ui.components.AppLogo
-import photos.network.ui.components.DecoratedTextField
 
 @Composable
 fun SettingsScreen(
@@ -65,197 +77,318 @@ fun SettingsScreen(
 ) {
     val viewmodel: SettingsViewModel = getViewModel()
 
-    AccountContent(
+    SettingsContent(
         modifier = modifier,
-        navController = navController,
         uiState = viewmodel.uiState.value,
         handleEvent = viewmodel::handleEvent,
+        navigateToLogin = { navController.navigate(Destination.Login.route) }
     )
 }
 
 @Composable
-fun AccountContent(
+fun SettingsContent(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
     uiState: SettingsUiState,
     handleEvent: (event: SettingsEvent) -> Unit,
+    navigateToLogin: () -> Unit = {}
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
-        // header + icon
-        Box(
-            modifier = Modifier
-                .padding(bottom = 16.dp)
-                .background(MaterialTheme.colorScheme.surface)
-        ) {
-            // header gradient
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(MaterialTheme.colorScheme.primary)
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color(0x55000000),
-                                Color(0x00000000)
-                            )
-                        )
-                    )
-            )
+    val verticalScrollState = rememberScrollState(0)
 
-            // app name
-            Text(
-                modifier = Modifier
-                    .padding(top = 32.dp)
-                    .fillMaxWidth(),
-                text = stringResource(id = R.string.app_name_full),
-                style = MaterialTheme.typography.headlineLarge,
-                textAlign = TextAlign.Center,
-                color = Color.White
-            )
+    Column(
+        modifier = modifier
+            .verticalScroll(verticalScrollState)
+            .fillMaxSize()
+    ) {
 
-            // logo with status indicator
-            AppLogo(
-                modifier = Modifier
-                    .padding(top = 125.dp)
-                    .fillMaxWidth()
-                    .align(Alignment.Center),
-                size = 150.dp,
-                serverStatus = uiState.serverStatus,
-            )
-        }
+        SettingsHeader(serverStatus = uiState.serverStatus)
 
-        // buttons
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .clickable {
-                        // TODO: handle click
-                    }
-            ) {
-
-                // Sync
-                IconButton(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
-                        .align(Alignment.CenterHorizontally),
-                    enabled = false,
-                    onClick = {}
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Sync,
-                        contentDescription = null
-                    )
-                }
-                Text(
-                    text = "Force Sync",
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .clickable {
-                        // TODO: handle click
-                    }
-            ) {
-                IconButton(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
-                        .align(Alignment.CenterHorizontally),
-                    onClick = {}
-                ) {
-                    Icon(Icons.Filled.Person, null)
-                }
-                Text(
-                    text = "Edit Profile",
-                    color = MaterialTheme.colorScheme.onBackground
-
-                )
-            }
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .clickable {
-                        // TODO: handle click
-                    }
-            ) {
-                IconButton(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
-                        .align(Alignment.CenterHorizontally),
-                    onClick = {},
-                    enabled = false
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.List,
-                        contentDescription = null,
-                    )
-                }
-                Text(
-                    text = "Activity Log",
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-        }
-
-        Divider(
-            modifier = Modifier
-                .padding(horizontal = 32.dp, vertical = 8.dp)
-                .fillMaxWidth(),
-            color = MaterialTheme.colorScheme.outline
+        ServerSetupItem(
+            onServerSetupClicked = {
+                handleEvent(SettingsEvent.ToggleServerSetup)
+            },
+            isExpanded = uiState.isServerSetupExpanded,
+            serverHost = uiState.host,
+            onServerHostUpdated = {
+                handleEvent(SettingsEvent.HostChanged(it))
+            },
+            isHostVerified = uiState.isHostVerified,
+            clientId = uiState.clientId,
+            onClientIdUpdated = {
+                handleEvent(SettingsEvent.ClientIdChanged(it))
+            },
+            isClientIdVerified = uiState.isClientVerified
         )
 
-        Column(
-            modifier = Modifier.padding(16.dp),
+        Divider()
+
+        AccountSetupItem(loggedIn = uiState.loggedIn) {
+            navigateToLogin()
+        }
+
+        SectionSpacer()
+
+        AppVersionItem(version = uiState.appVersion) {
+            handleEvent(SettingsEvent.SetClipboardEvent)
+        }
+
+        // ActivityLog()
+    }
+}
+
+@Composable
+internal fun SettingsHeader(
+    modifier: Modifier = Modifier,
+    serverStatus: ServerStatus,
+) {
+    // header + icon
+    Box(
+        modifier = modifier.background(MaterialTheme.colorScheme.surface)
+    ) {
+        // header gradient
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .background(MaterialTheme.colorScheme.primary)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0x55000000),
+                            Color(0x00000000)
+                        )
+                    )
+                )
+        )
+
+        // app name
+        Text(
+            modifier = Modifier
+                .padding(top = 32.dp)
+                .testTag("SETTINGS_HEADER_TITLE")
+                .fillMaxWidth(),
+            text = stringResource(id = R.string.app_name_full),
+            style = MaterialTheme.typography.headlineLarge,
+            textAlign = TextAlign.Center,
+            color = Color.White
+        )
+
+        // logo with status indicator
+        AppLogo(
+            modifier = Modifier
+                .padding(top = 125.dp)
+                .testTag("SETTINGS_HEADER_LOGO")
+                .fillMaxWidth()
+                .align(Alignment.Center),
+            size = 150.dp,
+            serverStatus = serverStatus,
+        )
+    }
+}
+
+@Composable
+fun ServerSetupItem(
+    modifier: Modifier = Modifier,
+    isExpanded: Boolean = false,
+    serverHost: String = "",
+    onServerHostUpdated: (String) -> Unit = {},
+    isHostVerified: Boolean = false,
+    clientId: String = "",
+    onClientIdUpdated: (String) -> Unit = {},
+    isClientIdVerified: Boolean = false,
+    serverStatus: ServerStatus = ServerStatus.UNAVAILABLE,
+    onServerSetupClicked: () -> Unit = {},
+) {
+    val serverSetupLabel = if (serverStatus != ServerStatus.AVAILABLE) {
+        stringResource(id = R.string.settings_item_server_setup)
+    } else {
+        stringResource(id = R.string.settings_item_server_update)
+    }
+    Surface(modifier = modifier
+        .clickable(
+            onClickLabel = serverSetupLabel
         ) {
-
-            // status
+            onServerSetupClicked()
+        }
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Add a photos.network instance configuration to sync your data with.",
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(1f),
+                text = serverSetupLabel
             )
-
-            DecoratedTextField(
-                modifier = Modifier.padding(vertical = 8.dp),
-                label = "Host",
-                value = uiState.host,
-                hint = "https://",
-                onValueChanged = {
-                    handleEvent(SettingsEvent.HostChanged(it))
-                }
-            )
-
-            DecoratedTextField(
-                modifier = Modifier.padding(vertical = 8.dp),
-                label = "Client ID",
-                value = uiState.clientId,
-                onValueChanged = {
-                    handleEvent(SettingsEvent.ClientIdChanged(it))
-                },
-                visualTransformation = PasswordVisualTransformation()
-            )
-
-            DecoratedTextField(
-                modifier = Modifier.padding(vertical = 8.dp),
-                label = "Client Secret",
-                value = uiState.clientSecret,
-                onValueChanged = {
-                    handleEvent(SettingsEvent.ClientSecretChanged(it))
-                },
-                visualTransformation = PasswordVisualTransformation()
-            )
+            if (isExpanded) {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = null
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowRight,
+                    contentDescription = null
+                )
+            }
         }
     }
 
-    // TODO: bottom sheet for server connection settings
+    Column {
+        // server host
+        AnimatedVisibility(
+            visible = isExpanded,
+            enter = fadeIn(animationSpec = tween(durationMillis = 1000)) + expandVertically(),
+            exit = shrinkVertically(animationSpec = tween(durationMillis = 500, delayMillis = 0)),
+        ) {
+            FormInput(
+                modifier = modifier,
+                label = "Host",
+                value = serverHost,
+                hint = "https://",
+                onValueChanged = {
+                    onServerHostUpdated(it)
+                },
+                showTrailingIcon = isHostVerified
+            )
+        }
+
+        // client id
+        AnimatedVisibility(
+            visible = isExpanded && isHostVerified,
+            enter = fadeIn(animationSpec = tween(durationMillis = 1000)) + expandVertically(),
+            exit = shrinkVertically(animationSpec = tween(durationMillis = 500, delayMillis = 0)),
+        ) {
+            FormInput(
+                modifier = modifier,
+                label = "Client ID",
+                value = clientId,
+                onValueChanged = {
+                    onClientIdUpdated(it)
+                },
+                showTrailingIcon = isClientIdVerified
+            )
+        }
+    }
+}
+
+@Composable
+fun FormInput(
+    modifier: Modifier = Modifier,
+    label: String = "",
+    value: String = "",
+    onValueChanged: (String) -> Unit = {},
+    hint: String = "",
+    showTrailingIcon: Boolean = false
+) {
+    Surface(modifier = modifier) {
+        var text by remember { mutableStateOf(value) }
+
+        TextField(
+            modifier = Modifier
+                .padding(horizontal = 32.dp, vertical = 8.dp)
+                .fillMaxWidth(),
+            value = text,
+            onValueChange = {
+                text = it
+                onValueChanged(it)
+            },
+            enabled = true,
+            readOnly = false,
+            textStyle = MaterialTheme.typography.bodyMedium,
+            label = {
+                Text(label)
+            },
+            placeholder = {
+                Text(text = hint)
+            },
+            leadingIcon = null,
+            trailingIcon = {
+                if (showTrailingIcon) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        tint = Color(0xFF4CAF50),
+                        contentDescription = null
+                    )
+                }
+            },
+            isError = false,
+            singleLine = true,
+            maxLines = 1,
+        )
+    }
+}
+
+@Composable
+fun SectionSpacer(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .height(48.dp)
+            .background(
+                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.12f)
+            )
+    )
+}
+
+@Composable
+fun AppVersionItem(
+    modifier: Modifier = Modifier,
+    version: String = "",
+    onAppVersionClicked: () -> Unit,
+) {
+    val context = LocalContext.current
+    Surface(modifier = modifier
+        .clickable {
+            onAppVersionClicked()
+            Toast
+                .makeText(context, R.string.settings_copied_to_clipboard, Toast.LENGTH_SHORT)
+                .show()
+        }
+    ) {
+        Row(
+            modifier = Modifier
+                .semantics(mergeDescendants = true) {}
+                .padding(16.dp)
+        ) {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = "App Version"
+            )
+            Text(
+                text = version,
+            )
+        }
+    }
+}
+
+@Composable
+fun AccountSetupItem(
+    modifier: Modifier = Modifier,
+    loggedIn: Boolean = false,
+    onAccountSetupClicked: () -> Unit = {},
+) {
+    val clickLabel: String = if (loggedIn) {
+        "Logout user"
+    } else {
+        "Open user login"
+    }
+    Surface(modifier = modifier
+        .clickable(
+            onClickLabel = clickLabel
+        ) {
+            onAccountSetupClicked()
+        }
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = clickLabel
+            )
+        }
+    }
 }
 
 @Preview(
@@ -275,7 +408,7 @@ private fun PreviewAccount(
     @PreviewParameter(PreviewAccountProvider::class) uiState: SettingsUiState,
 ) {
     AppTheme {
-        AccountContent(
+        SettingsContent(
             uiState = uiState,
             handleEvent = {}
         )
@@ -284,9 +417,13 @@ private fun PreviewAccount(
 
 internal class PreviewAccountProvider : PreviewParameterProvider<SettingsUiState> {
     override val values = sequenceOf(
-        SettingsUiState(serverStatus = ServerStatus.PROGRESS),
-        SettingsUiState(serverStatus = ServerStatus.UNAVAILABLE),
-        SettingsUiState(serverStatus = ServerStatus.AVAILABLE),
+        SettingsUiState(
+            serverStatus = ServerStatus.UNAVAILABLE,
+            isServerSetupExpanded = true,
+            isHostVerified = true
+        ),
+        SettingsUiState(serverStatus = ServerStatus.PROGRESS, isServerSetupExpanded = true),
+        SettingsUiState(serverStatus = ServerStatus.AVAILABLE, isServerSetupExpanded = true),
     )
     override val count: Int = values.count()
 }

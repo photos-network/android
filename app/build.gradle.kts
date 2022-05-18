@@ -251,6 +251,7 @@ dependencies {
     implementation("androidx.paging:paging-common-ktx:3.1.0")
     androidTestApi("androidx.compose.ui:ui-test:1.1.1")
     androidTestApi("androidx.compose.ui:ui-test-junit4:1.1.1")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.1.1")
     debugApi("androidx.compose.ui:ui-tooling:1.1.1")
 
     // accompanist

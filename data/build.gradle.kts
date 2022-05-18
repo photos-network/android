@@ -181,4 +181,5 @@ dependencies {
     androidTestApi("androidx.test:runner:1.4.0")
     androidTestApi("androidx.test:rules:1.4.0")
     androidTestApi("androidx.test.services:test-services:1.4.1")
+    androidTestApi("io.mockk:mockk:1.12.3")
 }

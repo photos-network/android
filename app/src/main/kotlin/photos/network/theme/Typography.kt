@@ -34,6 +34,12 @@ val Changa = FontFamily(
 //    Font(R.font.changa_semi_bold, FontWeight.Medium),
 )
 
+val JetbrainsMono = FontFamily(
+    Font(R.font.jetbrains_mono_regular, FontWeight.Normal),
+    Font(R.font.jetbrains_mono_thin, FontWeight.Thin),
+    Font(R.font.jetbrains_mono_light, FontWeight.Light),
+)
+
 val AppTypography = Typography(
     displayLarge = TextStyle(
         fontFamily = Roboto,

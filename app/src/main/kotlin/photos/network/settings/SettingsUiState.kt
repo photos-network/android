@@ -16,10 +16,16 @@
 package photos.network.settings
 
 data class SettingsUiState(
-    val serverStatus: ServerStatus = ServerStatus.UNAVAILABLE,
+    val isServerSetupExpanded: Boolean = false,
     val host: String = "",
+    val isHostVerified: Boolean = false,
     val clientId: String = "",
-    val clientSecret: String = "",
+    val isClientVerified: Boolean = false,
+    val redirectUri: String = "",
+    val serverStatus: ServerStatus = ServerStatus.UNAVAILABLE,
+    val loggedIn: Boolean = false,
+    val activityLog: List<String> = emptyList(),
+    val appVersion: String = "Unknown",
 )
 
 enum class ServerStatus {
