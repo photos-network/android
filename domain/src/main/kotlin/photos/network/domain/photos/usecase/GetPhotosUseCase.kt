@@ -32,9 +32,9 @@ class GetPhotosUseCase(
     operator fun invoke(): Flow<List<Photo>> {
         return combine(
             photoRepository.getPhotos(),
-            settingsRepository.privacyState,
-        ) { photos, filter ->
-            if (filter == PrivacyState.ACTIVE) {
+            settingsRepository.settings,
+        ) { photos, settings ->
+            if (settings.privacyState == PrivacyState.ACTIVE) {
                 photos.filterNot {
                     it.isPrivate
                 }

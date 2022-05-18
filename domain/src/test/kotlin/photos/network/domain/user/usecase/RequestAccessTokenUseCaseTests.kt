@@ -17,6 +17,7 @@ package photos.network.domain.user.usecase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.first
@@ -26,57 +27,42 @@ import org.junit.Test
 import photos.network.data.user.repository.User
 import photos.network.data.user.repository.UserRepository
 
-class GetCurrentUserUseCaseTests {
+class RequestAccessTokenUseCaseTests {
     @Rule
     @JvmField
     val rule = InstantTaskExecutorRule()
 
     private val userRepository = mockk<UserRepository>()
 
-    private val getCurrentUserUseCase by lazy {
-        GetCurrentUserUseCase(
+    private val requestAccessTokenUseCase by lazy {
+        RequestAccessTokenUseCase(
             userRepository = userRepository
         )
     }
 
     @Test
-    fun `use case should return user if available`(): Unit = runBlocking {
+    fun `use case should return user true if access token request was successful`(): Unit = runBlocking {
         // given
-        val user = User(
-            id = "f70ce489-f7bf-450b-a75a-295ce8a674c6",
-            lastname = "Norris",
-            firstname = "Carlos Ray",
-            profileImageUrl = "http://localhost/image/chuck_norris.jpg",
-            accessToken = "access_token"
-        )
-
-        every { userRepository.currentUser() } answers {
-            user.toDatabaseUser()
-        }
+        coEvery { userRepository.accessTokenRequest(any()) } answers { true }
 
         // when
-        val result = getCurrentUserUseCase().first()
+        val result = requestAccessTokenUseCase("abcdefg")
 
         // then
         Truth.assertThat(result).isNotNull()
-        Truth.assertThat(result?.id).isEqualTo(user.id)
-        Truth.assertThat(result?.lastname).isEqualTo(user.lastname)
-        Truth.assertThat(result?.firstname).isEqualTo(user.firstname)
-        Truth.assertThat(result?.profileImageUrl).isEqualTo(user.profileImageUrl)
-        Truth.assertThat(result?.accessToken).isEqualTo(user.accessToken)
+        Truth.assertThat(result).isEqualTo(true)
     }
 
     @Test
-    fun `use case should return null if no user is available`(): Unit = runBlocking {
+    fun `use case should return user false if access token request failed`(): Unit = runBlocking {
         // given
-        every { userRepository.currentUser() } answers {
-            null
-        }
+        coEvery { userRepository.accessTokenRequest(any()) } answers { false }
 
         // when
-        val result = getCurrentUserUseCase.invoke()
+        val result = requestAccessTokenUseCase("gfedcba")
 
         // then
-        Truth.assertThat(result.first()).isEqualTo(null)
+        Truth.assertThat(result).isNotNull()
+        Truth.assertThat(result).isEqualTo(false)
     }
 }

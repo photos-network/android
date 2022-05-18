@@ -15,14 +15,13 @@
  */
 package photos.network.domain.settings.usecase
 
-import kotlinx.coroutines.flow.Flow
-import photos.network.data.settings.repository.PrivacyState
 import photos.network.data.settings.repository.SettingsRepository
 
-class GetPrivacyStateUseCase(
-    private val settingsRepository: SettingsRepository,
+/**
+ * Toggle privacy setting
+ */
+class TogglePrivacyUseCase(
+    private val settingsRepository: SettingsRepository
 ) {
-    operator fun invoke(): Flow<PrivacyState> {
-        return settingsRepository.privacyState
-    }
+    suspend operator fun invoke(): Unit = settingsRepository.togglePrivacy()
 }
