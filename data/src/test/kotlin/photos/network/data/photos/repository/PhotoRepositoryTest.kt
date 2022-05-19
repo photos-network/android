@@ -43,36 +43,98 @@ class PhotoRepositoryTest {
     private val photoDao = mockk<PhotoDao>()
     private val workManager = mockk<WorkManager>()
 
+    private val repository by lazy {
+        PhotoRepositoryImpl(
+            applicationContext = applicationContext,
+            photoApi = photoApi,
+            photoDao = photoDao,
+            workManager = workManager,
+        )
+    }
+
     @Test
     fun `should return all photos from persistence`() = runBlocking {
         // given
         every { photoDao.getPhotos() } answers {
             flowOf(
                 listOf(
-                    Photo(
-                        uuid = null,
-                        filename = "IMG_20200202_202020.jpg",
-                        imageUrl = "http://127.0.0.1/image/e369d958-ad41-4391-9ccb-f89be8ca1e8b",
-                        dateTaken = 1580671220,
-                        dateAdded = 1580671220,
-                        dateModified = 1580671220,
-                        thumbnailFileUri = null,
-                        originalFileUri = null
-                    )
+                    createFakePhoto(filename = "001", dateTaken = 1580671220),
+                    createFakePhoto(filename = "002", dateTaken = 1580671221)
                 )
             )
         }
-        val repository = PhotoRepositoryImpl(
-            applicationContext = applicationContext,
-            photoApi = photoApi,
-            photoDao = photoDao,
-            workManager = workManager,
-        )
 
         // when
         val photos = repository.getPhotos().first()
 
         // then
-        Truth.assertThat(photos.size).isEqualTo(1)
+        Truth.assertThat(photos.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `photos returned should be ordered by dateTaken`() = runBlocking {
+        // given
+        every { photoDao.getPhotos() } answers {
+            flowOf(
+                listOf(
+                    createFakePhoto(filename = "002", dateTaken = 1580671221),
+                    createFakePhoto(filename = "001", dateTaken = 1580671220),
+                    createFakePhoto(filename = "003", dateTaken = 1580671223),
+                )
+            )
+        }
+
+        // when
+        val photos = repository.getPhotos().first()
+
+        // then
+        Truth.assertThat(photos[0].filename).isEqualTo("003")
+        Truth.assertThat(photos[1].filename).isEqualTo("002")
+        Truth.assertThat(photos[2].filename).isEqualTo("001")
+    }
+
+
+    @Test
+    fun `photos returned should be ordered by dateAdded if dateTaken is not available`() = runBlocking {
+        // given
+        every { photoDao.getPhotos() } answers {
+            flowOf(
+                listOf(
+                    createFakePhoto(filename = "002", dateTaken = null, dateAdded = 1580671221),
+                    createFakePhoto(filename = "001", dateTaken = null, dateAdded = 1580671220),
+                    createFakePhoto(filename = "003", dateTaken = null, dateAdded = 1580671223),
+                )
+            )
+        }
+
+        // when
+        val photos = repository.getPhotos().first()
+
+        // then
+        Truth.assertThat(photos[0].filename).isEqualTo("003")
+        Truth.assertThat(photos[1].filename).isEqualTo("002")
+        Truth.assertThat(photos[2].filename).isEqualTo("001")
+    }
+
+    private fun createFakePhoto(
+        uuid: String = "001",
+        filename: String = "IMG_20200202_202020.jpg",
+        imageUrl: String = "http://127.0.0.1/image/e369d958-ad41-4391-9ccb-f89be8ca1e8b",
+        dateAdded: Long = 1580671220,
+        dateTaken: Long? = null,
+        dateModified: Long? = null,
+        thumbnailFileUri: String? = null,
+        originalFileUri: String? = null
+    ): Photo {
+        return Photo(
+            uuid = uuid,
+            filename = filename,
+            imageUrl = imageUrl,
+            dateAdded = dateAdded,
+            dateTaken = dateTaken,
+            dateModified = dateModified,
+            thumbnailFileUri = thumbnailFileUri,
+            originalFileUri = originalFileUri,
+        )
     }
 }

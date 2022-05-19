@@ -58,7 +58,9 @@ class PhotoRepositoryImpl(
     }
 
     override fun getPhotos(): Flow<List<Photo>> = photoDao.getPhotos().mapNotNull { photos ->
-        photos.map { photo ->
+        photos.sortedByDescending {
+            it.dateTaken ?: it.dateAdded
+        }.map { photo ->
             photo.toPhoto()
         }
     }
