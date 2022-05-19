@@ -19,8 +19,10 @@ import android.content.Context
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import photos.network.data.photos.network.PhotoApi
@@ -47,6 +49,13 @@ class PhotoRepositoryImpl(
         .build()
 
     override fun syncPhotos() {
+        val syncLocalPhotosWorkRequest: WorkRequest = OneTimeWorkRequestBuilder<SyncLocalPhotosWorker>().build()
+
+        WorkManager.getInstance(applicationContext)
+            .enqueue(syncLocalPhotosWorkRequest)
+    }
+
+    fun startPersiodicSync() {
         workManager.enqueueUniquePeriodicWork(
             "photosSyncWorker",
             ExistingPeriodicWorkPolicy.REPLACE,
