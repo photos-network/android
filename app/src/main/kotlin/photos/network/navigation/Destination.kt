@@ -45,7 +45,6 @@ sealed class Destination(
     object Folders : Destination("folders", R.string.folders_title, Icons.Filled.Folder)
     object Details : Destination("details", R.string.details_title, Icons.Filled.Photo)
     object Login : Destination("login", R.string.login_title, Icons.Filled.Lock)
-//    object Setup : Destination("setup", R.string.setup_title, Icons.Filled.Settings)
     object Help : Destination("help", R.string.help_title, Icons.Filled.Help)
 
     fun isRootDestination(): Boolean {
@@ -66,7 +65,6 @@ sealed class Destination(
                 Folders.route -> Folders
                 Details.route -> Details
                 Login.route -> Login
-//                Setup.route -> Setup
                 Help.route -> Help
                 else -> Home
             }
