@@ -25,12 +25,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import photos.network.BuildConfig
 import photos.network.domain.settings.usecase.GetSettingsUseCase
 import photos.network.domain.settings.usecase.UpdateClientIdUseCase
 import photos.network.domain.settings.usecase.UpdateHostUseCase
 import photos.network.domain.settings.usecase.VerifyClientIdUseCase
 import photos.network.domain.settings.usecase.VerifyServerHostUseCase
-import photos.network.versionString
 
 class SettingsViewModel(
     private val application: Application,
@@ -45,7 +45,6 @@ class SettingsViewModel(
     private val isClientIdVerified = mutableStateOf(false)
 
     init {
-        val context = application.applicationContext
         viewModelScope.launch(Dispatchers.IO) {
             getSettingsUseCase().collect { settings ->
                 withContext(Dispatchers.Main) {
@@ -54,7 +53,7 @@ class SettingsViewModel(
                         isHostVerified = isHostVerified.value,
                         clientId = settings.clientId,
                         isClientVerified = isClientIdVerified.value,
-                        appVersion = context.versionString()
+                        appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
                     )
                 }
             }
