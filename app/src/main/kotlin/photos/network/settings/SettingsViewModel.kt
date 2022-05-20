@@ -80,7 +80,7 @@ class SettingsViewModel(
         val clipboard: ClipboardManager? =
             context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
 
-        val clip = ClipData.newPlainText("Photos.networdk", context.versionString())
+        val clip = ClipData.newPlainText("Photos.networdk", BuildConfig.VERSION_NAME)
         clipboard?.setPrimaryClip(clip)
     }
 
