@@ -33,7 +33,8 @@ data class User(
         lastname = lastname,
         firstname = firstname,
         profileImageUrl = "",
-        token = "",
+        accessToken = "",
+        refreshToken = "",
     )
 
     fun toPersistence(): PersistenceUser = PersistenceUser(
@@ -41,6 +42,7 @@ data class User(
         lastname = lastname,
         firstname = firstname,
         profileImageUrl = "",
-        token = "",
+        accessToken = "",
+        refreshToken = "",
     )
 }

@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.domain.settings.usecase
+package photos.network.data.photos.network
 
-import kotlinx.coroutines.flow.Flow
-import photos.network.data.settings.repository.PrivacyState
-import photos.network.data.settings.repository.SettingsRepository
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-class GetPrivacyStateUseCase(
-    private val settingsRepository: SettingsRepository,
-) {
-    operator fun invoke(): Flow<PrivacyState> {
-        return settingsRepository.privacyState
-    }
-}
+@Serializable
+data class Photo(
+    @SerialName("id") val id: String,
+    @SerialName("name") val name: String,
+    @SerialName("image_url") val imageUrl: String,
+    @SerialName("date_added") val dateAdded: String? = null,
+    @SerialName("date_taken") val dateTaken: Long? = null,
+)

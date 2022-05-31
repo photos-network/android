@@ -57,7 +57,6 @@ import photos.network.home.photos.PhotosScreen
 import photos.network.navigation.Destination
 import photos.network.presentation.help.HelpScreen
 import photos.network.presentation.login.LoginScreen
-import photos.network.presentation.setup.SetupScreen
 import photos.network.settings.ServerStatus
 import photos.network.settings.SettingsScreen
 import photos.network.theme.AppTheme
@@ -181,7 +180,6 @@ fun Home(
                     composable(route = Destination.Albums.route) { AlbumsScreen(navController = navController) }
                     composable(route = Destination.Folders.route) { FoldersScreen(navController = navController) }
                     composable(route = Destination.Account.route) { SettingsScreen(navController = navController) }
-                    composable(route = Destination.Setup.route) { SetupScreen(navController = navController) }
                     composable(route = Destination.Login.route) { LoginScreen(navController = navController) }
                     composable(route = Destination.Help.route) { HelpScreen(navController = navController) }
                     composable(

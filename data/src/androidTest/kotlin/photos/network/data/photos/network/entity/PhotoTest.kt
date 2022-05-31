@@ -24,12 +24,13 @@ import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import photos.network.data.PhotosNetworkMockFileReader
+import photos.network.data.photos.network.Photo
 
 /**
  * Test deserializing photo object.
  */
 @RunWith(AndroidJUnit4::class)
-class NetworkPhotoTest {
+class PhotoTest {
 
     @Ignore("Not fully implemented")
     @Test
@@ -38,7 +39,7 @@ class NetworkPhotoTest {
         val jsonString = PhotosNetworkMockFileReader.readStringFromFile("photo_object.json")
 
         // when
-        val response = Json.decodeFromString<NetworkPhoto>(jsonString)
+        val response = Json.decodeFromString<Photo>(jsonString)
 
         // then
         assertEquals(response.id, "photoIdentifier")

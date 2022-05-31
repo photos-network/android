@@ -15,41 +15,81 @@
  */
 package photos.network.presentation.login
 
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import logcat.logcat
-import photos.network.data.settings.repository.SettingsRepository
-import photos.network.data.user.repository.UserRepository
+import photos.network.domain.settings.usecase.GetSettingsUseCase
+import photos.network.domain.user.usecase.RequestAccessTokenUseCase
 
 class LoginViewModel(
-    private val settingsRepository: SettingsRepository,
-    private val userRepository: UserRepository
+    private val requestAccessTokenUseCase: RequestAccessTokenUseCase,
+    private val settingsUseCase: GetSettingsUseCase,
 ) : ViewModel() {
-
-    val host = mutableStateOf("https://photos.stuermer.pro")
-    val clientId = mutableStateOf("1803463f-c10f-4a65-aa15-b2e39be9f14d")
-    val clientSecret = mutableStateOf("1TmlFYywRd7MwlbRNiePjQ")
+    val uiState = mutableStateOf(LoginUiState())
 
     init {
-        viewModelScope.launch {
-            val settings = settingsRepository.loadSettings()
-            settings?.let {
-                logcat(LogPriority.WARN) { "update LoginVM from loaded settings." }
-                host.value = settings.host ?: ""
-                clientId.value = settings.clientId ?: ""
-                clientSecret.value = settings.clientSecret ?: ""
+        viewModelScope.launch(Dispatchers.IO) {
+            generateRandomNonce()
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsUseCase().collect {
+                withContext(Dispatchers.Main) {
+                    uiState.value = uiState.value.copy(
+                        host = it.host,
+                        clientId = it.clientId
+                    )
+                }
             }
         }
     }
 
-    fun requestAccessToken(authCode: String, callback: (success: Boolean) -> Unit) {
-        // TODO: request auth code
-        logcat(LogPriority.ERROR) { "TODO request access token with authCode: $authCode" }
-        viewModelScope.launch {
-            callback(userRepository.requestAuthorization(authCode, clientId.value))
+    fun handleEvent(event: LoginEvent) {
+        when (event) {
+            LoginEvent.UserCancelledLogin -> {
+                logcat(LogPriority.WARN) { "User cancelled login" }
+            }
+            LoginEvent.VerificationFailed -> {
+                logcat(LogPriority.WARN) { "Verification failed" }
+            }
+            is LoginEvent.VerifyAuthCode -> requestAccessToken(event.authCode)
+        }
+    }
+
+    /**
+     * generate random nonce for EACH request to prevent replay attacs
+     */
+    private fun generateRandomNonce() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val chars = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+            var tmpNonce = ""
+            for (i in 1..12) {
+                tmpNonce += chars.random()
+            }
+
+            withContext(Dispatchers.Main) {
+                uiState.value = uiState.value.copy(
+                    nonce = tmpNonce
+                )
+            }
+        }
+    }
+
+    private fun requestAccessToken(authCode: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (requestAccessTokenUseCase(authCode)) {
+                withContext(Dispatchers.Main) {
+                    uiState.value = uiState.value.copy(
+                        loginSucceded = true
+                    )
+                }
+            }
         }
     }
 }

@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.domain.settings.usecase
+package photos.network.data.settings.persistence
 
-import photos.network.data.settings.repository.SettingsRepository
+import kotlinx.serialization.Serializable
 
-/**
- * Toggle privacy setting
- */
-class TogglePrivacyStateUseCase(
-    private val settingsRepository: SettingsRepository
-) {
-    operator fun invoke(): Unit = settingsRepository.togglePrivacy()
-}
+@Serializable
+class Settings(
+    val host: String? = null,
+    val port: Int = 443,
+    val clientId: String? = null,
+    val privacyState: String = "NONE",
+)

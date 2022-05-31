@@ -29,6 +29,7 @@ import photos.network.data.photos.repository.PhotoRepository
 import photos.network.data.settings.repository.PrivacyState
 import photos.network.data.settings.repository.SettingsRepository
 import java.time.Instant
+import photos.network.data.settings.repository.Settings
 
 class GetPhotosUseCaseTests {
     @Rule
@@ -49,8 +50,9 @@ class GetPhotosUseCaseTests {
     fun `should return an unfiltered list of photos by default`(): Unit = runBlocking {
         // given
         val photos = createTestdata()
-        every { settingsRepository.privacyState } answers {
-            flowOf(PrivacyState.NONE)
+        val settings = createTestSettings(privacyState = PrivacyState.NONE)
+        every { settingsRepository.settings } answers {
+            flowOf(settings)
         }
         every { photoRepository.getPhotos() } answers {
             flowOf(photos)
@@ -68,8 +70,9 @@ class GetPhotosUseCaseTests {
     fun `should return non-privacy marked photos only`(): Unit = runBlocking {
         // given
         val photos = createTestdata()
-        every { settingsRepository.privacyState } answers {
-            flowOf(PrivacyState.ACTIVE)
+        val settings = createTestSettings(privacyState = PrivacyState.ACTIVE)
+        every { settingsRepository.settings } answers {
+            flowOf(settings)
         }
         every { photoRepository.getPhotos() } answers {
             flowOf(photos)
@@ -83,6 +86,19 @@ class GetPhotosUseCaseTests {
         Truth.assertThat(result.first()).isEqualTo(photos.filterNot { it.isPrivate })
     }
 
+    private fun createTestSettings(
+        host: String = "http://localhost",
+        port: Int = 443,
+        clientId: String = "",
+        privacyState: PrivacyState = PrivacyState.NONE,
+    ): Settings {
+        return Settings(
+            host = host,
+            port = port,
+            clientId = clientId,
+            privacyState = privacyState,
+        )
+    }
     private fun createTestdata(): List<Photo> {
         return listOf(
             Photo(

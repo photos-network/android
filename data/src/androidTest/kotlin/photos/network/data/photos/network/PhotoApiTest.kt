@@ -16,28 +16,38 @@
 package photos.network.data.photos.network
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
+import io.ktor.serialization.kotlinx.json.json
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Test
 import org.junit.runner.RunWith
 import photos.network.data.PhotosNetworkMockFileReader
-import photos.network.data.photos.network.entity.NetworkPhotos
+import photos.network.data.settings.persistence.SettingsStorage
+import photos.network.data.settings.repository.SettingsRepository
+import photos.network.data.settings.repository.SettingsRepositoryImpl
 
 /**
  * Test the REST interface to the photos.network core instance.
  */
 @RunWith(AndroidJUnit4::class)
 class PhotoApiTest {
+
+    private val settingsRepository = SettingsRepositoryImpl(
+        SettingsStorage(
+            context = InstrumentationRegistry.getInstrumentation().context
+        )
+    )
 
     @Test
     fun request_photos_with_valid_data() = runBlocking {
@@ -50,11 +60,13 @@ class PhotoApiTest {
                 headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             )
         }
-        val httpClient = createHttpClient(mockEngine)
-        val photoApi = PhotoApi(httpClient)
+        val photoApi = PhotoApi(
+            httpClient = createHttpClient(mockEngine),
+            settingsRepository = settingsRepository
+        )
 
         // when
-        val result: NetworkPhotos = photoApi.getPhotos()
+        val result: Photos = photoApi.getPhotos()
 
         // then
         assertEquals(result.size, 2)
@@ -71,6 +83,7 @@ class PhotoApiTest {
 
     @Test(expected = Exception::class)
     fun request_photos_with_empty_response() = runBlocking {
+        // given
         val mockEngine = MockEngine {
             respond(
                 content = "{}",
@@ -78,8 +91,10 @@ class PhotoApiTest {
                 headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             )
         }
-        val httpClient = createHttpClient(mockEngine)
-        val photoApi = PhotoApi(httpClient)
+        val photoApi = PhotoApi(
+            httpClient = createHttpClient(mockEngine),
+            settingsRepository = settingsRepository
+        )
 
         // when
         photoApi.getPhotos()
@@ -91,9 +106,8 @@ class PhotoApiTest {
 
     private fun createHttpClient(engine: MockEngine): HttpClient {
         return HttpClient(engine) {
-            install(JsonFeature) {
-                serializer = KotlinxSerializer()
-                accept(ContentType.Application.Json)
+            install(ContentNegotiation) {
+                json()
             }
         }
     }

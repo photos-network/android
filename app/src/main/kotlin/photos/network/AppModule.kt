@@ -22,7 +22,6 @@ import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
 import photos.network.home.HomeViewModel
 import photos.network.home.photos.PhotosViewModel
 import photos.network.presentation.login.LoginViewModel
-import photos.network.presentation.setup.SetupViewModel
 import photos.network.settings.SettingsViewModel
 import photos.network.user.CurrentUserViewModel
 
@@ -47,23 +46,24 @@ val appModule = module {
     }
     viewModel {
         LoginViewModel(
-            settingsRepository = get(),
-            userRepository = get()
-        )
-    }
-    viewModel {
-        SetupViewModel(
-            settingsRepository = get(),
-            userRepository = get()
+            requestAccessTokenUseCase = get(),
+            settingsUseCase = get()
         )
     }
     viewModel {
         HomeViewModel(
-            getPrivacyStateUseCase = get(),
+            getSettingsUseCase = get(),
             togglePrivacyStateUseCase = get()
         )
     }
     viewModel {
-        SettingsViewModel()
+        SettingsViewModel(
+            application = get(),
+            getSettingsUseCase = get(),
+            updateHostUseCase = get(),
+            updateClientIdUseCase = get(),
+            verifyServerHostUseCase = get(),
+            verifyClientIdUseCase = get(),
+        )
     }
 }

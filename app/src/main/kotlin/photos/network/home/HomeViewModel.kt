@@ -23,12 +23,12 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import photos.network.data.settings.repository.PrivacyState
-import photos.network.domain.settings.usecase.GetPrivacyStateUseCase
-import photos.network.domain.settings.usecase.TogglePrivacyStateUseCase
+import photos.network.domain.settings.usecase.GetSettingsUseCase
+import photos.network.domain.settings.usecase.TogglePrivacyUseCase
 
 class HomeViewModel constructor(
-    private val getPrivacyStateUseCase: GetPrivacyStateUseCase,
-    private val togglePrivacyStateUseCase: TogglePrivacyStateUseCase,
+    private val getSettingsUseCase: GetSettingsUseCase,
+    private val togglePrivacyStateUseCase: TogglePrivacyUseCase,
 ) : ViewModel() {
     val uiState = mutableStateOf(HomeUiState())
 
@@ -38,13 +38,11 @@ class HomeViewModel constructor(
 
     private fun loadInitialPrivacyState() {
         viewModelScope.launch(Dispatchers.IO) {
-            getPrivacyStateUseCase().collect { privacyState ->
+            getSettingsUseCase().collect { settings ->
                 withContext(Dispatchers.Main) {
-                    if (privacyState == PrivacyState.ACTIVE) {
-                        uiState.value = uiState.value.copy(isPrivacyEnabled = true)
-                    } else {
-                        uiState.value = uiState.value.copy(isPrivacyEnabled = false)
-                    }
+                    uiState.value = uiState.value.copy(
+                        isPrivacyEnabled = settings.privacyState == PrivacyState.ACTIVE
+                    )
                 }
             }
         }

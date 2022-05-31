@@ -15,29 +15,33 @@
  */
 package photos.network.data.settings.repository
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import photos.network.data.settings.persistence.SettingsStorage
-import photos.network.data.settings.persistence.entities.SettingsDto
+import photos.network.data.settings.persistence.Settings as PersistenceSettings
 
 class SettingsRepositoryImpl(
-    private val settingsStore: SettingsStorage
+    private val settingsStore: SettingsStorage,
 ) : SettingsRepository {
-    private var currentSettings: SettingsDto? = null
-    override var privacyState: Flow<PrivacyState> = flow {
-        while (true) {
-            if (currentSettings == null) {
-                currentSettings = settingsStore.read().takeIf {
-                    it != null
-                }
-            }
+    private var currentSettings: PersistenceSettings? = null
 
-            emit(
-                PrivacyState.values().firstOrNull {
-                    it.value == currentSettings?.privacyState
-                } ?: PrivacyState.NONE
-            )
+    override val settings: Flow<Settings> = flow {
+        while (true) {
+            loadSettings()
+
+            currentSettings?.let { dto ->
+                val privacyState = PrivacyState.valueOf(dto.privacyState)
+                emit(
+                    Settings(
+                        host = dto.host ?: "",
+                        clientId = dto.clientId ?: "",
+                        privacyState = privacyState,
+                    )
+                )
+            }
             delay(POLL_INTERVAL)
         }
     }
@@ -46,62 +50,104 @@ class SettingsRepositoryImpl(
         loadSettings()
     }
 
-    override val authCode: String?
-        get() = currentSettings?.authCode
-    override val clientId: String?
-        get() = currentSettings?.clientId
-    override val clientSecret: String?
-        get() = currentSettings?.clientSecret
-    override val redirectUri: String?
-        get() = currentSettings?.redirectUri
-    override val scope: String?
-        get() = currentSettings?.scope
-    override val host: String?
-        get() = currentSettings?.host
-
-    companion object {
-        private const val POLL_INTERVAL = 500L
+    override suspend fun updateSettings(newSettings: Settings) {
+        withContext(Dispatchers.IO) {
+            currentSettings = PersistenceSettings(
+                host = newSettings.host,
+                clientId = newSettings.clientId,
+                privacyState = newSettings.privacyState.toString()
+            )
+            saveSettings()
+        }
     }
 
-    override fun togglePrivacy() {
+    override suspend fun deleteSettings() {
+        withContext(Dispatchers.IO) {
+            currentSettings = null
+            settingsStore.delete()
+        }
+    }
+
+    override suspend fun togglePrivacy() {
         currentSettings?.let {
-            val newValue = if (it.privacyState == PrivacyState.NONE.value) {
-                PrivacyState.ACTIVE.value
+            val newValue = if (it.privacyState == PrivacyState.NONE.toString()) {
+                PrivacyState.ACTIVE.toString()
             } else {
-                PrivacyState.NONE.value
+                PrivacyState.NONE.toString()
             }
-            val new = SettingsDto(
+            val new = PersistenceSettings(
                 host = it.host,
-                redirectUri = it.redirectUri,
-                authCode = it.authCode,
                 clientId = it.clientId,
-                clientSecret = it.clientSecret,
-                scope = it.scope,
-                useSSL = it.useSSL,
                 privacyState = newValue,
             )
             currentSettings = new
+
+            saveSettings()
         }
     }
 
-    override fun loadSettings(): SettingsDto? {
-        if (currentSettings != null) {
-            return currentSettings
-        }
+    override suspend fun updateHost(newHost: String) {
+        withContext(Dispatchers.IO) {
 
-        currentSettings = settingsStore.read().takeIf {
-            it != null
+            val extracted = extractPort(newHost)
+            val host = newHost
+
+            currentSettings?.let {
+                val new = PersistenceSettings(
+                    host = host,
+                    clientId = it.clientId,
+                    privacyState = it.privacyState,
+                )
+                currentSettings = new
+
+                saveSettings()
+            }
+        }
+    }
+
+    override suspend fun updateClientId(newClientId: String) {
+        withContext(Dispatchers.IO) {
+            currentSettings?.let {
+                val new = PersistenceSettings(
+                    host = it.host,
+                    clientId = newClientId,
+                    privacyState = it.privacyState,
+                )
+                currentSettings = new
+
+                saveSettings()
+            }
+        }
+    }
+
+    private fun extractPort(input: String): Map<String, String> {
+        val pattern = "(?<protocol>[a-z]{2,6}):\\/\\/((?<subdomain>[a-z0-9]{0,10}\\.{1}){0,2}(?<domain>[a-z\\-0-9]{1,30}){1}\\.{1}(?<extension>[a-z]{1,10}){1}|(?<ipaddress>([0-9\\.]{2,5}){3,8}))(\\:?)(?<port>[0-9]{1,6}){0,1}\\/?(?<filepath>(?<path>[a-z0-9\\-_%]{1,20}\\/{1}){0,}(?<filename>[a-z0-9\\-_]{1,20}\\.{1}[a-z0-9]{2,6}){0,1}){0,1}(?<route>(\\/{1}[a-z_0-9\\-_]{1,20}){1,}){0,10}(?<query>\\?{1}[a-z0-9%\\+_\\-&=\\.@\\!,\\:]{0,200}){0,1}"
+        val matchResult = Regex(pattern).find(input)
+
+        val (protocol, host, subdomain, domain, tld, ip, _, _, port) = matchResult!!.destructured
+
+        return mapOf("$protocol$host" to port)
+    }
+
+    internal fun loadSettings() {
+        if (currentSettings == null) {
+            currentSettings = settingsStore.read().takeIf {
+                it != null
+            }
         }
 
         if (currentSettings == null) {
-            currentSettings = SettingsDto()
+            currentSettings = PersistenceSettings()
         }
-
-        return currentSettings
     }
 
-    override fun saveSettings(settings: SettingsDto) {
-        currentSettings = settings
-        settingsStore.save(settings)
+    internal fun saveSettings() {
+        currentSettings?.let {
+            settingsStore.save(it)
+        }
+    }
+
+    companion object {
+        private const val POLL_INTERVAL = 500L
     }
 }

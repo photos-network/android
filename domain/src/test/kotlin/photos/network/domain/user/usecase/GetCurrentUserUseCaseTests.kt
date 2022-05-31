@@ -47,7 +47,7 @@ class GetCurrentUserUseCaseTests {
             lastname = "Norris",
             firstname = "Carlos Ray",
             profileImageUrl = "http://localhost/image/chuck_norris.jpg",
-            token = "access_token"
+            accessToken = "access_token"
         )
 
         every { userRepository.currentUser() } answers {
@@ -63,7 +63,7 @@ class GetCurrentUserUseCaseTests {
         Truth.assertThat(result?.lastname).isEqualTo(user.lastname)
         Truth.assertThat(result?.firstname).isEqualTo(user.firstname)
         Truth.assertThat(result?.profileImageUrl).isEqualTo(user.profileImageUrl)
-        Truth.assertThat(result?.token).isEqualTo(user.token)
+        Truth.assertThat(result?.accessToken).isEqualTo(user.accessToken)
     }
 
     @Test

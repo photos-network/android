@@ -18,8 +18,13 @@ package photos.network.domain
 import org.koin.dsl.module
 import photos.network.domain.photos.usecase.GetPhotoUseCase
 import photos.network.domain.photos.usecase.GetPhotosUseCase
-import photos.network.domain.settings.usecase.GetPrivacyStateUseCase
-import photos.network.domain.settings.usecase.TogglePrivacyStateUseCase
+import photos.network.domain.settings.usecase.GetSettingsUseCase
+import photos.network.domain.settings.usecase.TogglePrivacyUseCase
+import photos.network.domain.settings.usecase.UpdateClientIdUseCase
+import photos.network.domain.settings.usecase.UpdateHostUseCase
+import photos.network.domain.settings.usecase.VerifyClientIdUseCase
+import photos.network.domain.settings.usecase.VerifyServerHostUseCase
+import photos.network.domain.user.usecase.RequestAccessTokenUseCase
 
 val domainModule = module {
     factory {
@@ -30,20 +35,50 @@ val domainModule = module {
     }
 
     factory {
+        RequestAccessTokenUseCase(
+            userRepository = get(),
+        )
+    }
+
+    factory {
         GetPhotoUseCase(
             photoRepository = get()
         )
     }
 
     factory {
-        GetPrivacyStateUseCase(
+        GetSettingsUseCase(
             settingsRepository = get()
         )
     }
 
     factory {
-        TogglePrivacyStateUseCase(
+        TogglePrivacyUseCase(
             settingsRepository = get()
+        )
+    }
+
+    factory {
+        UpdateHostUseCase(
+            settingsRepository = get()
+        )
+    }
+
+    factory {
+        UpdateClientIdUseCase(
+            settingsRepository = get()
+        )
+    }
+
+    factory {
+        VerifyServerHostUseCase(
+            userRepository = get()
+        )
+    }
+
+    factory {
+        VerifyClientIdUseCase(
+            userRepository = get()
         )
     }
 }

@@ -23,14 +23,16 @@ data class User(
     val lastname: String,
     val firstname: String,
     val profileImageUrl: String,
-    val token: String,
+    val accessToken: String? = null,
+    val refreshToken: String? = null,
 ) {
     fun toDatabaseUser(): PersistenceUser = PersistenceUser(
         id = id,
         lastname = lastname,
         firstname = firstname,
         profileImageUrl = profileImageUrl,
-        token = token,
+        accessToken = accessToken,
+        refreshToken = refreshToken,
     )
 
     fun toDomain(): DomainUser = DomainUser(
@@ -38,6 +40,7 @@ data class User(
         lastname = lastname,
         firstname = firstname,
         profileImageUrl = profileImageUrl,
-        token = token,
+        accessToken = accessToken,
+        refreshToken = refreshToken,
     )
 }

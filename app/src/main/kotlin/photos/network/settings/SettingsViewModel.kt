@@ -15,38 +15,86 @@
  */
 package photos.network.settings
 
+import android.app.Application
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import photos.network.BuildConfig
+import photos.network.domain.settings.usecase.GetSettingsUseCase
+import photos.network.domain.settings.usecase.UpdateClientIdUseCase
+import photos.network.domain.settings.usecase.UpdateHostUseCase
+import photos.network.domain.settings.usecase.VerifyClientIdUseCase
+import photos.network.domain.settings.usecase.VerifyServerHostUseCase
 
-class SettingsViewModel : ViewModel() {
+class SettingsViewModel(
+    private val application: Application,
+    private val getSettingsUseCase: GetSettingsUseCase,
+    private val updateHostUseCase: UpdateHostUseCase,
+    private val updateClientIdUseCase: UpdateClientIdUseCase,
+    private val verifyServerHostUseCase: VerifyServerHostUseCase,
+    private val verifyClientIdUseCase: VerifyClientIdUseCase,
+) : ViewModel() {
     val uiState = mutableStateOf(SettingsUiState())
+    private val isHostVerified = mutableStateOf(false)
+    private val isClientIdVerified = mutableStateOf(false)
 
-    fun handleEvent(event: SettingsEvent) {
-        when (event) {
-            SettingsEvent.ForceSync -> {}
-            SettingsEvent.EditProfile -> {}
-            is SettingsEvent.HostChanged -> updateHost(event.newHost)
-            is SettingsEvent.ClientIdChanged -> updateClientId(event.newId)
-            is SettingsEvent.ClientSecretChanged -> updateClientSecret(event.newSecret)
-            SettingsEvent.Login -> {}
-            SettingsEvent.ToggleActivityLog -> {}
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            getSettingsUseCase().collect { settings ->
+                withContext(Dispatchers.Main) {
+                    uiState.value = uiState.value.copy(
+                        host = settings.host,
+                        isHostVerified = isHostVerified.value,
+                        clientId = settings.clientId,
+                        isClientVerified = isClientIdVerified.value,
+                        appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+                    )
+                }
+            }
         }
     }
 
-    private fun updateHost(host: String) {
+    fun handleEvent(event: SettingsEvent) {
+        when (event) {
+            is SettingsEvent.HostChanged -> updateHost(event.newHost)
+            is SettingsEvent.ClientIdChanged -> updateClientId(event.newId)
+            SettingsEvent.ToggleServerSetup -> toggleServerSetup()
+            SettingsEvent.SetClipboardEvent -> copyIntoClipboard()
+        }
+    }
+
+    private fun toggleServerSetup() {
         uiState.value = uiState.value.copy(
-            host = host
+            isServerSetupExpanded = !uiState.value.isServerSetupExpanded
         )
     }
 
-    private fun updateClientId(clientId: String) {
-        uiState.value = uiState.value.copy(
-            clientId = clientId
-        )
+    private fun copyIntoClipboard() {
+        val context = application.applicationContext
+        val clipboard: ClipboardManager? =
+            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+
+        val clip = ClipData.newPlainText("Photos.networdk", BuildConfig.VERSION_NAME)
+        clipboard?.setPrimaryClip(clip)
     }
-    private fun updateClientSecret(clientSecret: String) {
-        uiState.value = uiState.value.copy(
-            clientSecret = clientSecret
-        )
+
+    private fun updateHost(host: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            updateHostUseCase(host = host)
+            isHostVerified.value = verifyServerHostUseCase(host)
+        }
+    }
+
+    private fun updateClientId(clientId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            updateClientIdUseCase(clientId = clientId)
+            isClientIdVerified.value = verifyClientIdUseCase(clientId)
+        }
     }
 }

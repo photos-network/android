@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.data.photos.network.entity
+package photos.network.domain.settings.usecase
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import photos.network.data.settings.repository.SettingsRepository
 
-@Serializable
-data class NetworkPhotos(
-    @SerialName("offset") val offset: Int,
-    @SerialName("limit") val limit: Int,
-    @SerialName("size") val size: Int,
-    @SerialName("results") val results: List<NetworkPhoto>,
-)
+/**
+ * Toggle privacy setting
+ */
+class TogglePrivacyUseCase(
+    private val settingsRepository: SettingsRepository
+) {
+    suspend operator fun invoke(): Unit = settingsRepository.togglePrivacy()
+}

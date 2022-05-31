@@ -28,5 +28,8 @@
     <string name="server_unauthorized_description">Communication to the configured photos.network instance is not authorized!</string>
     <string name="privacy_filter_enabled_description">All items labeled as private are hidden</string>
     <string name="privacy_filter_disabled_description">Hide items labeled as private in this view</string>
+    <string name="settings_item_server_setup">Setup server instance</string>
+    <string name="settings_item_server_update">Change server setup</string>
+    <string name="settings_copied_to_clipboard">Version copied into clipboard</string>
 
 </resources>

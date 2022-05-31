@@ -33,8 +33,20 @@ proguard-project.txt
 
 # Android Studio/IDEA
 *.iml
-.idea/*
+.idea
 /captures
 
-## Do not ignore project code style settings
+## Do not ignore project settings
+!.idea/codeInsightSettings.xml
 !.idea/codeStyles/
+!.idea/copyright/
+!.idea/dataSources.xml
+!.idea/detekt.xml
+!.idea/encodings.xml
+!.idea/externalDependencies.xml
+!.idea/fileTemplates/
+!.idea/icon.svg
+!.idea/inspectionProfiles/
+!.idea/runConfigurations/
+!.idea/scopes/
+!.idea/vcs.xml

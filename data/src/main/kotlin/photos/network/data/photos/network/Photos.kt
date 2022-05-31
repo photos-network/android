@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.presentation.setup
+package photos.network.data.photos.network
 
-import photos.network.data.user.persistence.User as DatabaseUser
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-data class SetupUiState(
-    val currentUser: DatabaseUser? = null,
-    val host: String? = null,
-    val clientId: String? = null,
-    val clientSecret: String? = null,
-    val isConnectionCheckInProgress: Boolean = false,
-    val isConnectionValid: Boolean = false,
-    val loading: Boolean = false,
-    val errorMessage: String? = null
+@Serializable
+data class Photos(
+    @SerialName("offset") val offset: Int,
+    @SerialName("limit") val limit: Int,
+    @SerialName("size") val size: Int,
+    @SerialName("results") val results: List<Photo>,
 )

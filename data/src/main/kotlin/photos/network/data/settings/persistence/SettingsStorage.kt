@@ -20,19 +20,18 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import photos.network.data.SecureStorage
-import photos.network.data.settings.persistence.entities.SettingsDto
 
 /**
  * Read/Write settings encrypted into internal storage
  */
 class SettingsStorage(context: Context) :
-    SecureStorage<SettingsDto>(context, "settings_storage.txt") {
+    SecureStorage<Settings>(context, "settings_storage.txt") {
 
-    override fun decodeData(data: String): SettingsDto {
+    override fun decodeData(data: String): Settings {
         return Json.decodeFromString(data)
     }
 
-    override fun encodeData(data: SettingsDto): String {
+    override fun encodeData(data: Settings): String {
         return Json.encodeToString(data)
     }
 }
