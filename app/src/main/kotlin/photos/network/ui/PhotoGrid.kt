@@ -18,6 +18,8 @@ package photos.network.ui
 import android.icu.text.DateFormatSymbols
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -101,24 +103,28 @@ fun PhotoGrid(
                         photos[index].imageUrl
                     }
 
-                    Image(
-                        painter = rememberImagePainter(
-                            data = data,
-                            builder = {
-                                crossfade(true)
-                                placeholder(R.drawable.image_placeholder)
-                            }
-                        ),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
+                    Box(
                         modifier = Modifier
+                            .aspectRatio(1.0f)
+                            .size(128.dp)
+                            .clip(RoundedCornerShape(2.dp))
                             .clickable {
                                 onSelectItem(photos[index].filename)
                             }
-                            .padding(1.dp)
-                            .clip(RoundedCornerShape(2.dp))
-                            .size(128.dp),
-                    )
+                    ) {
+                        Image(
+                            painter = rememberImagePainter(
+                                data = data,
+                                builder = {
+                                    crossfade(true)
+                                    placeholder(R.drawable.image_placeholder)
+                                }
+                            ),
+                            contentDescription = null,
+                            contentScale = ContentScale.None,
+                            modifier = Modifier.padding(1.dp),
+                        )
+                    }
                 }
             }
         }
