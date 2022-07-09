@@ -137,7 +137,7 @@ fun Home(
         },
         bottomBar = {
             if (currentDestination.isRootDestination()) {
-                NavigationBar(modifier = Modifier.padding(bottom = 48.dp)) {
+                NavigationBar {
                     // Photos
                     NavigationBarItem(
                         icon = { Icon(Destination.Photos.icon, contentDescription = null) },
@@ -171,7 +171,7 @@ fun Home(
             }
         },
         content = { innerPadding ->
-            Box(modifier = Modifier.padding(innerPadding)) {
+            Box(modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding())) {
                 NavHost(
                     navController = navController,
                     startDestination = Destination.Photos.route,
