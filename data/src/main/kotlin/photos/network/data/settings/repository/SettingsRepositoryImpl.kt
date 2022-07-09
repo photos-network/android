@@ -88,13 +88,9 @@ class SettingsRepositoryImpl(
 
     override suspend fun updateHost(newHost: String) {
         withContext(Dispatchers.IO) {
-
-            val extracted = extractPort(newHost)
-            val host = newHost
-
             currentSettings?.let {
                 val new = PersistenceSettings(
-                    host = host,
+                    host = newHost,
                     clientId = it.clientId,
                     privacyState = it.privacyState,
                 )
@@ -118,15 +114,6 @@ class SettingsRepositoryImpl(
                 saveSettings()
             }
         }
-    }
-
-    private fun extractPort(input: String): Map<String, String> {
-        val pattern = "(?<protocol>[a-z]{2,6}):\\/\\/((?<subdomain>[a-z0-9]{0,10}\\.{1}){0,2}(?<domain>[a-z\\-0-9]{1,30}){1}\\.{1}(?<extension>[a-z]{1,10}){1}|(?<ipaddress>([0-9\\.]{2,5}){3,8}))(\\:?)(?<port>[0-9]{1,6}){0,1}\\/?(?<filepath>(?<path>[a-z0-9\\-_%]{1,20}\\/{1}){0,}(?<filename>[a-z0-9\\-_]{1,20}\\.{1}[a-z0-9]{2,6}){0,1}){0,1}(?<route>(\\/{1}[a-z_0-9\\-_]{1,20}){1,}){0,10}(?<query>\\?{1}[a-z0-9%\\+_\\-&=\\.@\\!,\\:]{0,200}){0,1}"
-        val matchResult = Regex(pattern).find(input)
-
-        val (protocol, host, subdomain, domain, tld, ip, _, _, port) = matchResult!!.destructured
-
-        return mapOf("$protocol$host" to port)
     }
 
     internal fun loadSettings() {
