@@ -103,7 +103,7 @@ abstract class SecureStorage<T>(
 
     internal fun delete() {
         if (secureFile.exists()) {
-            secureFile.delete()
+            secureFile.deleteRecursively()
         }
     }
 }
