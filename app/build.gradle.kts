@@ -165,7 +165,7 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-DEBUG"
-            isMinifyEnabled = true
+            isMinifyEnabled = !gradle.startParameter.taskNames.any { it.contains("AndroidTest") }
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro",
