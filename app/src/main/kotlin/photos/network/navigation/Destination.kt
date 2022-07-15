@@ -43,7 +43,6 @@ sealed class Destination(
     object Albums : Destination("albums", R.string.albums_title, Icons.Filled.PhotoAlbum)
     object Account : Destination("account", R.string.account_title, Icons.Filled.People)
     object Folders : Destination("folders", R.string.folders_title, Icons.Filled.Folder)
-    object Details : Destination("details", R.string.details_title, Icons.Filled.Photo)
     object Login : Destination("login", R.string.login_title, Icons.Filled.Lock)
     object Help : Destination("help", R.string.help_title, Icons.Filled.Help)
 
@@ -63,7 +62,6 @@ sealed class Destination(
                 Albums.route -> Albums
                 Account.route -> Account
                 Folders.route -> Folders
-                Details.route -> Details
                 Login.route -> Login
                 Help.route -> Help
                 else -> Home

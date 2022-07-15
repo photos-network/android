@@ -17,7 +17,6 @@ package photos.network
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import photos.network.details.DetailViewModel
 import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
 import photos.network.home.HomeViewModel
 import photos.network.home.photos.PhotosViewModel
@@ -29,11 +28,6 @@ val appModule = module {
     viewModel {
         CurrentUserViewModel(
             userRepository = get()
-        )
-    }
-    viewModel {
-        DetailViewModel(
-            getPhotoUseCase = get()
         )
     }
     viewModel {

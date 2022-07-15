@@ -40,17 +40,14 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import org.koin.androidx.compose.getViewModel
 import photos.network.R
-import photos.network.details.DetailScreen
 import photos.network.home.albums.AlbumsScreen
 import photos.network.home.folders.FoldersScreen
 import photos.network.home.photos.PhotosScreen
@@ -182,22 +179,6 @@ fun Home(
                     composable(route = Destination.Account.route) { SettingsScreen(navController = navController) }
                     composable(route = Destination.Login.route) { LoginScreen(navController = navController) }
                     composable(route = Destination.Help.route) { HelpScreen(navController = navController) }
-                    composable(
-                        route = "${Destination.Details.route}/{identifier}",
-                        arguments = listOf(
-                            navArgument("identifier") {
-                                defaultValue = "-1"
-                                type = NavType.StringType
-                            }
-                        )
-                    ) { backStackEntry ->
-                        backStackEntry.arguments?.getString("identifier")?.let {
-                            DetailScreen(
-                                navController = navController,
-                                photoIdentifier = it
-                            )
-                        }
-                    }
                 }
             }
         }
