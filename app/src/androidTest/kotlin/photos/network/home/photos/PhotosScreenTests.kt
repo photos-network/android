@@ -15,9 +15,12 @@
  */
 package photos.network.home.photos
 
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipe
 import org.junit.Rule
 import org.junit.Test
 import photos.network.MainActivity
@@ -74,5 +77,76 @@ class PhotosScreenTests {
 
         // then
         assert(called)
+    }
+
+    @Test
+    fun swipe_right_should_select_next_image() {
+        // given
+        val photo1 = generateTestPhoto(filename = "photo1.jpg")
+        val uiState = PhotosUiState(
+            photos = listOf(photo1),
+            selectedIndex = 1,
+            selectedPhoto = photo1,
+            isLoading = false,
+        )
+        var selectedNext = false
+        var selectedPrevious = false
+        val eventHandler: (event: PhotosEvent) -> Unit = {
+            if (it is PhotosEvent.SelectNextPhoto) {
+                selectedNext = true
+            } else if (it is PhotosEvent.SelectPreviousPhoto) {
+                selectedPrevious = true
+            }
+        }
+
+        // when
+        composeTestRule.setContent {
+            AppTheme {
+                PhotosContent(uiState = uiState, handleEvent = eventHandler)
+            }
+        }
+        composeTestRule.onNodeWithTag("PHOTO_DETAILS").performTouchInput {
+            swipe(start = Offset(800f, 100f), end = Offset(100f, 100f))
+        }
+
+        // then
+        assert(selectedNext)
+        assert(!selectedPrevious)
+    }
+
+
+    @Test
+    fun swipe_right_should_select_previous_image() {
+        // given
+        val photo1 = generateTestPhoto(filename = "photo1.jpg")
+        val uiState = PhotosUiState(
+            photos = listOf(photo1),
+            selectedIndex = 1,
+            selectedPhoto = photo1,
+            isLoading = false,
+        )
+        var selectedNext = false
+        var selectedPrevious = false
+        val eventHandler: (event: PhotosEvent) -> Unit = {
+            if (it is PhotosEvent.SelectNextPhoto) {
+                selectedNext = true
+            } else if (it is PhotosEvent.SelectPreviousPhoto) {
+                selectedPrevious = true
+            }
+        }
+
+        // when
+        composeTestRule.setContent {
+            AppTheme {
+                PhotosContent(uiState = uiState, handleEvent = eventHandler)
+            }
+        }
+        composeTestRule.onNodeWithTag("PHOTO_DETAILS").performTouchInput {
+            swipe(start = Offset(100f, 100f), end = Offset(800f, 100f))
+        }
+
+        // then
+        assert(!selectedNext)
+        assert(selectedPrevious)
     }
 }
