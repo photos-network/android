@@ -3,18 +3,10 @@ package photos.network.home.photos
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
@@ -77,8 +69,19 @@ fun PhotoDetails(
             contentDescription = null,
         )
 
-        PhotoTopIcons()
+        PhotoTopIcons(
+            modifier = Modifier
+                .background(Color.White)
+                .fillMaxWidth()
+                .align(Alignment.TopStart),
+            onBackPressed = { onSelectItem(null) }
+        )
 
-        PhotoBottomIcons()
+        PhotoBottomIcons(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Black)
+                .align(Alignment.BottomCenter),
+        )
     }
 }
