@@ -21,6 +21,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import org.junit.Rule
 import org.junit.Test
 import photos.network.MainActivity
+import photos.network.generateTestPhoto
 import photos.network.theme.AppTheme
 
 class PhotosScreenTests {
@@ -41,5 +42,37 @@ class PhotosScreenTests {
 
         // then
         composeTestRule.onNodeWithTag("LOADING_SPINNER").assertIsDisplayed()
+    }
+
+    @Test
+    fun back_should_unselect_photo_if_set() {
+        // given
+        val photo1 = generateTestPhoto(filename = "photo1.jpg")
+        val uiState = PhotosUiState(
+            photos = listOf(photo1),
+            selectedIndex = 1,
+            selectedPhoto = photo1,
+            isLoading = false,
+        )
+        var called = false
+        val eventHandler: (event: PhotosEvent) -> Unit = {
+            if (it is PhotosEvent.SelectIndex) {
+                called = true
+            }
+        }
+
+        // when
+        composeTestRule.setContent {
+            AppTheme {
+                PhotosContent(
+                    uiState = uiState,
+                    handleEvent = eventHandler
+                )
+            }
+        }
+        composeTestRule.activity.onBackPressed()
+
+        // then
+        assert(called)
     }
 }
