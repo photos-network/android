@@ -24,6 +24,8 @@ import androidx.compose.ui.graphics.Color
 import coil.compose.rememberImagePainter
 import photos.network.R
 import photos.network.data.photos.repository.Photo
+import photos.network.ui.PhotoBottomIcons
+import photos.network.ui.PhotoTopIcons
 
 @Composable
 fun PhotoDetails(
@@ -75,44 +77,8 @@ fun PhotoDetails(
             contentDescription = null,
         )
 
-        Row(
-            modifier = Modifier
-                .background(Color.White)
-                .fillMaxWidth()
-                .align(Alignment.TopStart),
-        ) {
-            IconButton(
-                onClick = {
-                    onSelectItem(null)
-                }
-            ) {
-                Icon(Icons.Filled.ArrowBack, null)
-            }
+        PhotoTopIcons()
 
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Black)
-                .align(Alignment.BottomCenter),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            IconButton(
-                onClick = {
-                    // TODO: show share dialog
-                }
-            ) {
-                Icon(Icons.Default.Share, null, tint = Color.White)
-            }
-
-            IconButton(
-                onClick = {
-                    // TODO: show delete dialog
-                }
-            ) {
-                Icon(Icons.Default.Delete, null, tint = Color.White)
-            }
-        }
+        PhotoBottomIcons()
     }
 }
