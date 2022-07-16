@@ -78,7 +78,7 @@ fun PhotoGrid(
 
                 // add year header if necessary
                 if (yearOfFirst != yearNow) {
-                    item(span = { GridItemSpan(4) }) {
+                    item(span = { GridItemSpan(maxCurrentLineSpan) }) {
                         Text(
                             text = yearOfFirst.toString(),
                             style = MaterialTheme.typography.bodyMedium
@@ -100,7 +100,7 @@ fun PhotoGrid(
                     }
 
                     // month header
-                    item(span = { GridItemSpan(4) }) {
+                    item(span = { GridItemSpan(maxCurrentLineSpan) }) {
                         Text(text = title, style = MaterialTheme.typography.bodyLarge)
                     }
 
