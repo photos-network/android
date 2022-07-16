@@ -86,7 +86,7 @@ fun PhotoDetails(
 
         PhotoTopIcons(
             modifier = Modifier
-                .background(Color.White)
+                .background(Color.Black)
                 .fillMaxWidth()
                 .align(Alignment.TopStart),
             onBackPressed = { onSelectItem(null) }
