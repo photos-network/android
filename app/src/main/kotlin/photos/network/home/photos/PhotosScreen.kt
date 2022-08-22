@@ -20,6 +20,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,7 +32,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -55,7 +55,6 @@ import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberPermissionState
 import org.koin.androidx.compose.getViewModel
 import photos.network.data.photos.repository.Photo
-import photos.network.navigation.Destination
 import photos.network.theme.AppTheme
 import photos.network.ui.PhotoGrid
 import java.time.Instant
@@ -161,6 +160,10 @@ fun PhotosContent(
         }
     }
 
+    BackHandler(enabled = true){
+        handleEvent(PhotosEvent.SelectIndex(null))
+    }
+
     if (uiState.isLoading) {
         Text(
             modifier = Modifier.testTag("LOADING_SPINNER"),
@@ -171,9 +174,16 @@ fun PhotosContent(
     PhotoGrid(
         modifier = modifier,
         photos = uiState.photos,
+        selectedPhoto = uiState.selectedPhoto,
+        selectedIndex = uiState.selectedIndex,
         onSelectItem = {
-            // Handle selection
-            navController.navigate("${Destination.Details.route}/$it")
+            handleEvent(PhotosEvent.SelectIndex(it))
+        },
+        selectNextPhoto = {
+            handleEvent(PhotosEvent.SelectNextPhoto)
+        },
+        selectPreviousPhoto = {
+            handleEvent(PhotosEvent.SelectPreviousPhoto)
         }
     )
     // TODO: add fast-scroll

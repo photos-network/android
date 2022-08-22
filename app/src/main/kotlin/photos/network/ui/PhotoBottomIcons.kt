@@ -13,10 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.details
+package photos.network.ui
 
-sealed class DetailEvent {
-    class SetIdentifier(val identifier: String) : DetailEvent()
-    object Share : DetailEvent()
-    object Delete : DetailEvent()
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import photos.network.theme.AppTheme
+
+@Composable
+fun PhotoBottomIcons(
+    modifier: Modifier = Modifier
+) {
+
+}
+
+@Preview
+@Composable
+private fun PhotoBottomIconsPreview() {
+    AppTheme {
+        PhotoBottomIcons()
+    }
 }

@@ -19,6 +19,8 @@ import photos.network.data.photos.repository.Photo
 
 data class PhotosUiState(
     val photos: List<Photo> = emptyList(),
+    val selectedPhoto: Photo? = null,
+    val selectedIndex: Int? = null,
     val isLoading: Boolean = true,
     val hasError: Boolean = false,
 )

@@ -19,7 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import photos.network.domain.photos.usecase.GetPhotosUseCase
@@ -37,6 +36,15 @@ class PhotosViewModel(
         }
     }
 
+    fun handleEvent(event: PhotosEvent) {
+        when (event) {
+            PhotosEvent.StartLocalPhotoSyncEvent -> startLocalPhotoSync()
+            is PhotosEvent.SelectIndex -> selectItem(event.index)
+            PhotosEvent.SelectPreviousPhoto -> selectPreviousPhoto()
+            PhotosEvent.SelectNextPhoto -> selectNextPhoto()
+        }
+    }
+
     internal suspend fun loadPhotos() {
         getPhotosUseCase().collect { photos ->
             withContext(Dispatchers.Main) {
@@ -48,13 +56,59 @@ class PhotosViewModel(
         }
     }
 
-    fun handleEvent(event: PhotosEvent) {
-        when (event) {
-            PhotosEvent.StartLocalPhotoSyncEvent -> startLocalPhotoSync()
+    private fun startLocalPhotoSync() {
+        startPhotosSyncUseCase()
+    }
+
+    private fun selectPreviousPhoto() {
+        viewModelScope.launch(Dispatchers.IO) {
+            uiState.value.selectedIndex?.let { index ->
+                val newIndex = index - 1
+                if (newIndex >= 0) {
+                    val photo = uiState.value.photos[newIndex]
+
+                    withContext(Dispatchers.Main) {
+                        uiState.value = uiState.value.copy(
+                            selectedPhoto = photo,
+                            selectedIndex = newIndex
+                        )
+                    }
+                }
+            }
         }
     }
 
-    private fun startLocalPhotoSync() {
-        startPhotosSyncUseCase()
+    private fun selectNextPhoto() {
+        viewModelScope.launch(Dispatchers.IO) {
+            uiState.value.selectedIndex?.let { index ->
+                val newIndex = index + 1
+                if (newIndex < uiState.value.photos.size) {
+                    val photo = uiState.value.photos[newIndex]
+
+                    withContext(Dispatchers.Main) {
+                        uiState.value = uiState.value.copy(
+                            selectedPhoto = photo,
+                            selectedIndex = newIndex
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun selectItem(index: Int?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val photo = if (index != null) {
+                uiState.value.photos[index]
+            } else {
+                null
+            }
+            withContext(Dispatchers.Main) {
+                uiState.value = uiState.value.copy(
+                    selectedPhoto = photo,
+                    selectedIndex = index
+                )
+            }
+        }
     }
 }

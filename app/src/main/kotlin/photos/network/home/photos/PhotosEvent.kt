@@ -15,6 +15,9 @@
  */
 package photos.network.home.photos
 
-sealed class PhotosEvent {
-    object StartLocalPhotoSyncEvent : PhotosEvent()
+sealed interface PhotosEvent {
+    object StartLocalPhotoSyncEvent : PhotosEvent
+    class SelectIndex(val index: Int?) : PhotosEvent
+    object SelectNextPhoto : PhotosEvent
+    object SelectPreviousPhoto : PhotosEvent
 }
