@@ -43,6 +43,7 @@ import org.koin.androidx.workmanager.dsl.worker
 import org.koin.dsl.module
 import photos.network.data.photos.network.PhotoApi
 import photos.network.data.photos.network.TokenInfo
+import photos.network.data.photos.network.PhotoApiImpl
 import photos.network.data.photos.persistence.MIGRATION_1_2
 import photos.network.data.photos.persistence.PhotoDao
 import photos.network.data.photos.persistence.PhotoDatabase
@@ -53,6 +54,7 @@ import photos.network.data.settings.persistence.SettingsStorage
 import photos.network.data.settings.repository.SettingsRepository
 import photos.network.data.settings.repository.SettingsRepositoryImpl
 import photos.network.data.user.network.UserApi
+import photos.network.data.user.network.UserApiImpl
 import photos.network.data.user.persistence.User
 import photos.network.data.user.persistence.UserStorage
 import photos.network.data.user.repository.UserRepository
@@ -60,7 +62,7 @@ import photos.network.data.user.repository.UserRepositoryImpl
 
 val dataModule = module {
     single {
-        UserApi(
+        UserApiImpl(
             httpClient = get(),
             settingsRepository = get(),
             userStorage = get(),
@@ -94,7 +96,7 @@ val dataModule = module {
     }
 
     single {
-        PhotoApi(
+        PhotoApiImpl(
             httpClient = get(),
             settingsRepository = get(),
         )
