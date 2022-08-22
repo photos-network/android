@@ -34,7 +34,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import photos.network.data.PhotosNetworkMockFileReader
 import photos.network.data.settings.persistence.SettingsStorage
-import photos.network.data.settings.repository.SettingsRepository
 import photos.network.data.settings.repository.SettingsRepositoryImpl
 
 /**
@@ -60,7 +59,7 @@ class PhotoApiTest {
                 headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             )
         }
-        val photoApi = PhotoApi(
+        val photoApi = PhotoApiImpl(
             httpClient = createHttpClient(mockEngine),
             settingsRepository = settingsRepository
         )
@@ -91,7 +90,7 @@ class PhotoApiTest {
                 headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             )
         }
-        val photoApi = PhotoApi(
+        val photoApi = PhotoApiImpl(
             httpClient = createHttpClient(mockEngine),
             settingsRepository = settingsRepository
         )

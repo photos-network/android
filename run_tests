@@ -1,0 +1,1 @@
+./gradlew detekt lint testDebugUnitTest connectedAndroidTest :app:bundleDebug
