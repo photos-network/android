@@ -28,7 +28,9 @@ sequenceDiagram
     A--)C: Validate entered host
     U->>A: Enter Client ID
     A--)C: Validate entered client ID
-    critical OAuth Authorization Code Grant flow
+    
+    alt OAuth Authorization Code Grant flow
+    
       C->>U: Show credentials form (RFC 4.1.1)
       activate U
       U->>C: Send username and password
