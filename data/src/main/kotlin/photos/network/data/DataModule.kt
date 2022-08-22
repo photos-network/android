@@ -60,7 +60,7 @@ import photos.network.data.user.repository.UserRepository
 import photos.network.data.user.repository.UserRepositoryImpl
 
 val dataModule = module {
-    single {
+    single<UserApi> {
         UserApiImpl(
             httpClient = get(),
             settingsRepository = get(),
@@ -94,7 +94,7 @@ val dataModule = module {
         )
     }
 
-    single {
+    single<PhotoApi> {
         PhotoApiImpl(
             httpClient = get(),
             settingsRepository = get(),
