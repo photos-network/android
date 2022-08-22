@@ -185,12 +185,14 @@ class UserApiTests {
         val userApi = UserApiImpl(
             httpClient = HttpClient(MockEngine {
                 respond(
-                    content = ByteReadChannel("""{
-"access_token":"abcdefg",
-"expires_in": 3600,
-"refresh_token":"abcdefg",
-"token_type":"abcdefg"
-                        }""".trimIndent()),
+                    content = ByteReadChannel("""
+{
+    "access_token":"abcdefg",
+    "expires_in": 3600,
+    "refresh_token":"abcdefg",
+    "token_type":"abcdefg"
+}
+                        """.trimIndent()),
                     status = HttpStatusCode.PreconditionFailed,
                     headers = headersOf(HttpHeaders.ContentType, "application/json")
                 )
