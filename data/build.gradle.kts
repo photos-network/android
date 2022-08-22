@@ -154,7 +154,7 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:2.0.1")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.1")
     implementation("io.ktor:ktor-client-logging-jvm:2.0.1")
-    androidTestApi("io.ktor:ktor-client-mock-jvm:2.0.1")
+    implementation("io.ktor:ktor-client-mock-jvm:2.0.1")
 
     // logging
     api("com.squareup.logcat:logcat:0.1")
