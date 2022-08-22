@@ -29,19 +29,20 @@ sequenceDiagram
     U->>A: Enter Client ID
     A--)C: Validate entered client ID
     critical OAuth Authorization Code Grant flow
-    C->>U: Show credentials form (RFC 4.1.1)
-    activate U
-    U->>C: Send username and password
-    activate C
-    deactivate U
-    C->>A: Respond with auth code (RFC 4.1.2)
-    A->>C: Request access token (RFC 4.1.3)
-    C->>A: Respond with access token (RFC 4.1.4)
-    deactivate C
+      C->>U: Show credentials form (RFC 4.1.1)
+      activate U
+      U->>C: Send username and password
+      activate C
+      deactivate U
+      C->>A: Respond with auth code (RFC 4.1.2)
+      A->>C: Request access token (RFC 4.1.3)
+      C->>A: Respond with access token (RFC 4.1.4)
+      deactivate C
     end
     A->>C: Load data with access token
     C->>A: Return data
     A->>U: Display data to user
+
 ```
 
 The synchronisation of photos with a core instance is done in multiple steps:
