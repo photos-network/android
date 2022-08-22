@@ -29,6 +29,9 @@ val releaseKeyPassword: String by project
 
 // deployment
 play {
+    // publishing will be enabled for release flavor only
+    enabled.set(false)
+
     serviceAccountCredentials.set(rootProject.file("gradle_playstore_publisher_credentials.json"))
     defaultToAppBundles.set(true)
 
@@ -158,6 +161,13 @@ android {
             storePassword = releaseStorePassword
             keyAlias = releaseKeyAlias
             keyPassword = releaseKeyPassword
+        }
+    }
+
+    (this as ExtensionAware).extensions.configure<
+            NamedDomainObjectContainer<com.github.triplet.gradle.play.PlayPublisherExtension>>("playConfigs") {
+        register("release") {
+            enabled.set(true)
         }
     }
 
