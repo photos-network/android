@@ -18,28 +18,48 @@ To connect the app with a [core instance](https://github.com/photos-network/core
 After adding the **Host** and **Client ID** into the app, a browser window will be opened to enter the users credentials.
 ```mermaid
 sequenceDiagram
-    participant U as User
+    actor U as User
     participant A as App
     participant C as Core Instance
     U->>A: Enter Hostname
-    A->>C: Init a connection to the entered host to validate
+    A--)C: Validate entered host
     U->>A: Enter Client ID
-    A->>C: Validate the entered client ID
-    C->>A: Request user credentials
-    U->>A: Enter username and password
-    A->>C: Authenticate the user by the entered credentials
-    C->>A: Return a token Pair (access & refresh)
+    A--)C: Validate entered client ID
+    C->>U: Show credentials form
+    activate U
+    U->>C: Send username and password
+    activate C
+    deactivate U
+    C->>A: Respond with auth code
+    A->>C: Request access token
+    C->>A: Respond with access token
+    deactivate C
+    A->>C: Load data with access token
+    C->>A: Return data
+    A->>U: Display data to user
 ```
 
 The synchronisation of photos with a core instance is done in multiple steps:
 ```mermaid
-  graph TB
-    subgraph Sync
-      worker1[SyncLocalPhotosWorker]-- Query images from <br/>Androids local MediaStore --> repo1(Photos repository)
-    end
+flowchart LR
+    store[Android media store]
+    repo[(Photos repository)]
+    core((Core instance))
+
+    store --> syncWorker --> repo
+    repo --> uploadWorker --> core
+    core --> downloadWorker --> repo
     
+    subgraph Local Sync
+        syncWorker(SyncLocalPhotosWorker)
+    end
+
     subgraph Upload
-      worker2[UploadPhotosWorker]-- Uploads non-synced photos --> core((Core instance))
+        uploadWorker[UploadWorker]
+    end 
+
+    subgraph Download
+        downloadWorker[DownloadWorker]
     end
 ```
 
