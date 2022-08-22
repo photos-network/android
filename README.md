@@ -13,6 +13,36 @@ Its core features are:
 - Filter / Search photos by attributes like location or date
 - Group photos by objects like people of objects
 
+## App workflow
+To connect the app with a [core instance](https://github.com/photos-network/core), the user needs to authenticate itself via oauth.
+After adding the **Host** and **Client ID** into the app, a browser window will be opened to enter the users credentials.
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant A as App
+    participant C as Core Instance
+    U->>A: Enter Hostname
+    A->>C: Init a connection to the entered host to validate
+    U->>A: Enter Client ID
+    A->>C: Validate the entered client ID
+    C->>A: Request user credentials
+    U->>A: Enter username and password
+    A->>C: Authenticate the user by the entered credentials
+    C->>A: Return a token Pair (access & refresh)
+```
+
+The synchronisation of photos with a core instance is done in multiple steps:
+```mermaid
+  graph TB
+    subgraph SyncLocal
+      worker[SyncLocalPhotosWorker]-- Query images from <br/>Androids local MediaStore --> repo(Photos repository)
+    end
+    
+    subgraph SyncLocal
+      repo(Photos repository)-- Upload non-synced photos --> core((Core instance))
+    end
+```
+
 ## Gitflow
 - *main:* contains production code
 - *development:* latest changes that will be included in the next release
