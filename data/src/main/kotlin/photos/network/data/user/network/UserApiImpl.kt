@@ -89,6 +89,10 @@ class UserApiImpl(
             }
         ).body()
 
+        if (tokenInfo.accessToken.isEmpty() || tokenInfo.refreshToken.isEmpty()) {
+            return false
+        }
+
         val user = userStorage.read()
         val tmpUser: User
         if (user == null) {

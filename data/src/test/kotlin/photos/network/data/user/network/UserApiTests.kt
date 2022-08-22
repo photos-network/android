@@ -36,6 +36,7 @@ class UserApiTests {
             firstname = "Firstname",
             profileImageUrl = ""
         ) }
+        coEvery { userStorage.save(any()) } answers {}
         coEvery { settingsRepository.settings } answers {
             flowOf(
                 Settings(
@@ -44,6 +45,175 @@ class UserApiTests {
                 )
             )
         }
+    }
+
+    @Test
+    fun `verify server host should succeed`() = runBlocking {
+        // given
+        val userApi = UserApiImpl(
+            httpClient = HttpClient(MockEngine {
+                respond(
+                    content = ByteReadChannel("""
+{
+  "message": "API running"
+}
+                    """.trimIndent()),
+                    status = HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }) {
+                install(ContentNegotiation) {
+                    json(
+                        Json {
+                            prettyPrint = true
+                            isLenient = true
+                            ignoreUnknownKeys = true
+                        }, contentType = ContentType.Application.Json
+                    )
+                }
+            },
+            userStorage = userStorage,
+            settingsRepository = settingsRepository
+        )
+
+        // when
+        val result = userApi.verifyServerHost("localhost")
+
+        // then
+        Truth.assertThat(result).isEqualTo(true)
+    }
+
+    @Test
+    fun `verify invalid server host should fail`() = runBlocking {
+        // given
+        val userApi = UserApiImpl(
+            httpClient = HttpClient(MockEngine {
+                respond(
+                    content = ByteReadChannel("""{}""".trimIndent()),
+                    status = HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }) {
+                install(ContentNegotiation) {
+                    json(
+                        Json {
+                            prettyPrint = true
+                            isLenient = true
+                            ignoreUnknownKeys = true
+                        }, contentType = ContentType.Application.Json
+                    )
+                }
+            },
+            userStorage = userStorage,
+            settingsRepository = settingsRepository
+        )
+
+        // when
+        val result = userApi.verifyServerHost("invalid")
+
+        // then
+        Truth.assertThat(result).isEqualTo(false)
+    }
+
+    @Test
+    fun `verify client id should succeed`() = runBlocking {
+        // given
+        val userApi = UserApiImpl(
+            httpClient = HttpClient(MockEngine {
+                respond(
+                    content = ByteReadChannel("""{}""".trimIndent()),
+                    status = HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }) {
+                install(ContentNegotiation) {
+                    json(
+                        Json {
+                            prettyPrint = true
+                            isLenient = true
+                            ignoreUnknownKeys = true
+                        }, contentType = ContentType.Application.Json
+                    )
+                }
+            },
+            userStorage = userStorage,
+            settingsRepository = settingsRepository
+        )
+
+        // when
+        val result = userApi.verifyClientId("clientID")
+
+        // then
+        Truth.assertThat(result).isEqualTo(true)
+    }
+
+    @Test
+    fun `verify invalid client id should fail`() = runBlocking {
+        // given
+        val userApi = UserApiImpl(
+            httpClient = HttpClient(MockEngine {
+                respond(
+                    content = ByteReadChannel("""{}""".trimIndent()),
+                    status = HttpStatusCode.PreconditionFailed,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }) {
+                install(ContentNegotiation) {
+                    json(
+                        Json {
+                            prettyPrint = true
+                            isLenient = true
+                            ignoreUnknownKeys = true
+                        }, contentType = ContentType.Application.Json
+                    )
+                }
+            },
+            userStorage = userStorage,
+            settingsRepository = settingsRepository
+        )
+
+        // when
+        val result = userApi.verifyClientId("clientID")
+
+        // then
+        Truth.assertThat(result).isEqualTo(false)
+    }
+
+    @Test
+    fun `request access token for valid authCode should succeed`() = runBlocking {
+        // given
+        val userApi = UserApiImpl(
+            httpClient = HttpClient(MockEngine {
+                respond(
+                    content = ByteReadChannel("""{
+"access_token":"abcdefg",
+"expires_in": 3600,
+"refresh_token":"abcdefg",
+"token_type":"abcdefg"
+                        }""".trimIndent()),
+                    status = HttpStatusCode.PreconditionFailed,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }) {
+                install(ContentNegotiation) {
+                    json(
+                        Json {
+                            prettyPrint = true
+                            isLenient = true
+                            ignoreUnknownKeys = true
+                        }, contentType = ContentType.Application.Json
+                    )
+                }
+            },
+            userStorage = userStorage,
+            settingsRepository = settingsRepository
+        )
+
+        // when
+        val result = userApi.accessTokenRequest("authCode")
+
+        // then
+        Truth.assertThat(result).isEqualTo(true)
     }
 
     @Test
