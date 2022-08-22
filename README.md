@@ -35,11 +35,11 @@ The synchronisation of photos with a core instance is done in multiple steps:
 ```mermaid
   graph TB
     subgraph SyncLocal
-      worker[SyncLocalPhotosWorker]-- Query images from <br/>Androids local MediaStore --> repo(Photos repository)
+      worker1[SyncLocalPhotosWorker]-- Query images from <br/>Androids local MediaStore --> repo1(Photos repository)
     end
     
     subgraph SyncLocal
-      repo(Photos repository)-- Upload non-synced photos --> core((Core instance))
+      worker2[UploadPhotosWorker]-- Uploads non-synced photos --> core((Core instance))
     end
 ```
 
