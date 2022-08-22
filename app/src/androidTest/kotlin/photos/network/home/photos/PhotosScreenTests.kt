@@ -111,8 +111,8 @@ class PhotosScreenTests {
         }
 
         // then
-        assert(selectedNext)
         assert(!selectedPrevious)
+        assert(selectedNext)
     }
 
 
@@ -120,8 +120,9 @@ class PhotosScreenTests {
     fun swipe_right_should_select_previous_image() {
         // given
         val photo1 = generateTestPhoto(filename = "photo1.jpg")
+        val photo2 = generateTestPhoto(filename = "photo2.jpg")
         val uiState = PhotosUiState(
-            photos = listOf(photo1),
+            photos = listOf(photo1, photo2),
             selectedIndex = 1,
             selectedPhoto = photo1,
             isLoading = false,
