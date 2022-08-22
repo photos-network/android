@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.data.user.network.entity
+package photos.network.data.user.network.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -25,7 +25,6 @@ import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
@@ -42,8 +41,8 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.workmanager.dsl.worker
 import org.koin.dsl.module
 import photos.network.data.photos.network.PhotoApi
-import photos.network.data.photos.network.TokenInfo
 import photos.network.data.photos.network.PhotoApiImpl
+import photos.network.data.user.network.model.TokenInfo
 import photos.network.data.photos.persistence.MIGRATION_1_2
 import photos.network.data.photos.persistence.PhotoDao
 import photos.network.data.photos.persistence.PhotoDatabase
