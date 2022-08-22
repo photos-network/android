@@ -14,8 +14,11 @@ Its core features are:
 - Group photos by objects like people of objects
 
 ## App workflow
-To connect the app with a [core instance](https://github.com/photos-network/core), the user needs to authenticate itself via oauth.
-After adding the **Host** and **Client ID** into the app, a browser window will be opened to enter the users credentials.
+To connect the app to a [core instance](https://github.com/photos-network/core), 
+the user needs to authenticate itself via [Authorization Code Grant](https://www.oauth.com/oauth2-servers/server-side-apps/authorization-code/) in [OAuth 2.0](https://datatracker.ietf.org/doc/html/rfc6749).
+
+After adding the **Host** and **Client ID** into the app, the app will construct the request URI
+and display it in a browser window so the user can enter its credentials.
 ```mermaid
 sequenceDiagram
     actor U as User
@@ -25,18 +28,19 @@ sequenceDiagram
     A--)C: Validate entered host
     U->>A: Enter Client ID
     A--)C: Validate entered client ID
-    C->>U: Show credentials form
+    C->>U: Show credentials form (RFC 4.1.1)
     activate U
     U->>C: Send username and password
     activate C
     deactivate U
-    C->>A: Respond with auth code
-    A->>C: Request access token
-    C->>A: Respond with access token
+    C->>A: Respond with auth code (RFC 4.1.2)
+    A->>C: Request access token (RFC 4.1.3)
+    C->>A: Respond with access token (RFC 4.1.4)
     deactivate C
     A->>C: Load data with access token
     C->>A: Return data
     A->>U: Display data to user
+
 ```
 
 The synchronisation of photos with a core instance is done in multiple steps:
