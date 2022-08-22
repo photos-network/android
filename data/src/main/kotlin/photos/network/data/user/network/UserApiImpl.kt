@@ -135,9 +135,9 @@ class UserApiImpl(
         try {
             val host = settingsRepository.settings.first().host
 
-            httpClient.request(urlString = "$host/api/user/") {
+            return httpClient.request(urlString = "$host/api/user/") {
                 method = HttpMethod.Get
-            }
+            }.body<NetworkUser>()
         } catch (exception: Exception) {
             logcat(LogPriority.ERROR) { "Could not get user: $exception" }
         }
