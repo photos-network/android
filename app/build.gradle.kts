@@ -2,14 +2,14 @@ import com.github.triplet.gradle.androidpublisher.ResolutionStrategy
 import com.github.triplet.gradle.androidpublisher.ReleaseStatus
 
 plugins {
-    id("com.android.application") version "7.0.4"
-    id("com.diffplug.spotless") version "6.0.4"
-    kotlin("android") version "1.5.30"
-    kotlin("kapt") version "1.5.30"
-    kotlin("plugin.serialization") version "1.6.0"
-    id("marathon") version "0.6.4"
-    id("io.gitlab.arturbosch.detekt") version "1.19.0"
-    id("com.github.triplet.play") version "3.7.0"
+    id("com.android.application")
+    id("com.diffplug.spotless")
+    kotlin("android")
+    kotlin("kapt")
+    kotlin("plugin.serialization")
+    id("marathon")
+    id("io.gitlab.arturbosch.detekt")
+    id("com.github.triplet.play")
     id("jacoco")
 }
 
@@ -136,7 +136,7 @@ android {
         // API 24 | required by: networkSecurityConfig
         // API 26 | required by: Java 8 Time API
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 31
         versionCode = 5
         versionName = "0.1.0"
 
@@ -202,7 +202,7 @@ android {
         shaders = false
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.0-alpha04"
+        kotlinCompilerExtensionVersion = "1.2.0"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -252,48 +252,47 @@ dependencies {
     androidTestImplementation(project(":data", "androidTestArtifacts"))
 
     // Compose
-    implementation("androidx.activity:activity-compose:1.4.0")
-    implementation("androidx.compose.runtime:runtime-livedata:1.1.1")
-    implementation("androidx.compose.ui:ui:1.1.1")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha06")
-    implementation("androidx.compose.material:material:1.1.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.1.1")
-    implementation("androidx.navigation:navigation-compose:2.4.1")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0")
-    implementation("androidx.compose.material:material-icons-extended:1.1.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha14")
-    implementation("androidx.paging:paging-common-ktx:3.1.0")
-    androidTestApi("androidx.compose.ui:ui-test:1.1.1")
-    androidTestApi("androidx.compose.ui:ui-test-junit4:1.1.1")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.1.1")
-    debugApi("androidx.compose.ui:ui-tooling:1.1.1")
+    implementation(AndroidX.activity.compose)
+    implementation(AndroidX.compose.runtime.liveData)
+    implementation(AndroidX.compose.ui)
+    implementation(AndroidX.compose.material3)
+    implementation(AndroidX.compose.material)
+    implementation(AndroidX.compose.ui.toolingPreview)
+    implementation(AndroidX.navigation.compose)
+    implementation(AndroidX.constraintLayout.compose)
+    implementation(AndroidX.compose.material.icons.extended)
+    implementation(AndroidX.paging.compose)
+    implementation(AndroidX.paging.commonKtx)
+    androidTestApi(AndroidX.compose.ui.test)
+    androidTestApi(AndroidX.compose.ui.testJunit4)
+    debugImplementation(AndroidX.compose.ui.testManifest)
+    debugApi(AndroidX.compose.ui.tooling)
 
     // accompanist
-    val accompanistVersion = "0.23.1"
-    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-placeholder:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-permissions:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-navigation-animation:_")
+    implementation(Google.accompanist.systemuicontroller)
+    implementation("com.google.accompanist:accompanist-placeholder:_")
+    implementation(Google.accompanist.flowlayout)
+    implementation(Google.accompanist.insets)
+    implementation(Google.accompanist.pager)
+    implementation(Google.accompanist.swiperefresh)
+    implementation("com.google.accompanist:accompanist-permissions:_")
 
     // design
-    implementation("com.google.android.material:material:1.5.0")
+    implementation(Google.android.material)
 
     // Coil
-    implementation("io.coil-kt:coil:1.3.2")
-    implementation("io.coil-kt:coil-compose:1.3.2")
+    implementation(COIL)
+    implementation(COIL.compose)
 
     // retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    implementation(Square.retrofit2)
+    implementation(Square.okHttp3.loggingInterceptor)
 
     // serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
+    implementation(KotlinX.serialization.json)
+    implementation(JakeWharton.retrofit2.converter.kotlinxSerialization)
 
     // leakCanary
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
+    debugImplementation(Square.leakCanary.android)
 }

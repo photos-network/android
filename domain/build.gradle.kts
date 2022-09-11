@@ -1,9 +1,9 @@
 plugins {
-    id("com.android.library") version "7.0.4"
-    id("com.diffplug.spotless") version "6.0.4"
-    kotlin("android") version "1.5.30"
-    kotlin("kapt") version "1.5.30"
-    kotlin("plugin.serialization") version "1.5.30"
+    id("com.android.library")
+    id("com.diffplug.spotless")
+    kotlin("android")
+    kotlin("kapt")
+    kotlin("plugin.serialization")
     id("jacoco")
 }
 

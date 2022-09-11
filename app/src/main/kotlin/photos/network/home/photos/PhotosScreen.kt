@@ -69,7 +69,7 @@ fun PhotosScreen(
     val context = LocalContext.current
     val permissionState = rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
 
-    // Track if the user doesn't want to see the rationale any more.
+    // Track if the user doesn't want to see the rationale anymore.
     var doNotShowRationale by rememberSaveable { mutableStateOf(false) }
 
     PermissionRequired(
