@@ -45,7 +45,7 @@ proguard-project.txt
 !.idea/encodings.xml
 !.idea/externalDependencies.xml
 !.idea/fileTemplates/
-!.idea/icon.svg
+!.idea/icon.png
 !.idea/inspectionProfiles/
 !.idea/runConfigurations/
 !.idea/scopes/
