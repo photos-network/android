@@ -164,7 +164,7 @@ dependencies {
     api(AndroidX.security.crypto)
 
     // testing
-    testApi(AndroidX.test.ext.junitKtx)
+    testApi(AndroidX.test.ext.junit.ktx)
     testApi(Testing.junit4)
     testApi("com.google.truth:truth:_")
     testApi(Testing.mockK)
@@ -174,7 +174,7 @@ dependencies {
     androidTestApi(AndroidX.test.core)
     androidTestApi(AndroidX.test.coreKtx)
     androidTestApi(AndroidX.test.ext.junit)
-    androidTestApi(AndroidX.test.ext.junitKtx)
+    androidTestApi(AndroidX.test.ext.junit.ktx)
     androidTestApi(AndroidX.test.ext.truth)
     androidTestApi(AndroidX.test.monitor)
     androidTestApi(AndroidX.test.orchestrator)

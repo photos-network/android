@@ -10,6 +10,7 @@ plugins {
     id("marathon")
     id("io.gitlab.arturbosch.detekt")
     id("com.github.triplet.play")
+    id("org.ajoberstar.grgit")
     id("jacoco")
 }
 
@@ -137,8 +138,8 @@ android {
         // API 26 | required by: Java 8 Time API
         minSdk = 26
         targetSdk = 31
-        versionCode = 5
-        versionName = "0.1.0"
+        versionCode = grgit.log().size
+        versionName = "0.1.0-${grgit.head().abbreviatedId}"
 
         testInstrumentationRunner = "photos.network.PhotosNetworkJUnitRunner"
     }
