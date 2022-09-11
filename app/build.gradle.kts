@@ -128,7 +128,7 @@ marathon {
 }
 
 android {
-    compileSdk = 31
+    compileSdk = 33
     defaultConfig {
         applicationId = "photos.network"
         // API 21 | required by: security-crypto library
@@ -136,7 +136,7 @@ android {
         // API 24 | required by: networkSecurityConfig
         // API 26 | required by: Java 8 Time API
         minSdk = 26
-        targetSdk = 31
+        targetSdk = 33
         versionCode = 5
         versionName = "0.1.0"
 

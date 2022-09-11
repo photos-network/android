@@ -19,7 +19,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import photos.network.data.settings.repository.PrivacyState
@@ -30,7 +32,7 @@ class HomeViewModel constructor(
     private val getSettingsUseCase: GetSettingsUseCase,
     private val togglePrivacyStateUseCase: TogglePrivacyUseCase,
 ) : ViewModel() {
-    val uiState = mutableStateOf(HomeUiState())
+    val uiState = MutableStateFlow(HomeUiState())
 
     init {
         loadInitialPrivacyState()
@@ -40,9 +42,9 @@ class HomeViewModel constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getSettingsUseCase().collect { settings ->
                 withContext(Dispatchers.Main) {
-                    uiState.value = uiState.value.copy(
-                        isPrivacyEnabled = settings.privacyState == PrivacyState.ACTIVE
-                    )
+                    uiState.update {
+                        it.copy(isPrivacyEnabled = settings.privacyState == PrivacyState.ACTIVE)
+                    }
                 }
             }
         }

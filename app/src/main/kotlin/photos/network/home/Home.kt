@@ -33,6 +33,7 @@ import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -111,7 +112,7 @@ fun Home(
                                 viewmodel.handleEvent(HomeEvent.TogglePrivacyEvent)
                             }
                         ) {
-                            if (viewmodel.uiState.value.isPrivacyEnabled) {
+                            if (viewmodel.uiState.collectAsState().value.isPrivacyEnabled) {
                                 Icon(
                                     imageVector = Icons.Default.Shield,
                                     contentDescription = stringResource(id = R.string.privacy_filter_enabled_description),

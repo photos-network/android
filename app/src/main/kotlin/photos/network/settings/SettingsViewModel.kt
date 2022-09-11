@@ -23,6 +23,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import photos.network.BuildConfig
@@ -40,7 +42,7 @@ class SettingsViewModel(
     private val verifyServerHostUseCase: VerifyServerHostUseCase,
     private val verifyClientIdUseCase: VerifyClientIdUseCase,
 ) : ViewModel() {
-    val uiState = mutableStateOf(SettingsUiState())
+    val uiState = MutableStateFlow(SettingsUiState())
     private val isHostVerified = mutableStateOf(false)
     private val isClientIdVerified = mutableStateOf(false)
 
@@ -48,13 +50,15 @@ class SettingsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             getSettingsUseCase().collect { settings ->
                 withContext(Dispatchers.Main) {
-                    uiState.value = uiState.value.copy(
-                        host = settings.host,
-                        isHostVerified = isHostVerified.value,
-                        clientId = settings.clientId,
-                        isClientVerified = isClientIdVerified.value,
-                        appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-                    )
+                    uiState.update {
+                        it.copy(
+                            host = settings.host,
+                            isHostVerified = isHostVerified.value,
+                            clientId = settings.clientId,
+                            isClientVerified = isClientIdVerified.value,
+                            appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+                        )
+                    }
                 }
             }
         }
@@ -70,9 +74,11 @@ class SettingsViewModel(
     }
 
     private fun toggleServerSetup() {
-        uiState.value = uiState.value.copy(
-            isServerSetupExpanded = !uiState.value.isServerSetupExpanded
-        )
+        uiState.update {
+            it.copy(
+                isServerSetupExpanded = !uiState.value.isServerSetupExpanded
+            )
+        }
     }
 
     private fun copyIntoClipboard() {
