@@ -20,6 +20,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
@@ -31,7 +33,7 @@ class LoginViewModel(
     private val requestAccessTokenUseCase: RequestAccessTokenUseCase,
     private val settingsUseCase: GetSettingsUseCase,
 ) : ViewModel() {
-    val uiState = mutableStateOf(LoginUiState())
+    val uiState = MutableStateFlow(LoginUiState())
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -41,10 +43,12 @@ class LoginViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             settingsUseCase().collect {
                 withContext(Dispatchers.Main) {
-                    uiState.value = uiState.value.copy(
-                        host = it.host,
-                        clientId = it.clientId
-                    )
+                    uiState.update {
+                        it.copy(
+                            host = it.host,
+                            clientId = it.clientId
+                        )
+                    }
                 }
             }
         }
@@ -74,9 +78,11 @@ class LoginViewModel(
             }
 
             withContext(Dispatchers.Main) {
-                uiState.value = uiState.value.copy(
-                    nonce = tmpNonce
-                )
+                uiState.update {
+                    it.copy(
+                        nonce = tmpNonce
+                    )
+                }
             }
         }
     }
@@ -85,9 +91,11 @@ class LoginViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             if (requestAccessTokenUseCase(authCode)) {
                 withContext(Dispatchers.Main) {
-                    uiState.value = uiState.value.copy(
-                        loginSucceded = true
-                    )
+                    uiState.update {
+                        it.copy(
+                            loginSucceded = true
+                        )
+                    }
                 }
             }
         }
