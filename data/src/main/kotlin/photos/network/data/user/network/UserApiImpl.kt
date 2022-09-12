@@ -30,10 +30,10 @@ import kotlinx.coroutines.flow.first
 import logcat.LogPriority
 import logcat.asLog
 import logcat.logcat
-import photos.network.data.user.network.model.TokenInfo
 import photos.network.data.settings.repository.SettingsRepository
 import photos.network.data.user.network.model.ApiResponse
 import photos.network.data.user.network.model.NetworkUser
+import photos.network.data.user.network.model.TokenInfo
 import photos.network.data.user.persistence.User
 import photos.network.data.user.persistence.UserStorage
 
@@ -41,7 +41,7 @@ class UserApiImpl(
     private val httpClient: HttpClient,
     private val userStorage: UserStorage,
     private val settingsRepository: SettingsRepository,
-): UserApi {
+) : UserApi {
     override suspend fun verifyServerHost(host: String): Boolean {
         try {
             val response: HttpResponse = httpClient.request("$host/api") {
@@ -55,7 +55,6 @@ class UserApiImpl(
             val body = response.body<ApiResponse>()
 
             return body.message.contains("API running")
-
         } catch (exception: Exception) {
             logcat(LogPriority.ERROR) { exception.asLog() }
 

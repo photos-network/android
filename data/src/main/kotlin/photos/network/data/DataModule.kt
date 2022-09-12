@@ -20,7 +20,7 @@ import androidx.room.Room
 import androidx.work.WorkManager
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.android.Android
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
@@ -42,7 +42,6 @@ import org.koin.androidx.workmanager.dsl.worker
 import org.koin.dsl.module
 import photos.network.data.photos.network.PhotoApi
 import photos.network.data.photos.network.PhotoApiImpl
-import photos.network.data.user.network.model.TokenInfo
 import photos.network.data.photos.persistence.MIGRATION_1_2
 import photos.network.data.photos.persistence.PhotoDao
 import photos.network.data.photos.persistence.PhotoDatabase
@@ -54,6 +53,7 @@ import photos.network.data.settings.repository.SettingsRepository
 import photos.network.data.settings.repository.SettingsRepositoryImpl
 import photos.network.data.user.network.UserApi
 import photos.network.data.user.network.UserApiImpl
+import photos.network.data.user.network.model.TokenInfo
 import photos.network.data.user.persistence.User
 import photos.network.data.user.persistence.UserStorage
 import photos.network.data.user.repository.UserRepository
@@ -140,7 +140,7 @@ private fun provideKtorClient(
     userStorage: UserStorage,
     settingsStore: SettingsStorage,
 ): HttpClient {
-    val client = HttpClient(Android) {
+    val client = HttpClient(CIO) {
         expectSuccess = false
         followRedirects = true
 

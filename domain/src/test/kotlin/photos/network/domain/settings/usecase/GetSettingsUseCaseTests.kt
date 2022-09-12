@@ -28,7 +28,7 @@ import photos.network.data.settings.repository.PrivacyState
 import photos.network.data.settings.repository.Settings
 import photos.network.data.settings.repository.SettingsRepository
 
-class GetSettingsUseCaseTest {
+class GetSettingsUseCaseTests {
     @Rule
     @JvmField
     val rule = InstantTaskExecutorRule()

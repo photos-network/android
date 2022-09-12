@@ -1,9 +1,9 @@
 plugins {
-    id("com.android.library") version "7.0.4"
-    id("com.diffplug.spotless") version "6.0.4"
-    kotlin("android") version "1.5.30"
-    kotlin("kapt") version "1.5.30"
-    kotlin("plugin.serialization") version "1.5.30"
+    id("com.android.library")
+    id("com.diffplug.spotless")
+    kotlin("android")
+    kotlin("kapt")
+    kotlin("plugin.serialization")
     id("jacoco")
 }
 
@@ -114,72 +114,72 @@ repositories {
 }
 
 dependencies {
-    api("androidx.core:core-ktx:1.7.0")
+    api(AndroidX.core.ktx)
 
     // Coroutines
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
+    api(KotlinX.coroutines.core)
+    api(KotlinX.coroutines.android)
 
     // Coroutine Lifecycle Scopes
-    api("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
-    api("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
+    api(AndroidX.lifecycle.runtime.ktx)
+    api(AndroidX.lifecycle.viewModelKtx)
 
     // Koin dependency injection
-    api("io.insert-koin:koin-core:3.1.4")
-    testApi("io.insert-koin:koin-test:3.1.4")
-    api("io.insert-koin:koin-android:3.1.4")
-    api("io.insert-koin:koin-androidx-workmanager:3.1.4")
-    api("io.insert-koin:koin-androidx-navigation:3.1.4")
-    api("io.insert-koin:koin-androidx-compose:3.1.4")
+    api(Koin.core)
+    testApi(Koin.test)
+    api(Koin.android)
+    api(Koin.workManager)
+    api(Koin.navigation)
+    api(Koin.compose)
 
     // Persistence
-    api("androidx.room:room-runtime:2.4.1")
-    api("androidx.room:room-ktx:2.4.1")
-    kapt("androidx.room:room-compiler:2.4.1")
-    androidTestImplementation("androidx.room:room-testing:2.4.1")
+    api(AndroidX.room.runtime)
+    api(AndroidX.room.ktx)
+    kapt(AndroidX.room.compiler)
+    androidTestImplementation(AndroidX.room.testing)
 
     // workmanager
-    api("androidx.work:work-runtime-ktx:2.7.1")
-    androidTestApi("androidx.work:work-testing:2.7.1")
+    api(AndroidX.work.runtimeKtx)
+    androidTestApi(AndroidX.work.testing)
 
     // exifinterface
-    api("androidx.exifinterface:exifinterface:1.3.3")
+    api(AndroidX.exifInterface)
 
     // httpclient
-    implementation("io.ktor:ktor-client-core:2.0.1")
-    implementation("io.ktor:ktor-client-android:2.0.1")
-    implementation("io.ktor:ktor-client-cio:2.0.1")
-    implementation("io.ktor:ktor-client-auth:2.0.1")
-    implementation("io.ktor:ktor-client-serialization:2.0.1")
-    implementation("io.ktor:ktor-client-content-negotiation:2.0.1")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.1")
-    implementation("io.ktor:ktor-client-logging-jvm:2.0.1")
-    implementation("io.ktor:ktor-client-mock-jvm:2.0.1")
+    implementation(Ktor.client.core)
+    implementation(Ktor.client.cio)
+    implementation(Ktor.client.cio)
+    implementation(Ktor.client.auth)
+    implementation(Ktor.client.serialization)
+    implementation(Ktor.client.contentNegotiation)
+    implementation(Ktor.plugins.serialization.kotlinx.json)
+    implementation("io.ktor:ktor-client-logging-jvm:_")
+    implementation("io.ktor:ktor-client-mock-jvm:_")
 
     // logging
-    api("com.squareup.logcat:logcat:0.1")
+    api(Square.logcat)
 
     // serialization
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
-    api("androidx.security:security-crypto:1.1.0-alpha03")
+    api(KotlinX.serialization.json)
+    api(AndroidX.security.crypto)
 
     // testing
-    testApi("androidx.test.ext:junit-ktx:1.1.3")
-    testApi("junit:junit:4.13.2")
-    testApi("com.google.truth:truth:1.1.3")
-    testApi("io.mockk:mockk:1.12.3")
-    testApi("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
-    testApi("androidx.arch.core:core-testing:2.1.0")
+    testApi(AndroidX.test.ext.junit.ktx)
+    testApi(Testing.junit4)
+    testApi("com.google.truth:truth:_")
+    testApi(Testing.mockK)
+    testApi(KotlinX.coroutines.test)
+    testApi(AndroidX.archCore.testing)
 
-    androidTestApi("androidx.test:core:1.4.0")
-    androidTestApi("androidx.test:core-ktx:1.4.0")
-    androidTestApi("androidx.test.ext:junit:1.1.3")
-    androidTestApi("androidx.test.ext:junit-ktx:1.1.3")
-    androidTestApi("androidx.test.ext:truth:1.4.0")
-    androidTestApi("androidx.test:monitor:1.5.0")
-    androidTestApi("androidx.test:orchestrator:1.4.1")
-    androidTestApi("androidx.test:runner:1.4.0")
-    androidTestApi("androidx.test:rules:1.4.0")
-    androidTestApi("androidx.test.services:test-services:1.4.1")
-    androidTestApi("io.mockk:mockk:1.12.3")
+    androidTestApi(AndroidX.test.core)
+    androidTestApi(AndroidX.test.coreKtx)
+    androidTestApi(AndroidX.test.ext.junit)
+    androidTestApi(AndroidX.test.ext.junit.ktx)
+    androidTestApi(AndroidX.test.ext.truth)
+    androidTestApi(AndroidX.test.monitor)
+    androidTestApi(AndroidX.test.orchestrator)
+    androidTestApi(AndroidX.test.runner)
+    androidTestApi(AndroidX.test.rules)
+    androidTestApi(AndroidX.test.services)
+    androidTestApi(Testing.mockK)
 }

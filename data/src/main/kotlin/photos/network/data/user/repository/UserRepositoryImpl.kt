@@ -16,12 +16,12 @@
 package photos.network.data.user.repository
 
 import io.ktor.client.plugins.ServerResponseException
-import java.net.ConnectException
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.logcat
 import photos.network.data.user.network.UserApi
 import photos.network.data.user.persistence.UserStorage
+import java.net.ConnectException
 import photos.network.data.user.persistence.User as DatabaseUser
 
 class UserRepositoryImpl(

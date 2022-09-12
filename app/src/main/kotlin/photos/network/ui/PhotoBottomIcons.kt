@@ -24,7 +24,6 @@ import photos.network.theme.AppTheme
 fun PhotoBottomIcons(
     modifier: Modifier = Modifier
 ) {
-
 }
 
 @Preview

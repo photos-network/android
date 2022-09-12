@@ -34,12 +34,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
@@ -52,7 +49,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.permissions.PermissionRequired
+import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import org.koin.androidx.compose.getViewModel
 import photos.network.data.photos.repository.Photo
@@ -66,15 +63,9 @@ fun PhotosScreen(
     navController: NavHostController = rememberNavController(),
 ) {
     val viewmodel: PhotosViewModel = getViewModel()
-    val context = LocalContext.current
     val permissionState = rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-
-    // Track if the user doesn't want to see the rationale any more.
-    var doNotShowRationale by rememberSaveable { mutableStateOf(false) }
-
-    PermissionRequired(
-        permissionState = permissionState,
-        permissionNotGrantedContent = {
+    when (permissionState.status) {
+        is PermissionStatus.Denied -> {
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -92,33 +83,15 @@ fun PhotosScreen(
                     Text("Grant access")
                 }
             }
-        },
-        permissionNotAvailableContent = {
-            // permission denied. Please, grant access on the Settings screen.
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    text = "Read external storage is important to show images on this device. Please grant the permission."
-                )
-                Button(onClick = { navigateToPermissionSettings(context) }) {
-                    Text("Open system settings")
-                }
-            }
         }
-    ) {
-        PhotosContent(
-            modifier = modifier,
-            navController = navController,
-            uiState = viewmodel.uiState.collectAsState().value,
-            handleEvent = viewmodel::handleEvent,
-        )
+        PermissionStatus.Granted -> {
+            PhotosContent(
+                modifier = modifier,
+                navController = navController,
+                uiState = viewmodel.uiState.collectAsState().value,
+                handleEvent = viewmodel::handleEvent,
+            )
+        }
     }
 }
 
@@ -161,7 +134,7 @@ fun PhotosContent(
         }
     }
 
-    BackHandler(enabled = true){
+    BackHandler(enabled = true) {
         handleEvent(PhotosEvent.SelectIndex(null))
     }
 

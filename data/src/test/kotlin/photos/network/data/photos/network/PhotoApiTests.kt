@@ -41,9 +41,11 @@ class PhotoApiTests {
     fun `get photos should return photos for the current user`() = runBlocking {
         // given
         val photoApi = PhotoApiImpl(
-            httpClient = HttpClient(MockEngine {
-                respond(
-                    content = ByteReadChannel("""
+            httpClient = HttpClient(
+                MockEngine {
+                    respond(
+                        content = ByteReadChannel(
+                            """
 {
   "offset": 0,
   "limit": 50,
@@ -56,18 +58,21 @@ class PhotoApiTests {
     }
   ]
 }
-                    """.trimIndent()),
-                    status = HttpStatusCode.OK,
-                    headers = headersOf(HttpHeaders.ContentType, "application/json")
-                )
-            }) {
+                            """.trimIndent()
+                        ),
+                        status = HttpStatusCode.OK,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json")
+                    )
+                }
+            ) {
                 install(ContentNegotiation) {
                     json(
                         Json {
                             prettyPrint = true
                             isLenient = true
                             ignoreUnknownKeys = true
-                        }, contentType = ContentType.Application.Json
+                        },
+                        contentType = ContentType.Application.Json
                     )
                 }
             },

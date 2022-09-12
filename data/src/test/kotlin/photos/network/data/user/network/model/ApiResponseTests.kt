@@ -1,10 +1,10 @@
 package photos.network.data.user.network.model
 
+import com.google.common.truth.Truth
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
-import com.google.common.truth.Truth
-import org.junit.Test
 import kotlinx.serialization.json.Json
+import org.junit.Test
 
 class ApiResponseTests {
     @Test

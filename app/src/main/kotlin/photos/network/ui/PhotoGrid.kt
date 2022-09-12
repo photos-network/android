@@ -24,10 +24,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.GridItemSpan
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,12 +40,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import java.time.Instant
-import java.time.ZoneOffset
 import photos.network.R
 import photos.network.data.photos.repository.Photo
 import photos.network.home.photos.PhotoDetails
 import photos.network.theme.AppTheme
+import java.time.Instant
+import java.time.ZoneOffset
 
 @Composable
 fun PhotoGrid(
@@ -57,7 +57,7 @@ fun PhotoGrid(
     selectPreviousPhoto: () -> Unit = {},
     selectNextPhoto: () -> Unit = {},
 ) {
-    val lazyListState = rememberLazyListState()
+    val lazyListState = rememberLazyGridState()
 
     Box {
         LazyVerticalGrid(
@@ -65,7 +65,7 @@ fun PhotoGrid(
             modifier = modifier
                 .fillMaxSize()
                 .padding(4.dp),
-            cells = GridCells.Adaptive(90.dp),
+            columns = GridCells.Adaptive(90.dp),
         ) {
             // group by year
             val groupedByYear = photos.groupBy {

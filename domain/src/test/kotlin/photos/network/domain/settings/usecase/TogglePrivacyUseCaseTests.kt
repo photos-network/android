@@ -22,8 +22,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
-import photos.network.data.settings.repository.PrivacyState
-import photos.network.data.settings.repository.Settings
 import photos.network.data.settings.repository.SettingsRepository
 
 class TogglePrivacyUseCaseTests {
