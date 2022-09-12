@@ -147,7 +147,7 @@ dependencies {
 
     // httpclient
     implementation(Ktor.client.core)
-    implementation(Ktor.client.okHttp)
+    implementation(Ktor.client.cio)
     implementation(Ktor.client.cio)
     implementation(Ktor.client.auth)
     implementation(Ktor.client.serialization)

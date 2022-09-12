@@ -7,7 +7,6 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     kotlin("plugin.serialization")
-    id("marathon")
     id("io.gitlab.arturbosch.detekt")
     id("com.github.triplet.play")
     id("org.ajoberstar.grgit")
@@ -106,26 +105,6 @@ project.afterEvaluate {
 // https://detekt.dev/gradle.html
 detekt {
     config = files("../detekt.yml")
-}
-
-marathon {
-    applicationPmClear = true
-    testApplicationPmClear = true
-    shardingStrategy {
-        countSharding {
-            count = 100
-            strictMode = true
-        }
-    }
-    retryStrategy {
-        fixedQuota {
-            retryPerTestQuota = 3
-            totalAllowedRetryQuota = 100
-        }
-    }
-    allureConfiguration {
-        enabled = true
-    }
 }
 
 android {
