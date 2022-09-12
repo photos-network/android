@@ -121,7 +121,7 @@ dependencies {
     api(KotlinX.coroutines.android)
 
     // Coroutine Lifecycle Scopes
-    api(AndroidX.lifecycle.runtimeKtx)
+    api(AndroidX.lifecycle.runtime.ktx)
     api(AndroidX.lifecycle.viewModelKtx)
 
     // Koin dependency injection
@@ -129,7 +129,7 @@ dependencies {
     testApi(Koin.test)
     api(Koin.android)
     api(Koin.workManager)
-    api("io.insert-koin:koin-androidx-navigation:_")
+    api(Koin.navigation)
     api(Koin.compose)
 
     // Persistence
@@ -151,8 +151,8 @@ dependencies {
     implementation(Ktor.client.cio)
     implementation(Ktor.client.auth)
     implementation(Ktor.client.serialization)
-    implementation("io.ktor:ktor-client-content-negotiation:_")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:_")
+    implementation(Ktor.client.contentNegotiation)
+    implementation(Ktor.plugins.serialization.kotlinx.json)
     implementation("io.ktor:ktor-client-logging-jvm:_")
     implementation("io.ktor:ktor-client-mock-jvm:_")
 

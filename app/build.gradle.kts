@@ -1,5 +1,6 @@
 import com.github.triplet.gradle.androidpublisher.ResolutionStrategy
 import com.github.triplet.gradle.androidpublisher.ReleaseStatus
+import de.fayard.refreshVersions.core.versionFor
 
 plugins {
     id("com.android.application")
@@ -182,7 +183,7 @@ android {
         shaders = false
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0"
+        kotlinCompilerExtensionVersion = versionFor(AndroidX.compose.compiler)
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -249,14 +250,14 @@ dependencies {
     debugApi(AndroidX.compose.ui.tooling)
 
     // accompanist
-    implementation("com.google.accompanist:accompanist-navigation-animation:_")
-    implementation(Google.accompanist.systemuicontroller)
-    implementation("com.google.accompanist:accompanist-placeholder:_")
-    implementation(Google.accompanist.flowlayout)
+    implementation(Google.accompanist.navigationAnimation)
+    implementation(Google.accompanist.systemUiController)
+    implementation(Google.accompanist.placeholder)
+    implementation(Google.accompanist.flowLayout)
     implementation(Google.accompanist.insets)
     implementation(Google.accompanist.pager)
-    implementation(Google.accompanist.swiperefresh)
-    implementation("com.google.accompanist:accompanist-permissions:_")
+    implementation(Google.accompanist.swipeRefresh)
+    implementation(Google.accompanist.permissions)
 
     // design
     implementation(Google.android.material)
