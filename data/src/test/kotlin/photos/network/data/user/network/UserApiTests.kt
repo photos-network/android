@@ -30,12 +30,14 @@ class UserApiTests {
 
     @Before
     fun setup() {
-        coEvery { userStorage.read() } answers { User(
-            id = "id123",
-            lastname = "Lastname",
-            firstname = "Firstname",
-            profileImageUrl = ""
-        ) }
+        coEvery { userStorage.read() } answers {
+            User(
+                id = "id123",
+                lastname = "Lastname",
+                firstname = "Firstname",
+                profileImageUrl = ""
+            )
+        }
         coEvery { userStorage.save(any()) } answers {}
         coEvery { settingsRepository.settings } answers {
             flowOf(
@@ -51,24 +53,29 @@ class UserApiTests {
     fun `verify server host should succeed`() = runBlocking {
         // given
         val userApi = UserApiImpl(
-            httpClient = HttpClient(MockEngine {
-                respond(
-                    content = ByteReadChannel("""
+            httpClient = HttpClient(
+                MockEngine {
+                    respond(
+                        content = ByteReadChannel(
+                            """
 {
   "message": "API running"
 }
-                    """.trimIndent()),
-                    status = HttpStatusCode.OK,
-                    headers = headersOf(HttpHeaders.ContentType, "application/json")
-                )
-            }) {
+                            """.trimIndent()
+                        ),
+                        status = HttpStatusCode.OK,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json")
+                    )
+                }
+            ) {
                 install(ContentNegotiation) {
                     json(
                         Json {
                             prettyPrint = true
                             isLenient = true
                             ignoreUnknownKeys = true
-                        }, contentType = ContentType.Application.Json
+                        },
+                        contentType = ContentType.Application.Json
                     )
                 }
             },
@@ -87,20 +94,23 @@ class UserApiTests {
     fun `verify invalid server host should fail`() = runBlocking {
         // given
         val userApi = UserApiImpl(
-            httpClient = HttpClient(MockEngine {
-                respond(
-                    content = ByteReadChannel("""{}""".trimIndent()),
-                    status = HttpStatusCode.OK,
-                    headers = headersOf(HttpHeaders.ContentType, "application/json")
-                )
-            }) {
+            httpClient = HttpClient(
+                MockEngine {
+                    respond(
+                        content = ByteReadChannel("""{}""".trimIndent()),
+                        status = HttpStatusCode.OK,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json")
+                    )
+                }
+            ) {
                 install(ContentNegotiation) {
                     json(
                         Json {
                             prettyPrint = true
                             isLenient = true
                             ignoreUnknownKeys = true
-                        }, contentType = ContentType.Application.Json
+                        },
+                        contentType = ContentType.Application.Json
                     )
                 }
             },
@@ -119,20 +129,23 @@ class UserApiTests {
     fun `verify client id should succeed`() = runBlocking {
         // given
         val userApi = UserApiImpl(
-            httpClient = HttpClient(MockEngine {
-                respond(
-                    content = ByteReadChannel("""{}""".trimIndent()),
-                    status = HttpStatusCode.OK,
-                    headers = headersOf(HttpHeaders.ContentType, "application/json")
-                )
-            }) {
+            httpClient = HttpClient(
+                MockEngine {
+                    respond(
+                        content = ByteReadChannel("""{}""".trimIndent()),
+                        status = HttpStatusCode.OK,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json")
+                    )
+                }
+            ) {
                 install(ContentNegotiation) {
                     json(
                         Json {
                             prettyPrint = true
                             isLenient = true
                             ignoreUnknownKeys = true
-                        }, contentType = ContentType.Application.Json
+                        },
+                        contentType = ContentType.Application.Json
                     )
                 }
             },
@@ -151,20 +164,23 @@ class UserApiTests {
     fun `verify invalid client id should fail`() = runBlocking {
         // given
         val userApi = UserApiImpl(
-            httpClient = HttpClient(MockEngine {
-                respond(
-                    content = ByteReadChannel("""{}""".trimIndent()),
-                    status = HttpStatusCode.PreconditionFailed,
-                    headers = headersOf(HttpHeaders.ContentType, "application/json")
-                )
-            }) {
+            httpClient = HttpClient(
+                MockEngine {
+                    respond(
+                        content = ByteReadChannel("""{}""".trimIndent()),
+                        status = HttpStatusCode.PreconditionFailed,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json")
+                    )
+                }
+            ) {
                 install(ContentNegotiation) {
                     json(
                         Json {
                             prettyPrint = true
                             isLenient = true
                             ignoreUnknownKeys = true
-                        }, contentType = ContentType.Application.Json
+                        },
+                        contentType = ContentType.Application.Json
                     )
                 }
             },
@@ -183,27 +199,32 @@ class UserApiTests {
     fun `request access token for valid authCode should succeed`() = runBlocking {
         // given
         val userApi = UserApiImpl(
-            httpClient = HttpClient(MockEngine {
-                respond(
-                    content = ByteReadChannel("""
+            httpClient = HttpClient(
+                MockEngine {
+                    respond(
+                        content = ByteReadChannel(
+                            """
 {
     "access_token":"abcdefg",
     "expires_in": 3600,
     "refresh_token":"abcdefg",
     "token_type":"abcdefg"
 }
-                        """.trimIndent()),
-                    status = HttpStatusCode.PreconditionFailed,
-                    headers = headersOf(HttpHeaders.ContentType, "application/json")
-                )
-            }) {
+                            """.trimIndent()
+                        ),
+                        status = HttpStatusCode.PreconditionFailed,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json")
+                    )
+                }
+            ) {
                 install(ContentNegotiation) {
                     json(
                         Json {
                             prettyPrint = true
                             isLenient = true
                             ignoreUnknownKeys = true
-                        }, contentType = ContentType.Application.Json
+                        },
+                        contentType = ContentType.Application.Json
                     )
                 }
             },
@@ -222,9 +243,11 @@ class UserApiTests {
     fun `get user should return the current user`() = runBlocking {
         // given
         val userApi = UserApiImpl(
-            HttpClient(MockEngine {
-                respond(
-                    content = ByteReadChannel("""
+            HttpClient(
+                MockEngine {
+                    respond(
+                        content = ByteReadChannel(
+                            """
 {
   "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "email": "info@photos.network",
@@ -232,18 +255,21 @@ class UserApiTests {
   "firstname": "Firstname",
   "lastSeen": "2022-02-22T02:22:22.222Z"
 }
-                    """.trimIndent()),
-                    status = HttpStatusCode.OK,
-                    headers = headersOf(HttpHeaders.ContentType, "application/json")
-                )
-            }) {
+                            """.trimIndent()
+                        ),
+                        status = HttpStatusCode.OK,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json")
+                    )
+                }
+            ) {
                 install(ContentNegotiation) {
                     json(
                         Json {
                             prettyPrint = true
                             isLenient = true
                             ignoreUnknownKeys = true
-                        }, contentType = ContentType.Application.Json
+                        },
+                        contentType = ContentType.Application.Json
                     )
                 }
             },

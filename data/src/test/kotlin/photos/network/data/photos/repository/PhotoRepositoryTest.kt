@@ -93,7 +93,6 @@ class PhotoRepositoryTest {
         Truth.assertThat(photos[2].filename).isEqualTo("001")
     }
 
-
     @Test
     fun `photos returned should be ordered by dateAdded if dateTaken is not available`() = runBlocking {
         // given

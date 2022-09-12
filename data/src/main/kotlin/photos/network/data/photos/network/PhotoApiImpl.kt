@@ -25,7 +25,7 @@ import photos.network.data.settings.repository.SettingsRepository
 class PhotoApiImpl(
     private val httpClient: HttpClient,
     private val settingsRepository: SettingsRepository,
-): PhotoApi {
+) : PhotoApi {
     override suspend fun getPhotos(offset: Int, limit: Int): Photos {
         val host = settingsRepository.settings.first().host
         return httpClient.request(urlString = "$host/api/photos") {

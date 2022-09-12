@@ -18,13 +18,10 @@ package photos.network.domain.user.usecase
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
-import photos.network.data.user.repository.User
 import photos.network.data.user.repository.UserRepository
 
 class RequestAccessTokenUseCaseTests {

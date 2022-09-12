@@ -40,12 +40,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import java.time.Instant
-import java.time.ZoneOffset
 import photos.network.R
 import photos.network.data.photos.repository.Photo
 import photos.network.home.photos.PhotoDetails
 import photos.network.theme.AppTheme
+import java.time.Instant
+import java.time.ZoneOffset
 
 @Composable
 fun PhotoGrid(

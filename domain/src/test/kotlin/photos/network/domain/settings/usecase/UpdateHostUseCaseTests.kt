@@ -16,21 +16,15 @@
 package photos.network.domain.settings.usecase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.google.common.truth.Truth
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
-import photos.network.data.settings.repository.PrivacyState
-import photos.network.data.settings.repository.Settings
 import photos.network.data.settings.repository.SettingsRepository
 
-class UpdateHostUseCaseTest {
+class UpdateHostUseCaseTests {
     @Rule
     @JvmField
     val rule = InstantTaskExecutorRule()

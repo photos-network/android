@@ -1,7 +1,7 @@
 package photos.network
 
-import java.time.Instant
 import photos.network.data.photos.repository.Photo
+import java.time.Instant
 
 fun generateTestPhoto(
     filename: String,

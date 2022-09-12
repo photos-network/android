@@ -68,7 +68,6 @@ import org.koin.androidx.compose.getViewModel
 import photos.network.R
 import photos.network.navigation.Destination
 import photos.network.theme.AppTheme
-import photos.network.ui.components.ActivityLog
 import photos.network.ui.components.AppLogo
 
 @Composable
@@ -204,12 +203,13 @@ fun ServerSetupItem(
     } else {
         stringResource(id = R.string.settings_item_server_update)
     }
-    Surface(modifier = modifier
-        .clickable(
-            onClickLabel = serverSetupLabel
-        ) {
-            onServerSetupClicked()
-        }
+    Surface(
+        modifier = modifier
+            .clickable(
+                onClickLabel = serverSetupLabel
+            ) {
+                onServerSetupClicked()
+            }
     ) {
         Row(
             modifier = Modifier
@@ -338,13 +338,14 @@ fun AppVersionItem(
     onAppVersionClicked: () -> Unit,
 ) {
     val context = LocalContext.current
-    Surface(modifier = modifier
-        .clickable {
-            onAppVersionClicked()
-            Toast
-                .makeText(context, R.string.settings_copied_to_clipboard, Toast.LENGTH_SHORT)
-                .show()
-        }
+    Surface(
+        modifier = modifier
+            .clickable {
+                onAppVersionClicked()
+                Toast
+                    .makeText(context, R.string.settings_copied_to_clipboard, Toast.LENGTH_SHORT)
+                    .show()
+            }
     ) {
         Row(
             modifier = Modifier
@@ -373,12 +374,13 @@ fun AccountSetupItem(
     } else {
         "Open user login"
     }
-    Surface(modifier = modifier
-        .clickable(
-            onClickLabel = clickLabel
-        ) {
-            onAccountSetupClicked()
-        }
+    Surface(
+        modifier = modifier
+            .clickable(
+                onClickLabel = clickLabel
+            ) {
+                onAccountSetupClicked()
+            }
     ) {
         Row(
             modifier = Modifier

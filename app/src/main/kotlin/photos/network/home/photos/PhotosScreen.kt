@@ -161,7 +161,7 @@ fun PhotosContent(
         }
     }
 
-    BackHandler(enabled = true){
+    BackHandler(enabled = true) {
         handleEvent(PhotosEvent.SelectIndex(null))
     }
 

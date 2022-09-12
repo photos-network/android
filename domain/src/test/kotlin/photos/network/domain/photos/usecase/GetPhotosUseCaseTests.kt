@@ -27,9 +27,9 @@ import org.junit.Test
 import photos.network.data.photos.repository.Photo
 import photos.network.data.photos.repository.PhotoRepository
 import photos.network.data.settings.repository.PrivacyState
+import photos.network.data.settings.repository.Settings
 import photos.network.data.settings.repository.SettingsRepository
 import java.time.Instant
-import photos.network.data.settings.repository.Settings
 
 class GetPhotosUseCaseTests {
     @Rule

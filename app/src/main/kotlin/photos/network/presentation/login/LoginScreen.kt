@@ -91,8 +91,8 @@ fun LoginScreen(
                         request: WebResourceRequest?
                     ): Boolean {
                         request?.let {
-                            logcat(LogPriority.ERROR) { "url=${redirectUri}"}
-                            logcat(LogPriority.ERROR) { "url=${request.url}"}
+                            logcat(LogPriority.ERROR) { "url=$redirectUri" }
+                            logcat(LogPriority.ERROR) { "url=${request.url}" }
                             // check oauth redirect
                             if (request.url.toString().startsWith(redirectUri)) {
                                 // check the 'state' to prevent CSRF attacks. Ignore if not matching with sent 'nonce'

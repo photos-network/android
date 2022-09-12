@@ -24,7 +24,7 @@ import org.junit.Rule
 import org.junit.Test
 import photos.network.data.user.repository.UserRepository
 
-class VerifyServerHostUseCaseTest {
+class VerifyServerHostUseCaseTests {
     @Rule
     @JvmField
     val rule = InstantTaskExecutorRule()
