@@ -2,7 +2,7 @@ import de.fayard.refreshVersions.core.StabilityLevel
 rootProject.name = "PhotosNetwork"
 
 plugins {
-    id("de.fayard.refreshVersions") version "0.50.1"
+    id("de.fayard.refreshVersions") version "0.50.2"
 }
 
 refreshVersions {
