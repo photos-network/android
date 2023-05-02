@@ -19,7 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import org.koin.androidx.compose.viewModel
-import photos.network.domain.user.User
+import photos.network.repository.sharing.User
 
 val LocalCurrentUser = staticCompositionLocalOf<User?> {
     error("LocalCurrentUser not provided")
@@ -30,7 +30,7 @@ val LocalCurrentUser = staticCompositionLocalOf<User?> {
  */
 @Composable
 fun CurrentUserHost(
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val viewModel: CurrentUserViewModel by viewModel()
 

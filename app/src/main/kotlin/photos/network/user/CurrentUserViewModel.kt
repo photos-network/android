@@ -16,11 +16,11 @@
 package photos.network.user
 
 import androidx.lifecycle.ViewModel
-import photos.network.data.user.repository.UserRepository
-import photos.network.domain.user.User
+import photos.network.repository.sharing.User
+import photos.network.repository.sharing.UserRepository
 
 class CurrentUserViewModel(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : ViewModel() {
     val currentUser: User?
         get() {

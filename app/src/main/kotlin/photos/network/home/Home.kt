@@ -19,7 +19,9 @@ import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.outlined.Shield
@@ -36,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -45,20 +48,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.statusBarsPadding
 import org.koin.androidx.compose.getViewModel
 import photos.network.R
-import photos.network.home.albums.AlbumsScreen
-import photos.network.home.folders.FoldersScreen
-import photos.network.home.photos.PhotosScreen
-import photos.network.navigation.Destination
-import photos.network.presentation.help.HelpScreen
-import photos.network.presentation.login.LoginScreen
-import photos.network.settings.ServerStatus
-import photos.network.settings.SettingsScreen
-import photos.network.theme.AppTheme
-import photos.network.ui.components.AppLogo
+import photos.network.network.ServerStatus
+import photos.network.ui.common.navigation.Destination
+import photos.network.ui.common.theme.AppTheme
+import photos.network.ui.common.components.AppLogo
 
 /**
  * Default app screen containing a searchbar, photos grid, albums tab and more.
@@ -66,12 +61,14 @@ import photos.network.ui.components.AppLogo
 @Composable
 fun Home(
     modifier: Modifier = Modifier,
-    orientation: Int
+    orientation: Int,
 ) {
     val navController = rememberNavController()
     val navBackStackEntry = navController.currentBackStackEntryAsState()
-    val currentDestination by derivedStateOf {
-        Destination.fromString(navBackStackEntry.value?.destination?.route)
+    val currentDestination by remember {
+        derivedStateOf {
+            Destination.fromString(navBackStackEntry.value?.destination?.route)
+        }
     }
 
     val viewmodel: HomeViewModel = getViewModel()
@@ -102,7 +99,7 @@ fun Home(
                                 },
                             size = 32.dp,
                             statusSize = 16.dp,
-                            serverStatus = ServerStatus.UNAVAILABLE
+                            serverStatus = ServerStatus.UNAVAILABLE,
                         )
                     },
                     actions = {
@@ -110,25 +107,25 @@ fun Home(
                         IconButton(
                             onClick = {
                                 viewmodel.handleEvent(HomeEvent.TogglePrivacyEvent)
-                            }
+                            },
                         ) {
                             if (viewmodel.uiState.collectAsState().value.isPrivacyEnabled) {
                                 Icon(
                                     imageVector = Icons.Default.Shield,
                                     contentDescription = stringResource(id = R.string.privacy_filter_enabled_description),
-                                    tint = MaterialTheme.colorScheme.onPrimary
+                                    tint = MaterialTheme.colorScheme.onPrimary,
                                 )
                             } else {
                                 Icon(
                                     imageVector = Icons.Outlined.Shield,
                                     contentDescription = stringResource(id = R.string.privacy_filter_disabled_description),
-                                    tint = MaterialTheme.colorScheme.onPrimary
+                                    tint = MaterialTheme.colorScheme.onPrimary,
                                 )
                             }
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = MaterialTheme.colorScheme.primary,
                     ),
                 )
             }
@@ -143,7 +140,7 @@ fun Home(
                         selected = currentDestination == Destination.Photos,
                         onClick = {
                             navController.navigate(Destination.Photos.route)
-                        }
+                        },
                     )
 
                     // Albums
@@ -153,7 +150,7 @@ fun Home(
                         selected = currentDestination == Destination.Albums,
                         onClick = {
                             navController.navigate(Destination.Albums.route)
-                        }
+                        },
                     )
 
                     // Folders
@@ -163,7 +160,7 @@ fun Home(
                         selected = currentDestination == Destination.Folders,
                         onClick = {
                             navController.navigate(Destination.Folders.route)
-                        }
+                        },
                     )
                 }
             }
@@ -174,15 +171,34 @@ fun Home(
                     navController = navController,
                     startDestination = Destination.Photos.route,
                 ) {
-                    composable(route = Destination.Photos.route) { PhotosScreen(navController = navController) }
-                    composable(route = Destination.Albums.route) { AlbumsScreen(navController = navController) }
-                    composable(route = Destination.Folders.route) { FoldersScreen(navController = navController) }
-                    composable(route = Destination.Account.route) { SettingsScreen(navController = navController) }
-                    composable(route = Destination.Login.route) { LoginScreen(navController = navController) }
-                    composable(route = Destination.Help.route) { HelpScreen(navController = navController) }
+                    composable(route = Destination.Photos.route) {
+                        photos.network.ui.photos.PhotosScreen(
+                            navController = navController,
+                        )
+                    }
+                    composable(route = Destination.Albums.route) {
+                        photos.network.ui.albums.AlbumsScreen(
+                            navController = navController,
+                        )
+                    }
+                    composable(route = Destination.Folders.route) {
+                        photos.network.ui.folders.FoldersScreen(
+                            navController = navController,
+                        )
+                    }
+                    composable(route = Destination.Account.route) {
+                        photos.network.ui.settings.SettingsScreen(
+                            navController = navController,
+                        )
+                    }
+                    composable(route = Destination.Login.route) {
+                        photos.network.ui.sharing.login.LoginScreen(
+                            navController = navController,
+                        )
+                    }
                 }
             }
-        }
+        },
     )
 }
 
@@ -193,7 +209,7 @@ fun PreviewHomeScreen() {
     AppTheme {
         Home(
             modifier = Modifier.fillMaxSize(),
-            orientation = Configuration.ORIENTATION_LANDSCAPE
+            orientation = Configuration.ORIENTATION_LANDSCAPE,
         )
     }
 }

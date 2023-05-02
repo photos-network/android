@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import photos.network.data.settings.repository.PrivacyState
+import photos.network.common.persistence.PrivacyState
 import photos.network.domain.settings.usecase.GetSettingsUseCase
 import photos.network.domain.settings.usecase.TogglePrivacyUseCase
 

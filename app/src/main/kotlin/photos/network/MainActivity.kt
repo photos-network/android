@@ -16,8 +16,8 @@
 package photos.network
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -33,14 +33,14 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import photos.network.home.Home
-import photos.network.navigation.Destination
-import photos.network.theme.AppTheme
+import photos.network.ui.common.navigation.Destination
+import photos.network.ui.common.theme.AppTheme
 import photos.network.user.CurrentUserHost
 
 /**
  * Main entry point, handling navigation events.
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -64,7 +64,7 @@ fun PhotosApp(
     SideEffect {
         systemUiController.setSystemBarsColor(
             color = Color.Transparent,
-            darkIcons = useDarkIcons
+            darkIcons = useDarkIcons,
         )
     }
 
@@ -73,7 +73,7 @@ fun PhotosApp(
             CurrentUserHost {
                 Home(
                     modifier = Modifier.fillMaxSize(),
-                    orientation = LocalConfiguration.current.orientation
+                    orientation = LocalConfiguration.current.orientation,
                 )
             }
         }

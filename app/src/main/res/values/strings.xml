@@ -1,35 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation">
     <string name="app_name" translatable="false">Photos</string>
-    <string name="app_name_full" translatable="false">Photos.network</string>
-    <string name="app_description">An open source project for self hosted photo management.</string>
 
     <string name="setup_host_label">Host</string>
     <string name="setup_client_id_label">Client ID</string>
     <string name="setup_client_secret_label">Client Secret</string>
     <string name="button_next">Next</string>
     <string name="icon_user_profile">User profile icon</string>
-    <string name="icon_tags">tags icon</string>
+
     <string name="load_error">Could not load photos</string>
-    <string name="home_title">Home</string>
-    <string name="login_title">Login</string>
-    <string name="setup_title">Setup</string>
-    <string name="help_title">Help</string>
-    <string name="photos_title">Photos</string>
-    <string name="albums_title">Albums</string>
-    <string name="details_title">Details</string>
-    <string name="search_hint">Search</string>
-    <string name="folders_title">Folders</string>
-    <string name="account_title">Account</string>
+
     <string name="app_logo_description">application logo</string>
-    <string name="server_available_description">Communication with the configured photos.network instance is fine.</string>
-    <string name="server_unavailable_description">The configured photos.network instance is currently not available.</string>
-    <string name="server_inprogress_description">Data is being transmitted with the configured photos.network instance.</string>
-    <string name="server_unauthorized_description">Communication to the configured photos.network instance is not authorized!</string>
     <string name="privacy_filter_enabled_description">All items labeled as private are hidden</string>
     <string name="privacy_filter_disabled_description">Hide items labeled as private in this view</string>
-    <string name="settings_item_server_setup">Setup server instance</string>
-    <string name="settings_item_server_update">Change server setup</string>
-    <string name="settings_copied_to_clipboard">Version copied into clipboard</string>
 
 </resources>

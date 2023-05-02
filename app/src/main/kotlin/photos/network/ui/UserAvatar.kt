@@ -32,15 +32,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.LocalImageLoader
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.imageLoader
+import coil.request.ImageRequest
 import photos.network.R
-import photos.network.domain.user.User
-import photos.network.theme.AppTheme
+import photos.network.repository.sharing.User
+import photos.network.ui.common.theme.AppTheme
 
 /**
  * Rounded user avatar with initials if no profile image url is available or set
@@ -49,28 +52,29 @@ import photos.network.theme.AppTheme
 fun UserAvatar(
     modifier: Modifier = Modifier,
     user: User?,
-    color: Color = MaterialTheme.colorScheme.primary
+    color: Color = MaterialTheme.colorScheme.primary,
 ) {
     Box(
         modifier = modifier
             .aspectRatio(1f)
             .wrapContentSize(Alignment.Center)
             .clip(CircleShape)
-            .background(color)
+            .background(color),
     ) {
         if (user != null) {
             if (user.profileImageUrl.isNotBlank()) {
                 Image(
-                    painter = rememberImagePainter(
-                        data = user.profileImageUrl,
-                        imageLoader = LocalImageLoader.current,
-                        builder = {
-                            crossfade(true)
-                            placeholder(R.drawable.bob_ross_head_200x200)
-                        }
+                    painter = rememberAsyncImagePainter(
+                        ImageRequest.Builder(LocalContext.current).data(data = user.profileImageUrl)
+                            .apply(block = fun ImageRequest.Builder.() {
+                                crossfade(true)
+                                placeholder(R.drawable.bob_ross_head_200x200)
+                            }).build(), imageLoader = LocalContext.current.imageLoader
                     ),
                     contentDescription = stringResource(id = R.string.icon_user_profile),
-                    modifier = Modifier.aspectRatio(1f).clip(CircleShape),
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .clip(CircleShape),
                     contentScale = ContentScale.FillBounds,
                 )
             } else {
@@ -88,7 +92,7 @@ fun UserAvatar(
                     textAlign = TextAlign.Center,
                     text = textContent,
                     color = MaterialTheme.colorScheme.onPrimary,
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall,
                 )
             }
         } else {
@@ -100,7 +104,7 @@ fun UserAvatar(
                 textAlign = TextAlign.Center,
                 text = "--",
                 color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall,
             )
         }
     }
@@ -114,8 +118,8 @@ fun UserProfileImagePreview() {
             user = User(
                 firstname = "Bob",
                 lastname = "Ross",
-                profileImageUrl = "https://boardgaming.com/wp-content/uploads/2017/12/bob-ross-head-200x200.jpg"
-            )
+                profileImageUrl = "https://boardgaming.com/wp-content/uploads/2017/12/bob-ross-head-200x200.jpg",
+            ),
         )
     }
 }
@@ -126,7 +130,7 @@ fun UserProfileImagePreview() {
 fun UserProfileImagePreviewNoImage() {
     AppTheme {
         UserAvatar(
-            user = User(firstname = "Bob", lastname = "Ross", profileImageUrl = "")
+            user = User(firstname = "Bob", lastname = "Ross", profileImageUrl = ""),
         )
     }
 }
@@ -136,7 +140,7 @@ fun UserProfileImagePreviewNoImage() {
 fun UserProfileImagePreviewNoName() {
     AppTheme {
         UserAvatar(
-            user = User(firstname = "", lastname = "", profileImageUrl = "")
+            user = User(firstname = "", lastname = "", profileImageUrl = ""),
         )
     }
 }
