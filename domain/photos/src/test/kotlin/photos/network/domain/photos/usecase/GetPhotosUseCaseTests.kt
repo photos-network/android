@@ -24,12 +24,12 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
-import java.time.Instant
 import photos.network.common.persistence.PrivacyState
 import photos.network.common.persistence.Settings
 import photos.network.repository.photos.Photo
 import photos.network.repository.photos.PhotoRepository
 import photos.network.repository.settings.SettingsRepository
+import java.time.Instant
 
 class GetPhotosUseCaseTests {
     @Rule

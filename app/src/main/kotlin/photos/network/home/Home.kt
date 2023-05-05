@@ -19,7 +19,6 @@ import android.content.res.Configuration
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -130,9 +129,10 @@ fun Home(
                                 )
                             }
                         }
-                    }, colors = TopAppBarDefaults.smallTopAppBarColors(
+                    },
+                    colors = TopAppBarDefaults.smallTopAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primary,
-                    )
+                    ),
                 )
             }
         },
@@ -177,10 +177,11 @@ fun Home(
             } else {
                 0.dp
             }
-            Box(modifier = Modifier
-                .padding(bottom = innerPadding.calculateBottomPadding())
-                .padding(top = topPadding)
-                .border(2.dp, Color.Green)
+            Box(
+                modifier = Modifier
+                    .padding(bottom = innerPadding.calculateBottomPadding())
+                    .padding(top = topPadding)
+                    .border(2.dp, Color.Green),
             ) {
                 NavHost(
                     navController = navController,
