@@ -52,8 +52,8 @@ include(":database:photos")
 include(":database:settings")
 include(":database:sharing")
 
-// communication via REST with core instance
-include(":network")
+// communication via REST API with core instance
+include(":api")
 
 // instance and account
 include(":system:account")

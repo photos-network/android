@@ -28,8 +28,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import logcat.LogPriority
 import logcat.logcat
+import photos.network.api.photo.PhotoApi
 import photos.network.database.photos.PhotoDao
-import photos.network.network.photo.PhotoApi
 import photos.network.repository.photos.worker.SyncLocalPhotosWorker
 import photos.network.repository.photos.worker.SyncStatus
 import java.time.Instant

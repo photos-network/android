@@ -15,6 +15,10 @@ spotless {
     }
 }
 
+detekt {
+    config = files("$rootDir/detekt.yml")
+}
+
 android {
     namespace = "photos.network.repository.sharing"
 
@@ -74,8 +78,13 @@ configurations {
 dependencies {
     api(project(":common"))
     testImplementation(project(":common", "testArtifacts"))
+    testImplementation(project(mapOf("path" to ":common")))
     androidTestImplementation(project(":common", "androidTestArtifacts"))
 
-    api(projects.network)
+    api(projects.api)
     api(projects.database.sharing)
+
+    testImplementation(libs.mockk)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.truth)
 }

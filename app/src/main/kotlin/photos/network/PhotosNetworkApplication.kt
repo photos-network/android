@@ -24,6 +24,7 @@ import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
+import photos.network.api.apiModule
 import photos.network.database.photos.databasePhotosModule
 import photos.network.database.settings.databaseSettingsModule
 import photos.network.database.sharing.databaseSharingModule
@@ -32,7 +33,6 @@ import photos.network.domain.folders.domainFoldersModule
 import photos.network.domain.photos.domainPhotosModule
 import photos.network.domain.settings.domainSettingsModule
 import photos.network.domain.sharing.domainSharingModule
-import photos.network.network.networkModule
 import photos.network.repository.photos.repositoryPhotosModule
 import photos.network.repository.settings.repositorySettingsModule
 import photos.network.repository.sharing.repositorySharingModule
@@ -96,7 +96,7 @@ open class PhotosNetworkApplication : Application(), KoinComponent {
                     repositorySharingModule,
                     databaseSharingModule,
 
-                    networkModule,
+                    apiModule,
                 ),
             )
         }

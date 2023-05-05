@@ -28,12 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.view.WindowCompat
-import androidx.navigation.NavHostController
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import photos.network.home.Home
-import photos.network.ui.common.navigation.Destination
 import photos.network.ui.common.theme.AppTheme
 import photos.network.user.CurrentUserHost
 
@@ -45,6 +42,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             PhotosApp()
         }
@@ -55,8 +53,6 @@ val LocalAppVersion = staticCompositionLocalOf { "Unknown" }
 
 @Composable
 fun PhotosApp(
-    startDestination: String = Destination.Home.route,
-    navController: NavHostController = rememberAnimatedNavController(),
     systemUiController: SystemUiController = rememberSystemUiController(),
 ) {
     val useDarkIcons = !isSystemInDarkTheme()

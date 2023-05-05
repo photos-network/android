@@ -15,7 +15,7 @@
  */
 package photos.network.ui.settings
 
-import photos.network.network.ServerStatus
+import photos.network.api.ServerStatus
 
 data class SettingsUiState(
     val isServerSetupExpanded: Boolean = false,
@@ -29,4 +29,3 @@ data class SettingsUiState(
     val activityLog: List<String> = emptyList(),
     val appVersion: String = "Unknown",
 )
-

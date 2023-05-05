@@ -1,1 +1,6 @@
-./gradlew spotlessCheck detekt lint testDebugUnitTest connectedAndroidTest :app:bundleDebug
+./gradlew spotlessCheck &&
+./gradlew detekt &&
+./gradlew lint &&
+./gradlew testDebugUnitTest &&
+./gradlew connectedAndroidTest &&
+./gradlew :app:bundleDebug

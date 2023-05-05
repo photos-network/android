@@ -49,4 +49,9 @@ dependencies {
 
     api(projects.repository.photos)
     implementation(projects.repository.settings)
+
+    testImplementation(libs.mockk)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.truth)
+    testImplementation(libs.core.testing)
 }

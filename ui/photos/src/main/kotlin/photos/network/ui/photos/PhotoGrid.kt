@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import photos.network.repository.photos.Photo
 import photos.network.ui.common.theme.AppTheme
-import photos.network.ui.photos.PhotoDetails
 import java.time.Instant
 import java.time.ZoneOffset
 
@@ -85,7 +84,6 @@ fun PhotoGrid(
 
                     // add year header if necessary
                     if (yearOfFirst != yearNow) {
-
                         item(span = { GridItemSpan(maxCurrentLineSpan) }) {
                             Text(
                                 text = yearOfFirst.toString(),

@@ -19,8 +19,8 @@ import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.logcat
+import photos.network.api.user.UserApi
 import photos.network.common.persistence.SecureStorage
-import photos.network.network.user.UserApi
 import java.net.ConnectException
 
 class UserRepositoryImpl(

@@ -18,5 +18,4 @@ package photos.network.domain.sharing
 import org.koin.dsl.module
 
 val domainSharingModule = module {
-
 }

@@ -62,10 +62,6 @@ dependencies {
 
     // Persistence
     implementation(libs.bundles.room)
-//    annotationProcessor(libs.room.compiler)
-//    kapt(libs.room.compiler)
-    // To use Kotlin Symbol Processing (KSP)
-     ksp(libs.room.compiler)
-
+    ksp(libs.room.compiler)
     androidTestImplementation(libs.room.testing)
 }

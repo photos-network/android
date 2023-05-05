@@ -17,11 +17,13 @@ package photos.network.domain.settings.usecase
 
 import photos.network.repository.sharing.UserRepository
 
+private const val CLIENT_ID_MIN_LENGTH = 10
+
 class VerifyClientIdUseCase(
     private val userRepository: UserRepository,
 ) {
     suspend operator fun invoke(clientId: String): Boolean {
-        return if (clientId.length > 10) {
+        return if (clientId.length > CLIENT_ID_MIN_LENGTH) {
             userRepository.verifyClientId(clientId)
         } else {
             false

@@ -86,7 +86,8 @@ dependencies {
 
     // testing
     testApi(libs.mockk)
-    testApi(libs.com.google.truth.truth)
+    testApi(libs.truth)
+    testApi(libs.junit.junit)
     androidTestApi(libs.androidx.test.core)
     androidTestApi(libs.androidx.test.ext.junit)
     androidTestApi(libs.androidx.test.ext.junit)

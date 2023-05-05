@@ -49,4 +49,9 @@ dependencies {
 
     api(projects.repository.settings)
     api(projects.repository.sharing)
+
+    testImplementation(libs.mockk)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.truth)
+    testImplementation(libs.core.testing)
 }

@@ -37,7 +37,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.LocalImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -69,7 +68,8 @@ fun UserAvatar(
                             .apply(block = fun ImageRequest.Builder.() {
                                 crossfade(true)
                                 placeholder(R.drawable.bob_ross_head_200x200)
-                            }).build(), imageLoader = LocalContext.current.imageLoader
+                            }).build(),
+                        imageLoader = LocalContext.current.imageLoader,
                     ),
                     contentDescription = stringResource(id = R.string.icon_user_profile),
                     modifier = Modifier

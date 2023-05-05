@@ -137,14 +137,24 @@ jobs:
 
       - name: Run debug unit tests
         run: |
-          ./gradlew --console=plain testDebugUnitTest --stacktrace
+          ./gradlew --console=plain koverXmlReport --stacktrace
 
       - name: Upload test reports
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: tests
           path: app/build/reports/tests
+
+      - name: Add coverage report to PR
+        uses: mi-kas/kover-report@v1
+        with:
+          path: ${{ github.workspace }}/app/build/reports/kover/xml/report.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: App Coverage
+          update-comment: true
+          min-coverage-overall: 20
+          min-coverage-changed-files: 50
 
   android_tests:
     name: Tests on Android (API level ${{ matrix.api-level }})

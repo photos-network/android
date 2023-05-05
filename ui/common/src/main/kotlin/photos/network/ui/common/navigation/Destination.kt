@@ -19,7 +19,6 @@ import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.People

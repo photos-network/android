@@ -25,9 +25,8 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
-import photos.network.data.TestCoroutineDispatcherRule
+import photos.network.api.photo.PhotoApi
 import photos.network.database.photos.PhotoDao
-import photos.network.network.photo.PhotoApi
 
 /**
  * Test photo repository
@@ -93,26 +92,27 @@ class PhotoRepositoryTest {
     }
 
     @Test
-    fun `photos returned should be ordered by dateAdded if dateTaken is not available`() = runBlocking {
-        // given
-        every { photoDao.getPhotos() } answers {
-            flowOf(
-                listOf(
-                    createFakePhoto(filename = "002", dateTaken = null, dateAdded = 1580671221),
-                    createFakePhoto(filename = "001", dateTaken = null, dateAdded = 1580671220),
-                    createFakePhoto(filename = "003", dateTaken = null, dateAdded = 1580671223),
-                ),
-            )
+    fun `photos returned should be ordered by dateAdded if dateTaken is not available`() =
+        runBlocking {
+            // given
+            every { photoDao.getPhotos() } answers {
+                flowOf(
+                    listOf(
+                        createFakePhoto(filename = "002", dateTaken = null, dateAdded = 1580671221),
+                        createFakePhoto(filename = "001", dateTaken = null, dateAdded = 1580671220),
+                        createFakePhoto(filename = "003", dateTaken = null, dateAdded = 1580671223),
+                    ),
+                )
+            }
+
+            // when
+            val photos = repository.getPhotos().first()
+
+            // then
+            Truth.assertThat(photos[0].filename).isEqualTo("003")
+            Truth.assertThat(photos[1].filename).isEqualTo("002")
+            Truth.assertThat(photos[2].filename).isEqualTo("001")
         }
-
-        // when
-        val photos = repository.getPhotos().first()
-
-        // then
-        Truth.assertThat(photos[0].filename).isEqualTo("003")
-        Truth.assertThat(photos[1].filename).isEqualTo("002")
-        Truth.assertThat(photos[2].filename).isEqualTo("001")
-    }
 
     private fun createFakePhoto(
         uuid: String = "001",
@@ -125,14 +125,14 @@ class PhotoRepositoryTest {
         originalFileUri: String? = null,
     ): Photo {
         return Photo(
-            uuid = uuid,
+//            uuid = uuid,
             filename = filename,
             imageUrl = imageUrl,
             dateAdded = dateAdded,
             dateTaken = dateTaken,
             dateModified = dateModified,
-            thumbnailFileUri = thumbnailFileUri,
-            originalFileUri = originalFileUri,
+//            thumbnailFileUri = thumbnailFileUri,
+//            originalFileUri = originalFileUri,
         )
     }
 }

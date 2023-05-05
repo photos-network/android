@@ -18,5 +18,4 @@ package photos.network.domain.folders
 import org.koin.dsl.module
 
 val domainFoldersModule = module {
-
 }

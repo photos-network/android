@@ -37,7 +37,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import photos.network.network.ServerStatus
+import photos.network.api.ServerStatus
 import photos.network.ui.common.R
 import photos.network.ui.common.theme.AppTheme
 

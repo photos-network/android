@@ -18,5 +18,4 @@ package photos.network.common
 import org.koin.dsl.module
 
 val commonModule = module {
-
 }

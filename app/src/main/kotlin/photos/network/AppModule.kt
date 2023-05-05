@@ -18,8 +18,6 @@ package photos.network
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import photos.network.home.HomeViewModel
-import photos.network.ui.settings.SettingsViewModel
-import photos.network.ui.sharing.login.LoginViewModel
 import photos.network.user.CurrentUserViewModel
 
 val appModule = module {
@@ -29,12 +27,10 @@ val appModule = module {
         )
     }
 
-
     viewModel {
         HomeViewModel(
             getSettingsUseCase = get(),
             togglePrivacyStateUseCase = get(),
         )
     }
-
 }

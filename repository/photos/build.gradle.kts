@@ -15,6 +15,10 @@ spotless {
     }
 }
 
+detekt {
+    config = files("$rootDir/detekt.yml")
+}
+
 android {
     namespace = "photos.network.repository.photos"
 
@@ -48,76 +52,18 @@ android {
 dependencies {
     implementation(projects.common)
     testImplementation(project(":common", "testArtifacts"))
+    testImplementation(project(mapOf("path" to ":common")))
     androidTestImplementation(project(":common", "androidTestArtifacts"))
 
     // workmanager
     api(libs.work.runtime.ktx)
     androidTestApi(libs.work.testing)
 
-    implementation(projects.network)
+    implementation(projects.api)
     api(projects.database.photos)
 
-//    api(AndroidX.core.ktx)
-
-    // Coroutines
-//    api(KotlinX.coroutines.core)
-//    api(KotlinX.coroutines.android)
-
-    // Coroutine Lifecycle Scopes
-//    api(AndroidX.lifecycle.runtime.ktx)
-//    api(AndroidX.lifecycle.viewModelKtx)
-
-    // Koin dependency injection
-//    api(Koin.core)
-//    testApi(Koin.test)
-//    api(Koin.android)
-//    api(Koin.workManager)
-//    api(Koin.navigation)
-//    api(Koin.compose)
-
-    // Persistence
-//    api(AndroidX.room.runtime)
-//    api(AndroidX.room.ktx)
-//    androidTestImplementation(AndroidX.room.testing)
-
-    // exifinterface
-//    api(AndroidX.exifInterface)
-
-    // httpclient
-//    implementation(Ktor.client.core)
-//    implementation(Ktor.client.cio)
-//    implementation(Ktor.client.cio)
-//    implementation(Ktor.client.auth)
-//    implementation(Ktor.client.serialization)
-//    implementation(Ktor.client.contentNegotiation)
-//    implementation(Ktor.plugins.serialization.kotlinx.json)
-//    implementation(libs.ktor.client.logging.jvm)
-//    implementation(libs.ktor.client.mock.jvm)
-
-    // logging
-//    api(Square.logcat)
-
-    // serialization
-//    api(KotlinX.serialization.json)
-//    api(AndroidX.security.crypto)
-
-    // testing
-//    testApi(AndroidX.test.ext.junit.ktx)
-//    testApi(Testing.junit4)
-//    testApi(libs.com.google.truth.truth)
-//    testApi(Testing.mockK)
-//    testApi(KotlinX.coroutines.test)
-//    testApi(AndroidX.archCore.testing)
-
-//    androidTestApi(AndroidX.test.core)
-//    androidTestApi(AndroidX.test.coreKtx)
-//    androidTestApi(AndroidX.test.ext.junit)
-//    androidTestApi(AndroidX.test.ext.junit.ktx)
-//    androidTestApi(AndroidX.test.ext.truth)
-//    androidTestApi(AndroidX.test.monitor)
-//    androidTestApi(AndroidX.test.orchestrator)
-//    androidTestApi(AndroidX.test.runner)
-//    androidTestApi(AndroidX.test.rules)
-//    androidTestApi(AndroidX.test.services)
-//    androidTestApi(Testing.mockK)
+    testImplementation(libs.mockk)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.truth)
+    testImplementation(libs.core.testing)
 }

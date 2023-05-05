@@ -177,4 +177,7 @@ dependencies {
 
     // leakCanary
     debugImplementation(libs.leakcanary.android)
+
+    testImplementation(libs.core.testing)
+    testImplementation(libs.mockk)
 }

@@ -15,6 +15,10 @@ spotless {
     }
 }
 
+detekt {
+    config = files("$rootDir/detekt.yml")
+}
+
 android {
     namespace = "photos.network.ui.settings"
 

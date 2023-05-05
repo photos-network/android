@@ -65,7 +65,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.getViewModel
-import photos.network.network.ServerStatus
+import photos.network.api.ServerStatus
 import photos.network.ui.common.components.AppLogo
 import photos.network.ui.common.navigation.Destination
 import photos.network.ui.common.theme.AppTheme

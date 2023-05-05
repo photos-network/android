@@ -20,7 +20,7 @@ import io.mockk.mockk
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
-import photos.network.domain.user.usecase.GetCurrentUserUseCase
+import photos.network.domain.sharing.usecase.GetCurrentUserUseCase
 
 class CurrentUserViewModelTests {
     @get:Rule

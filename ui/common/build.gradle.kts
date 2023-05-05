@@ -15,6 +15,10 @@ spotless {
     }
 }
 
+detekt {
+    config = files("$rootDir/detekt.yml")
+}
+
 android {
     namespace = "photos.network.ui.common"
 
@@ -48,7 +52,7 @@ dependencies {
     testImplementation(project(":common", "testArtifacts"))
     androidTestImplementation(project(":common", "androidTestArtifacts"))
 
-    implementation(projects.network)
+    implementation(projects.api)
 
     // Compose
     api(platform(libs.compose.bom))

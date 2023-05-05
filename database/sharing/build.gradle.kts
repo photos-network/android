@@ -58,7 +58,7 @@ dependencies {
     testImplementation(project(":common", "testArtifacts"))
     androidTestImplementation(project(":common", "androidTestArtifacts"))
 
-    implementation(projects.network)
+    implementation(projects.api)
 
     // Persistence
     implementation(libs.bundles.room)

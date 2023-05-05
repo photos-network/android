@@ -17,11 +17,13 @@ package photos.network.domain.settings.usecase
 
 import photos.network.repository.sharing.UserRepository
 
+private const val HOST_MIN_LENGTH = 8
+
 class VerifyServerHostUseCase(
     private val userRepository: UserRepository,
 ) {
     suspend operator fun invoke(host: String): Boolean {
-        return if (host.length > 8) {
+        return if (host.length > HOST_MIN_LENGTH) {
             userRepository.verifyServerHost(host)
         } else {
             false
