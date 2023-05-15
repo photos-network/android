@@ -17,7 +17,9 @@ package photos.network.repository.sharing
 
 import androidx.work.WorkManager
 import org.koin.android.ext.koin.androidApplication
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import photos.network.common.persistence.SecureStorage
 
 val repositorySharingModule = module {
     factory { WorkManager.getInstance(androidApplication()) }
@@ -25,7 +27,7 @@ val repositorySharingModule = module {
     single<UserRepository> {
         UserRepositoryImpl(
             userApi = get(),
-            userStorage = get(),
+            userStorage = get(qualifier = named("UserStorage")),
         )
     }
 }

@@ -18,6 +18,7 @@ package photos.network.api.user
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.port
 import io.ktor.client.request.request
@@ -44,9 +45,7 @@ class UserApiImpl(
     @Suppress("TooGenericExceptionCaught", "ReturnCount")
     override suspend fun verifyServerHost(host: String): Boolean {
         try {
-            val response: HttpResponse = httpClient.request("$host/api") {
-                method = HttpMethod.Get
-            }
+            val response: HttpResponse = httpClient.get("/api")
 
             if (!response.status.isSuccess()) {
                 return false

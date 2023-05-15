@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.database.sharing
+package photos.network.repository.folders
 
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import photos.network.common.persistence.SecureStorage
-import photos.network.common.persistence.User
 
-val databaseSharingModule = module {
-    single<SecureStorage<User>>(
-        named("UserStorage"),
-        createdAtStart = true
-    ) {
-        UserStorage(context = get())
+val repositoryFoldersModule = module {
+    single<FoldersRepository> {
+        FoldersRepositoryImpl(
+            fileSystem = get(),
+        )
     }
 }

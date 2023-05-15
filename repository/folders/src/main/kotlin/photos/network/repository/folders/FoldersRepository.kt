@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Photos.network developers
+ * Copyright 2020-2022 Photos.network developers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.database.sharing
+package photos.network.repository.folders
 
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
-import photos.network.common.persistence.SecureStorage
-import photos.network.common.persistence.User
+import kotlinx.coroutines.flow.Flow
+import photos.network.system.filesystem.FileItem
+import photos.network.system.filesystem.FolderItem
 
-val databaseSharingModule = module {
-    single<SecureStorage<User>>(
-        named("UserStorage"),
-        createdAtStart = true
-    ) {
-        UserStorage(context = get())
-    }
+interface FoldersRepository {
+
+    fun getFolders(): Flow<List<FolderItem>>
+    fun getFiles(): Flow<FileItem?>
 }

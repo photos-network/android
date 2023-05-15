@@ -15,12 +15,16 @@
  */
 package photos.network.database.settings
 
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import photos.network.common.persistence.SecureStorage
 import photos.network.common.persistence.Settings
 
 val databaseSettingsModule = module {
-    single<SecureStorage<Settings>> {
+    single<SecureStorage<Settings>>(
+        named("SettingsStorage"),
+        createdAtStart = true
+    ) {
         SettingsStorage(context = get())
     }
 }

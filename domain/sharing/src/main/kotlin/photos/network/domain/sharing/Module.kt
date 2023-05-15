@@ -16,6 +16,12 @@
 package photos.network.domain.sharing
 
 import org.koin.dsl.module
+import photos.network.domain.sharing.usecase.GetCurrentUserUseCase
+import photos.network.domain.sharing.usecase.LogoutUseCase
+import photos.network.domain.sharing.usecase.RequestAccessTokenUseCase
 
 val domainSharingModule = module {
+    single { RequestAccessTokenUseCase(userRepository = get()) }
+    single { LogoutUseCase(userRepository = get()) }
+    single { GetCurrentUserUseCase(userRepository = get()) }
 }

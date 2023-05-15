@@ -23,8 +23,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
-import photos.network.data.user.repository.User
-import photos.network.data.user.repository.UserRepository
+import photos.network.domain.sharing.UserMapper
+import photos.network.repository.sharing.User
+import photos.network.repository.sharing.UserRepository
 
 class GetCurrentUserUseCaseTests {
     @Rule
@@ -51,7 +52,7 @@ class GetCurrentUserUseCaseTests {
         )
 
         every { userRepository.currentUser() } answers {
-            user.toDatabaseUser()
+            UserMapper.mapRepositoryToDatabase(user)
         }
 
         // when

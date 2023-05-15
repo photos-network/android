@@ -20,14 +20,14 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import photos.network.common.persistence.SecureStorage
-import photos.network.common.persistence.User as DatabaseUser
+import photos.network.common.persistence.User
 
-class UserStorage(context: Context) : SecureStorage<DatabaseUser>(context, "user_storage.txt") {
-    override fun decodeData(data: String): DatabaseUser {
+class UserStorage(context: Context) : SecureStorage<User>(context, "user_storage.txt") {
+    override fun decodeData(data: String): User {
         return Json.decodeFromString(data)
     }
 
-    override fun encodeData(data: DatabaseUser): String {
+    override fun encodeData(data: User): String {
         return Json.encodeToString(data)
     }
 }

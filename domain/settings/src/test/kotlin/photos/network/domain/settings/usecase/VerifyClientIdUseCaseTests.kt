@@ -22,7 +22,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
-import photos.network.data.user.repository.UserRepository
+import photos.network.repository.sharing.UserRepository
 
 class VerifyClientIdUseCaseTests {
     @Rule

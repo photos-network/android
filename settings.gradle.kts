@@ -43,6 +43,7 @@ include(":domain:settings")
 include(":domain:sharing")
 
 include(":repository:photos")
+include(":repository:folders")
 include(":repository:settings")
 include(":repository:sharing")
 

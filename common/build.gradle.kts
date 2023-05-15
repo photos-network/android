@@ -37,6 +37,15 @@ android {
     }
 }
 
+kover {
+    filters {
+        classes {
+            excludes += "photos.network.common.Module*"
+            excludes += "photos.network.common.BuildConfig"
+        }
+    }
+}
+
 configurations {
     create("testArtifacts"){
         extendsFrom(configurations.testApi.get())

@@ -15,8 +15,12 @@ spotless {
     }
 }
 
+detekt {
+    config = files("$rootDir/detekt.yml")
+}
+
 android {
-    namespace = "photos.network.domain.folders"
+    namespace = "photos.network.repository.folders"
 
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
@@ -39,13 +43,22 @@ android {
     packagingOptions {
         resources.excludes += "META-INF/AL2.0"
         resources.excludes += "META-INF/LGPL2.1"
+        resources.excludes += "META-INF/licenses/ASM"
+        resources.pickFirsts.add("win32-x86-64/attach_hotspot_windows.dll")
+        resources.pickFirsts.add("win32-x86/attach_hotspot_windows.dll")
     }
 }
 
 dependencies {
-    api(projects.common)
+    implementation(projects.common)
     testImplementation(project(":common", "testArtifacts"))
+    testImplementation(project(mapOf("path" to ":common")))
     androidTestImplementation(project(":common", "androidTestArtifacts"))
 
-    api(projects.repository.folders)
+    api(projects.system.filesystem)
+
+    testImplementation(libs.mockk)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.truth)
+    testImplementation(libs.core.testing)
 }

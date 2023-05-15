@@ -15,6 +15,7 @@
  */
 package photos.network.repository.sharing
 
+@Deprecated(message = "Not used")
 data class User(
     val id: String? = null,
     val lastname: String,
@@ -22,22 +23,4 @@ data class User(
     val profileImageUrl: String,
     val accessToken: String? = null,
     val refreshToken: String? = null,
-) {
-//    fun toDatabaseUser(): PersistenceUser = PersistenceUser(
-//        id = id,
-//        lastname = lastname,
-//        firstname = firstname,
-//        profileImageUrl = profileImageUrl,
-//        accessToken = accessToken,
-//        refreshToken = refreshToken,
-//    )
-//
-//    fun toDomain(): DomainUser = DomainUser(
-//        id = id,
-//        lastname = lastname,
-//        firstname = firstname,
-//        profileImageUrl = profileImageUrl,
-//        accessToken = accessToken,
-//        refreshToken = refreshToken,
-//    )
-}
+)

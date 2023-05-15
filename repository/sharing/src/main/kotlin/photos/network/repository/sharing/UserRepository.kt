@@ -15,8 +15,9 @@
  */
 package photos.network.repository.sharing
 
+import photos.network.repository.sharing.User as RepositoryUser
 interface UserRepository {
-    fun currentUser(): User?
+    fun currentUser(): RepositoryUser?
 
     suspend fun invalidateAuthorization()
 

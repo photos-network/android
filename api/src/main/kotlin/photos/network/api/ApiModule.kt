@@ -38,11 +38,13 @@ import io.ktor.client.request.port
 import io.ktor.client.request.url
 import io.ktor.client.statement.request
 import io.ktor.http.Parameters
+import io.ktor.http.URLProtocol
 import io.ktor.http.encodedPath
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
 import logcat.logcat
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import photos.network.api.photo.PhotoApi
 import photos.network.api.photo.PhotoApiImpl
@@ -57,16 +59,16 @@ val apiModule = module {
     single {
         provideKtorClient(
             application = get(),
-            userStorage = get(),
-            settingsStore = get(),
+            userStorage = get(qualifier = named("UserStorage")),
+            settingsStorage = get(qualifier = named("SettingsStorage")),
         )
     }
 
     single<UserApi> {
         UserApiImpl(
             httpClient = get(),
-            settingsStorage = get(),
-            userStorage = get(),
+            userStorage = get(qualifier = named("UserStorage")),
+            settingsStorage = get(qualifier = named("SettingsStorage"))
         )
     }
 
@@ -79,7 +81,7 @@ val apiModule = module {
 private fun provideKtorClient(
     application: Application,
     userStorage: SecureStorage<User>,
-    settingsStore: SecureStorage<Settings>,
+    settingsStorage: SecureStorage<Settings>,
 ): HttpClient {
     val client = HttpClient(CIO) {
         expectSuccess = false
@@ -152,16 +154,9 @@ private fun provideKtorClient(
                 // called after receiving a 401 (Unauthorized) response with the WWW-Authenticate header
                 refreshTokens {
                     val refreshToken = userStorage.read()?.refreshToken ?: ""
-                    val host = settingsStore.read()?.host ?: ""
-                    val clientId = settingsStore.read()?.clientId ?: ""
+                    val host = settingsStorage.read()?.host ?: ""
+                    val clientId = settingsStorage.read()?.clientId ?: ""
 
-                    /**
-                     * OAuth refresh token request based on [RFC6749](https://tools.ietf.org/html/rfc6749#section-6)
-                     *
-                     * @param refreshToken The refresh token issued to the client.
-                     * @param clientId The client identifier issued by the authorization server.
-                     * @param scope list of case-sensitive strings to grant access based on.
-                     */
                     /**
                      * OAuth refresh token request based on [RFC6749](https://tools.ietf.org/html/rfc6749#section-6)
                      *
@@ -211,8 +206,9 @@ private fun provideKtorClient(
     client.plugin(HttpSend).intercept { request ->
         // replace port and host for each call
         @Suppress("MagicNumber")
-        request.port = settingsStore.read()?.port ?: 443
-        request.url(settingsStore.read()?.host ?: "")
+        request.port = settingsStorage.read()?.port ?: 443
+        request.url.host = settingsStorage.read()?.host ?: ""
+        request.url.protocol = URLProtocol.HTTPS
 
         val originalCall = execute(request)
 

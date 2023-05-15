@@ -51,10 +51,10 @@ val repositoryPhotosModule = module {
 
     single<PhotoRepository> {
         PhotoRepositoryImpl(
-            applicationContext = get(),
             photoApi = get(),
             photoDao = get(),
             workManager = get(),
+            mediaStore = get()
         )
     }
 }

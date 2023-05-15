@@ -55,6 +55,8 @@ dependencies {
     testImplementation(project(mapOf("path" to ":common")))
     androidTestImplementation(project(":common", "androidTestArtifacts"))
 
+    api(projects.system.mediastore)
+
     // workmanager
     api(libs.work.runtime.ktx)
     androidTestApi(libs.work.testing)

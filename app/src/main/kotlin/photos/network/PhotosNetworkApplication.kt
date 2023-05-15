@@ -33,9 +33,12 @@ import photos.network.domain.folders.domainFoldersModule
 import photos.network.domain.photos.domainPhotosModule
 import photos.network.domain.settings.domainSettingsModule
 import photos.network.domain.sharing.domainSharingModule
+import photos.network.repository.folders.repositoryFoldersModule
 import photos.network.repository.photos.repositoryPhotosModule
 import photos.network.repository.settings.repositorySettingsModule
 import photos.network.repository.sharing.repositorySharingModule
+import photos.network.system.filesystem.systemFilesystemModule
+import photos.network.system.mediastore.systemMediastoreModule
 import photos.network.ui.albums.uiAlbumsModule
 import photos.network.ui.folders.uiFoldersModule
 import photos.network.ui.photos.uiPhotosModule
@@ -77,6 +80,7 @@ open class PhotosNetworkApplication : Application(), KoinComponent {
                     // folders
                     uiFoldersModule,
                     domainFoldersModule,
+                    repositoryFoldersModule,
 
                     // photos
                     uiPhotosModule,
@@ -97,6 +101,9 @@ open class PhotosNetworkApplication : Application(), KoinComponent {
                     databaseSharingModule,
 
                     apiModule,
+
+                    systemFilesystemModule,
+                    systemMediastoreModule,
                 ),
             )
         }

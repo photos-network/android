@@ -24,8 +24,8 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
-import photos.network.data.settings.repository.PrivacyState
-import photos.network.data.settings.repository.Settings
+import photos.network.common.persistence.PrivacyState
+import photos.network.common.persistence.Settings
 import photos.network.repository.settings.SettingsRepository
 
 class GetSettingsUseCaseTests {
