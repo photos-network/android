@@ -52,7 +52,6 @@ android {
 dependencies {
     implementation(projects.common)
     testImplementation(project(":common", "testArtifacts"))
-    testImplementation(project(mapOf("path" to ":common")))
     androidTestImplementation(project(":common", "androidTestArtifacts"))
 
     api(projects.system.filesystem)

@@ -68,7 +68,7 @@ val apiModule = module {
         UserApiImpl(
             httpClient = get(),
             userStorage = get(qualifier = named("UserStorage")),
-            settingsStorage = get(qualifier = named("SettingsStorage"))
+            settingsStorage = get(qualifier = named("SettingsStorage")),
         )
     }
 

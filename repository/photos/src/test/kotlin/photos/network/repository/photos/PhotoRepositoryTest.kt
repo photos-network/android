@@ -23,30 +23,28 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
-import org.junit.Rule
 import org.junit.Test
 import photos.network.api.photo.PhotoApi
 import photos.network.database.photos.PhotoDao
+import photos.network.system.mediastore.MediaStore
 
 /**
  * Test photo repository
  */
 class PhotoRepositoryTest {
 
-    @get:Rule
-    val coroutineRule = TestCoroutineDispatcherRule()
-
     private val applicationContext = mockk<Context>()
     private val photoApi = mockk<PhotoApi>()
     private val photoDao = mockk<PhotoDao>()
+    private val mediaStore = mockk<MediaStore>()
     private val workManager = mockk<WorkManager>()
 
     private val repository by lazy {
         PhotoRepositoryImpl(
-            applicationContext = applicationContext,
             photoApi = photoApi,
             photoDao = photoDao,
             workManager = workManager,
+            mediaStore = mediaStore,
         )
     }
 
@@ -123,8 +121,8 @@ class PhotoRepositoryTest {
         dateModified: Long? = null,
         thumbnailFileUri: String? = null,
         originalFileUri: String? = null,
-    ): Photo {
-        return Photo(
+    ): photos.network.database.photos.Photo {
+        return photos.network.database.photos.Photo(
 //            uuid = uuid,
             filename = filename,
             imageUrl = imageUrl,

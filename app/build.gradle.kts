@@ -180,4 +180,5 @@ dependencies {
 
     testImplementation(libs.core.testing)
     testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

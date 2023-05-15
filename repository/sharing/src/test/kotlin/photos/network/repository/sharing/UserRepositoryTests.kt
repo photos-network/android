@@ -19,18 +19,14 @@ import com.google.common.truth.Truth
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
-import org.junit.Rule
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import photos.network.api.user.UserApi
 import photos.network.api.user.entity.NetworkUser
-import photos.network.common.TestCoroutineDispatcherRule
 import photos.network.common.persistence.SecureStorage
 import photos.network.common.persistence.User as DatabaseUser
 
 class UserRepositoryTests {
-    @get:Rule
-    val coroutineRule = TestCoroutineDispatcherRule()
 
     private val userStorage = mockk<SecureStorage<User>>()
 
@@ -44,7 +40,7 @@ class UserRepositoryTests {
     }
 
     @Test
-    fun `should reflect user from persistence`() = runBlocking {
+    fun `should reflect user from persistence`() = runTest {
         // given
         every { userStorage.read()?.lastname } answers { fakeUser().lastname }
         every { userStorage.save(any()) } answers { Unit }

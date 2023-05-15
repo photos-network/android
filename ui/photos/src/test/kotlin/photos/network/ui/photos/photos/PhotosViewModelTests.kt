@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package photos.network.ui.photos.photos
 
 import com.google.common.truth.Truth
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -28,9 +32,10 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import photos.network.data.photos.repository.Photo
 import photos.network.domain.photos.usecase.GetPhotosUseCase
 import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
+import photos.network.repository.photos.Photo
+import photos.network.repository.photos.worker.SyncStatus
 import java.time.Instant
 
 class PhotosViewModelTests {
@@ -88,15 +93,15 @@ class PhotosViewModelTests {
     }
 
     @Test
-    fun `viewmodel should start sync when opened`() {
+    fun `viewmodel should start sync when opened`() = runTest {
         // given
-        every { startPhotosSyncUseCase() } answers { Unit }
+        coEvery { startPhotosSyncUseCase() } answers { SyncStatus.SyncSucceeded }
         every { getPhotosUseCase() } answers { flowOf(emptyList()) }
 
         // when
         viewmodel.handleEvent(photos.network.ui.photos.PhotosEvent.StartLocalPhotoSyncEvent)
 
         // then
-        verify(atLeast = 1) { startPhotosSyncUseCase.invoke() }
+        coVerify(atLeast = 1) { startPhotosSyncUseCase.invoke() }
     }
 }

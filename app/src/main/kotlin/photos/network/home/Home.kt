@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.outlined.Shield
@@ -80,8 +79,7 @@ fun Home(
         modifier = modifier
             .fillMaxSize()
             .navigationBarsPadding()
-            .testTag("HomeScreenTag")
-            .border(1.dp, Color.Magenta),
+            .testTag("HomeScreenTag"),
         snackbarHost = {
 //            SnackbarHost(
 //                hostState = it,
@@ -93,9 +91,7 @@ fun Home(
                 // privacy
                 TopAppBar(
                     title = {},
-                    modifier = Modifier
-                        .statusBarsPadding()
-                        .padding(top = 36.dp),
+                    modifier = Modifier,
                     navigationIcon = {
                         AppLogo(
                             modifier = Modifier
@@ -110,23 +106,25 @@ fun Home(
                     },
                     actions = {
                         // privacy
-                        IconButton(
-                            onClick = {
-                                viewmodel.handleEvent(HomeEvent.TogglePrivacyEvent)
-                            },
-                        ) {
-                            if (viewmodel.uiState.collectAsState().value.isPrivacyEnabled) {
-                                Icon(
-                                    imageVector = Icons.Default.Shield,
-                                    contentDescription = stringResource(id = R.string.privacy_filter_enabled_description),
-                                    tint = MaterialTheme.colorScheme.onPrimary,
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Outlined.Shield,
-                                    contentDescription = stringResource(id = R.string.privacy_filter_disabled_description),
-                                    tint = MaterialTheme.colorScheme.onPrimary,
-                                )
+                        if (currentDestination == Destination.Photos || currentDestination == Destination.Albums) {
+                            IconButton(
+                                onClick = {
+                                    viewmodel.handleEvent(HomeEvent.TogglePrivacyEvent)
+                                },
+                            ) {
+                                if (viewmodel.uiState.collectAsState().value.isPrivacyEnabled) {
+                                    Icon(
+                                        imageVector = Icons.Default.Shield,
+                                        contentDescription = stringResource(id = R.string.privacy_filter_enabled_description),
+                                        tint = MaterialTheme.colorScheme.onPrimary,
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Shield,
+                                        contentDescription = stringResource(id = R.string.privacy_filter_disabled_description),
+                                        tint = MaterialTheme.colorScheme.onPrimary,
+                                    )
+                                }
                             }
                         }
                     },

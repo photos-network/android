@@ -20,8 +20,6 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
-import java.time.Instant
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import logcat.LogPriority
@@ -31,6 +29,8 @@ import photos.network.database.photos.PhotoDao
 import photos.network.repository.photos.worker.SyncLocalPhotosWorker
 import photos.network.repository.photos.worker.SyncStatus
 import photos.network.system.mediastore.MediaStore
+import java.time.Instant
+import java.util.concurrent.TimeUnit
 
 class PhotoRepositoryImpl(
     private val mediaStore: MediaStore,
@@ -66,7 +66,7 @@ class PhotoRepositoryImpl(
                     dateModified = null,
                     isPrivate = false,
                     uri = it.uri,
-                )
+                ),
             )
         }
 

@@ -23,7 +23,7 @@ import photos.network.common.persistence.Settings
 val databaseSettingsModule = module {
     single<SecureStorage<Settings>>(
         named("SettingsStorage"),
-        createdAtStart = true
+        createdAtStart = true,
     ) {
         SettingsStorage(context = get())
     }

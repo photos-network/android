@@ -15,9 +15,9 @@
  */
 package photos.network.repository.folders
 
-import java.nio.file.FileSystem
 import kotlinx.coroutines.flow.Flow
 import photos.network.system.filesystem.FileItem
+import photos.network.system.filesystem.FileSystem
 import photos.network.system.filesystem.FolderItem
 
 class FoldersRepositoryImpl(

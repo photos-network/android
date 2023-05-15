@@ -19,8 +19,6 @@ import androidx.work.WorkManager
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import photos.network.common.persistence.SecureStorage
-import photos.network.common.persistence.Settings
 
 val repositorySettingsModule = module {
     factory { WorkManager.getInstance(androidApplication()) }

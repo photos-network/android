@@ -68,4 +68,5 @@ dependencies {
     testImplementation(libs.junit.junit)
     testImplementation(libs.truth)
     testImplementation(libs.core.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

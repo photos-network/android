@@ -102,4 +102,4 @@ Create a Feature request with a short but understandable description what the fe
 * Check for unnecessary whitespace with `git diff --check` before committing.
 * Make sure your commit messages are in the proper format. Start the first
   line of the commit with the issue number in parentheses.
-* run tests and code quality checks locally ```./gradlew detekt lint testDebugUnitTest connectedAndroidTest```
+* run tests and code quality checks locally ```./run_tests```

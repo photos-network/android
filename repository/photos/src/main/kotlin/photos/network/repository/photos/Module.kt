@@ -54,7 +54,7 @@ val repositoryPhotosModule = module {
             photoApi = get(),
             photoDao = get(),
             workManager = get(),
-            mediaStore = get()
+            mediaStore = get(),
         )
     }
 }

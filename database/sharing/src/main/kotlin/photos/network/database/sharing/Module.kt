@@ -23,7 +23,7 @@ import photos.network.common.persistence.User
 val databaseSharingModule = module {
     single<SecureStorage<User>>(
         named("UserStorage"),
-        createdAtStart = true
+        createdAtStart = true,
     ) {
         UserStorage(context = get())
     }

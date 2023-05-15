@@ -15,7 +15,9 @@
  */
 package photos.network
 
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -28,6 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_SWIPE
+import androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import photos.network.home.Home
@@ -42,6 +46,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
 
         setContent {
             PhotosApp()
@@ -62,6 +68,12 @@ fun PhotosApp(
             color = Color.Transparent,
             darkIcons = useDarkIcons,
         )
+        systemUiController.isStatusBarVisible = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            systemUiController.systemBarsBehavior = BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        } else {
+            systemUiController.systemBarsBehavior = BEHAVIOR_SHOW_BARS_BY_SWIPE
+        }
     }
 
     CompositionLocalProvider(LocalAppVersion provides BuildConfig.VERSION_NAME) {
