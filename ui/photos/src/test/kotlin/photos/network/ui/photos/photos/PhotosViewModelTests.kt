@@ -34,11 +34,11 @@ import org.junit.Before
 import org.junit.Test
 import photos.network.domain.photos.usecase.GetPhotosUseCase
 import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
+import photos.network.domain.settings.usecase.GetSettingsUseCase
+import photos.network.domain.settings.usecase.TogglePrivacyUseCase
 import photos.network.repository.photos.Photo
 import photos.network.repository.photos.worker.SyncStatus
 import java.time.Instant
-import photos.network.domain.settings.usecase.GetSettingsUseCase
-import photos.network.domain.settings.usecase.TogglePrivacyUseCase
 
 class PhotosViewModelTests {
     private val getSettingsUseCase = mockk<GetSettingsUseCase>()
