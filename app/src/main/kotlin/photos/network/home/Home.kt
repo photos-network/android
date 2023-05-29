@@ -17,7 +17,6 @@ package photos.network.home
 
 import android.content.res.Configuration
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -30,13 +29,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationRail
@@ -46,12 +40,9 @@ import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -70,9 +61,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.window.layout.DisplayFeature
 import org.koin.androidx.compose.getViewModel
-import photos.network.R
-import photos.network.api.ServerStatus
-import photos.network.ui.common.components.AppLogo
 import photos.network.ui.common.navigation.Destination
 import photos.network.ui.common.theme.AppTheme
 
@@ -107,54 +95,6 @@ fun Home(
             .fillMaxSize()
             .testTag("HomeScreenTag"),
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = {
-            if (currentDestination.isRootDestination()) {
-                // privacy
-                TopAppBar(
-                    title = {},
-                    modifier = Modifier,
-                    navigationIcon = {
-                        AppLogo(
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp)
-                                .clickable {
-                                    navController.navigate(Destination.Account.route)
-                                },
-                            size = 32.dp,
-                            statusSize = 16.dp,
-                            serverStatus = ServerStatus.UNAVAILABLE,
-                        )
-                    },
-                    actions = {
-                        // privacy
-                        if (currentDestination == Destination.Photos || currentDestination == Destination.Albums) {
-                            IconButton(
-                                onClick = {
-                                    viewmodel.handleEvent(HomeEvent.TogglePrivacyEvent)
-                                },
-                            ) {
-                                if (viewmodel.uiState.collectAsState().value.isPrivacyEnabled) {
-                                    Icon(
-                                        imageVector = Icons.Default.Shield,
-                                        contentDescription = stringResource(id = R.string.privacy_filter_enabled_description),
-                                        tint = MaterialTheme.colorScheme.onPrimary,
-                                    )
-                                } else {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Shield,
-                                        contentDescription = stringResource(id = R.string.privacy_filter_disabled_description),
-                                        tint = MaterialTheme.colorScheme.onPrimary,
-                                    )
-                                }
-                            }
-                        }
-                    },
-                    colors = TopAppBarDefaults.smallTopAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                    ),
-                )
-            }
-        },
         bottomBar = {
             if (showBottomNavigation && currentDestination.isRootDestination()) {
                 HomeBottomNavigation(

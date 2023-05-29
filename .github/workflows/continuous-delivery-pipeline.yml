@@ -152,7 +152,7 @@ jobs:
 
       - name: Run debug unit tests
         run: |
-          ./gradlew --console=plain koverXmlReport --stacktrace
+          ./gradlew --console=plain koverMergedXmlReport --stacktrace
 
       - name: Upload test reports
         if: always()
@@ -164,7 +164,7 @@ jobs:
       - name: Add coverage report to PR
         uses: mi-kas/kover-report@v1
         with:
-          path: ${{ github.workspace }}/app/build/reports/kover/xml/report.xml
+          path: ${{ github.workspace }}/build/reports/kover/report.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           title: App Coverage
           update-comment: true

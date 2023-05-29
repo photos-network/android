@@ -16,6 +16,7 @@
 package photos.network.ui.photos
 
 sealed interface PhotosEvent {
+    object TogglePrivacyEvent : PhotosEvent
     object StartLocalPhotoSyncEvent : PhotosEvent
     class SelectIndex(val index: Int?) : PhotosEvent
     object SelectNextPhoto : PhotosEvent

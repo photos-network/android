@@ -66,85 +66,6 @@ fun PhotoGrid(
         // TODO: add fast-scroll
 
         Box {
-            LazyVerticalGrid(
-                state = lazyListState,
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(4.dp),
-                columns = GridCells.Adaptive(90.dp),
-            ) {
-                // group by year
-                val groupedByYear = photos.groupBy {
-                    it.dateAdded.atZone(ZoneOffset.UTC).year
-                }
-
-                groupedByYear.forEach { (_, photos) ->
-                    val yearOfFirst = photos[0].dateAdded.atZone(ZoneOffset.UTC).year
-                    val yearNow = Instant.now().atZone(ZoneOffset.UTC).year
-
-                    // add year header if necessary
-                    if (yearOfFirst != yearNow) {
-                        item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                            Text(
-                                text = yearOfFirst.toString(),
-                                style = MaterialTheme.typography.bodyMedium,
-                            )
-                        }
-                    }
-
-                    // group by month
-                    val groupedByMonth = photos.groupBy {
-                        it.dateAdded.atZone(ZoneOffset.UTC).month
-                    }
-
-                    groupedByMonth.forEach { (month, photos) ->
-                        // add year if not matching with current year
-                        val title = if (yearOfFirst == yearNow) {
-                            DateFormatSymbols().months[month.value - 1]
-                        } else {
-                            "${DateFormatSymbols().months[month.value - 1]} $yearOfFirst"
-                        }
-
-                        // month header
-                        item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                            Text(text = title, style = MaterialTheme.typography.bodyLarge)
-                        }
-
-                        items(photos.size) { index: Int ->
-                            // TODO: show always local uri?
-                            val data = if (photos[index].uri != null) {
-                                photos[index].uri
-                            } else {
-                                photos[index].imageUrl
-                            }
-
-                            Box(
-                                modifier = Modifier
-                                    .aspectRatio(1.0f)
-                                    .size(128.dp)
-                                    .clip(RoundedCornerShape(2.dp))
-                                    .clickable {
-                                        onSelectItem(index)
-                                    },
-                            ) {
-                                Image(
-                                    painter = rememberImagePainter(
-                                        data = data,
-                                        builder = {
-                                            crossfade(true)
-                                            placeholder(R.drawable.image_placeholder)
-                                        },
-                                    ),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.None,
-                                    modifier = Modifier.padding(1.dp),
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
             if (selectedPhoto != null) {
                 PhotoDetails(
                     modifier = Modifier
@@ -157,6 +78,85 @@ fun PhotoGrid(
                     selectedPhoto = selectedPhoto,
                     onSelectItem = onSelectItem,
                 )
+            } else {
+                LazyVerticalGrid(
+                    state = lazyListState,
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(4.dp),
+                    columns = GridCells.Adaptive(90.dp),
+                ) {
+                    // group by year
+                    val groupedByYear = photos.groupBy {
+                        it.dateAdded.atZone(ZoneOffset.UTC).year
+                    }
+
+                    groupedByYear.forEach { (_, photos) ->
+                        val yearOfFirst = photos[0].dateAdded.atZone(ZoneOffset.UTC).year
+                        val yearNow = Instant.now().atZone(ZoneOffset.UTC).year
+
+                        // add year header if necessary
+                        if (yearOfFirst != yearNow) {
+                            item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+                                Text(
+                                    text = yearOfFirst.toString(),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                )
+                            }
+                        }
+
+                        // group by month
+                        val groupedByMonth = photos.groupBy {
+                            it.dateAdded.atZone(ZoneOffset.UTC).month
+                        }
+
+                        groupedByMonth.forEach { (month, photos) ->
+                            // add year if not matching with current year
+                            val title = if (yearOfFirst == yearNow) {
+                                DateFormatSymbols().months[month.value - 1]
+                            } else {
+                                "${DateFormatSymbols().months[month.value - 1]} $yearOfFirst"
+                            }
+
+                            // month header
+                            item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+                                Text(text = title, style = MaterialTheme.typography.bodyLarge)
+                            }
+
+                            items(photos.size) { index: Int ->
+                                // TODO: show always local uri?
+                                val data = if (photos[index].uri != null) {
+                                    photos[index].uri
+                                } else {
+                                    photos[index].imageUrl
+                                }
+
+                                Box(
+                                    modifier = Modifier
+                                        .aspectRatio(1.0f)
+                                        .size(128.dp)
+                                        .clip(RoundedCornerShape(2.dp))
+                                        .clickable {
+                                            onSelectItem(index)
+                                        },
+                                ) {
+                                    Image(
+                                        painter = rememberImagePainter(
+                                            data = data,
+                                            builder = {
+                                                crossfade(true)
+                                                placeholder(R.drawable.image_placeholder)
+                                            },
+                                        ),
+                                        contentDescription = null,
+                                        contentScale = ContentScale.None,
+                                        modifier = Modifier.padding(1.dp),
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -22,16 +22,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import photos.network.common.persistence.PrivacyState
 import photos.network.domain.photos.usecase.GetPhotosUseCase
 import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
+import photos.network.domain.settings.usecase.GetSettingsUseCase
+import photos.network.domain.settings.usecase.TogglePrivacyUseCase
 
 class PhotosViewModel(
+    private val getSettingsUseCase: GetSettingsUseCase,
+    private val togglePrivacyStateUseCase: TogglePrivacyUseCase,
     private val getPhotosUseCase: GetPhotosUseCase,
     private val startPhotosSyncUseCase: StartPhotosSyncUseCase,
 ) : ViewModel() {
     val uiState = MutableStateFlow(PhotosUiState())
 
     init {
+        loadInitialPrivacyState()
+
         viewModelScope.launch(Dispatchers.IO) {
             loadPhotos()
         }
@@ -43,6 +50,23 @@ class PhotosViewModel(
             is PhotosEvent.SelectIndex -> selectItem(event.index)
             PhotosEvent.SelectPreviousPhoto -> selectPreviousPhoto()
             PhotosEvent.SelectNextPhoto -> selectNextPhoto()
+            PhotosEvent.TogglePrivacyEvent -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    togglePrivacyStateUseCase()
+                }
+            }
+        }
+    }
+
+    private fun loadInitialPrivacyState() {
+        viewModelScope.launch(Dispatchers.IO) {
+            getSettingsUseCase().collect { settings ->
+                withContext(Dispatchers.Main) {
+                    uiState.update {
+                        it.copy(isPrivacyEnabled = settings.privacyState == PrivacyState.ACTIVE)
+                    }
+                }
+            }
         }
     }
 

@@ -145,6 +145,13 @@ android {
         unitTests {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
+
+            // Disable kover for non-debug builds
+            all {
+                it.extensions.configure(kotlinx.kover.api.KoverTaskExtension::class) {
+                    isDisabled.set(!it.name.contains("testDebug"))
+                }
+            }
         }
     }
 

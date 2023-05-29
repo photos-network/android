@@ -21,6 +21,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -28,8 +29,17 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -37,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -50,6 +61,9 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import org.koin.androidx.compose.getViewModel
+import photos.network.api.ServerStatus
+import photos.network.ui.common.components.AppLogo
+import photos.network.ui.common.navigation.Destination
 import photos.network.ui.common.theme.AppTheme
 
 @Composable
@@ -58,34 +72,84 @@ fun PhotosScreen(
     navController: NavHostController = rememberNavController(),
 ) {
     val viewmodel: PhotosViewModel = getViewModel()
+    val uiState = viewmodel.uiState.collectAsState().value
     val permissionState = rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-    when (permissionState.status) {
-        is PermissionStatus.Denied -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    text = "To show images stored on this device, the permission to read external storage is mandatory. Please grant the permission.",
+
+    Scaffold(
+        topBar = {
+            if (uiState.selectedPhoto == null) {
+                TopAppBar(
+                    title = {},
+                    modifier = Modifier,
+                    navigationIcon = {
+                        AppLogo(
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp)
+                                .clickable {
+                                    navController.navigate(Destination.Account.route)
+                                },
+                            size = 32.dp,
+                            statusSize = 16.dp,
+                            serverStatus = ServerStatus.UNAVAILABLE,
+                        )
+                    },
+                    actions = {
+                        IconButton(
+                            onClick = {
+                                viewmodel.handleEvent(PhotosEvent.TogglePrivacyEvent)
+                            },
+                        ) {
+                            if (uiState.isPrivacyEnabled) {
+                                Icon(
+                                    imageVector = Icons.Default.Shield,
+                                    contentDescription = stringResource(id = R.string.privacy_filter_enabled_description),
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Outlined.Shield,
+                                    contentDescription = stringResource(id = R.string.privacy_filter_disabled_description),
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                )
+                            }
+                        }
+                    },
+                    colors = TopAppBarDefaults.smallTopAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                    ),
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                Button(onClick = { permissionState.launchPermissionRequest() }) {
-                    Text("Grant access")
+            }
+        },
+    ) { innerPadding ->
+        when (permissionState.status) {
+            is PermissionStatus.Denied -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(top = innerPadding.calculateTopPadding())
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        text = "To show images stored on this device, the permission to read external storage is mandatory. Please grant the permission.",
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(onClick = { permissionState.launchPermissionRequest() }) {
+                        Text("Grant access")
+                    }
                 }
             }
-        }
-        PermissionStatus.Granted -> {
-            PhotosContent(
-                modifier = modifier,
-                navController = navController,
-                uiState = viewmodel.uiState.collectAsState().value,
-                handleEvent = viewmodel::handleEvent,
-            )
+            PermissionStatus.Granted -> {
+                PhotosContent(
+                    modifier = modifier.padding(top = innerPadding.calculateTopPadding()),
+                    navController = navController,
+                    uiState = uiState,
+                    handleEvent = viewmodel::handleEvent,
+                )
+            }
         }
     }
 }

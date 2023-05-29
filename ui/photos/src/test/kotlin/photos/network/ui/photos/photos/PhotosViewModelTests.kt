@@ -37,12 +37,18 @@ import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
 import photos.network.repository.photos.Photo
 import photos.network.repository.photos.worker.SyncStatus
 import java.time.Instant
+import photos.network.domain.settings.usecase.GetSettingsUseCase
+import photos.network.domain.settings.usecase.TogglePrivacyUseCase
 
 class PhotosViewModelTests {
+    private val getSettingsUseCase = mockk<GetSettingsUseCase>()
+    private val togglePrivacyUseCase = mockk<TogglePrivacyUseCase>()
     private val getPhotosUseCase = mockk<GetPhotosUseCase>()
     private val startPhotosSyncUseCase = mockk<StartPhotosSyncUseCase>()
     private val viewmodel by lazy {
         photos.network.ui.photos.PhotosViewModel(
+            getSettingsUseCase = getSettingsUseCase,
+            togglePrivacyStateUseCase = togglePrivacyUseCase,
             getPhotosUseCase = getPhotosUseCase,
             startPhotosSyncUseCase = startPhotosSyncUseCase,
         )

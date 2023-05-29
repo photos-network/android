@@ -39,6 +39,7 @@ android {
         jvmTarget = "11"
         freeCompilerArgs = freeCompilerArgs + "-opt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi"
         freeCompilerArgs = freeCompilerArgs + "-opt-in=androidx.compose.material.ExperimentalMaterialApi"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
     }
 
     buildFeatures {
@@ -55,6 +56,7 @@ dependencies {
     androidTestImplementation(project(":common", "androidTestArtifacts"))
 
     api(projects.domain.photos)
+    api(projects.domain.settings)
     implementation(projects.ui.common)
 
     // Compose

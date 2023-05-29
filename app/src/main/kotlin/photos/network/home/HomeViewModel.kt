@@ -16,46 +16,5 @@
 package photos.network.home
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import photos.network.common.persistence.PrivacyState
-import photos.network.domain.settings.usecase.GetSettingsUseCase
-import photos.network.domain.settings.usecase.TogglePrivacyUseCase
 
-class HomeViewModel constructor(
-    private val getSettingsUseCase: GetSettingsUseCase,
-    private val togglePrivacyStateUseCase: TogglePrivacyUseCase,
-) : ViewModel() {
-    val uiState = MutableStateFlow(HomeUiState())
-
-    init {
-        loadInitialPrivacyState()
-    }
-
-    private fun loadInitialPrivacyState() {
-        viewModelScope.launch(Dispatchers.IO) {
-            getSettingsUseCase().collect { settings ->
-                withContext(Dispatchers.Main) {
-                    uiState.update {
-                        it.copy(isPrivacyEnabled = settings.privacyState == PrivacyState.ACTIVE)
-                    }
-                }
-            }
-        }
-    }
-
-    fun handleEvent(event: HomeEvent) {
-        when (event) {
-            HomeEvent.TogglePrivacyEvent -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    togglePrivacyStateUseCase()
-                }
-            }
-        }
-    }
-}
+class HomeViewModel : ViewModel()

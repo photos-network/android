@@ -28,9 +28,6 @@ val appModule = module {
     }
 
     viewModel {
-        HomeViewModel(
-            getSettingsUseCase = get(),
-            togglePrivacyStateUseCase = get(),
-        )
+        HomeViewModel()
     }
 }

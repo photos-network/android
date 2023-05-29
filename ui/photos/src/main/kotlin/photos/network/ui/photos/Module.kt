@@ -21,6 +21,8 @@ import org.koin.dsl.module
 val uiPhotosModule = module {
     viewModel {
         PhotosViewModel(
+            getSettingsUseCase = get(),
+            togglePrivacyStateUseCase = get(),
             getPhotosUseCase = get(),
             startPhotosSyncUseCase = get(),
         )

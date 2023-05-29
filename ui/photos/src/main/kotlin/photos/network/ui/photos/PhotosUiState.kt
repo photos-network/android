@@ -18,6 +18,7 @@ package photos.network.ui.photos
 import photos.network.repository.photos.Photo
 
 data class PhotosUiState(
+    val isPrivacyEnabled: Boolean = false,
     val photos: List<Photo> = emptyList(),
     val selectedPhoto: Photo? = null,
     val selectedIndex: Int? = null,

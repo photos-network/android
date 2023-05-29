@@ -10,8 +10,4 @@
 
     <string name="load_error">Could not load photos</string>
 
-    <string name="app_logo_description">application logo</string>
-    <string name="privacy_filter_enabled_description">All items labeled as private are hidden</string>
-    <string name="privacy_filter_disabled_description">Hide items labeled as private in this view</string>
-
 </resources>
