@@ -15,6 +15,7 @@
  */
 package photos.network
 
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -22,6 +23,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
@@ -32,8 +35,11 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_SWIPE
 import androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+import androidx.window.layout.DisplayFeature
+import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import logcat.logcat
 import photos.network.home.Home
 import photos.network.ui.common.theme.AppTheme
 import photos.network.user.CurrentUserHost
@@ -50,7 +56,24 @@ class MainActivity : ComponentActivity() {
         window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
 
         setContent {
-            PhotosApp()
+            PhotosApp(
+                windowSizeClass = calculateWindowSizeClass(this),
+                displayFeatures = calculateDisplayFeatures(this),
+            )
+        }
+    }
+
+    /**
+     * Handle specific configuration changes to prevent activity recreation in the Manifest.
+     */
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        // Checks whether a keyboard is available
+        if (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_YES) {
+            logcat { "Keyboard available" }
+        } else if (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_NO) {
+            logcat { "No Keyboard" }
         }
     }
 }
@@ -60,6 +83,8 @@ val LocalAppVersion = staticCompositionLocalOf { "Unknown" }
 @Composable
 fun PhotosApp(
     systemUiController: SystemUiController = rememberSystemUiController(),
+    windowSizeClass: WindowSizeClass,
+    displayFeatures: List<DisplayFeature>,
 ) {
     val useDarkIcons = !isSystemInDarkTheme()
 
@@ -82,6 +107,8 @@ fun PhotosApp(
                 Home(
                     modifier = Modifier.fillMaxSize(),
                     orientation = LocalConfiguration.current.orientation,
+                    windowSizeClass = windowSizeClass,
+                    displayFeatures = displayFeatures,
                 )
             }
         }

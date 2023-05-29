@@ -138,6 +138,7 @@ android {
         freeCompilerArgs = freeCompilerArgs + "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi"
         freeCompilerArgs = freeCompilerArgs + "-opt-in=com.google.accompanist.pager.ExperimentalPagerApi"
         freeCompilerArgs = freeCompilerArgs + "-opt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi"
     }
 
     testOptions {
@@ -174,6 +175,8 @@ dependencies {
     implementation(libs.activity.compose)
 
     implementation(libs.bundles.accompanist)
+    implementation(libs.androidx.window)
+//    implementation(libs.androidx.window.core)
 
     // leakCanary
     debugImplementation(libs.leakcanary.android)
