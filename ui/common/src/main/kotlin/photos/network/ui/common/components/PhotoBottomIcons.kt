@@ -13,36 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.ui
+package photos.network.ui.common.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import photos.network.ui.common.theme.AppTheme
 
 @Composable
-fun PhotoTopIcons(
+fun PhotoBottomIcons(
     modifier: Modifier = Modifier,
-    onBackPressed: () -> Unit = {},
+    onIconClicked: () -> Unit = {},
 ) {
     Row(modifier = modifier) {
         IconButton(
-            onClick = { onBackPressed() },
+            onClick = { onIconClicked() },
         ) {
-            Icon(Icons.Filled.ArrowBack, null)
+            Icon(Icons.Filled.Delete, null)
         }
     }
 }
 
 @Preview
 @Composable
-private fun PhotoTopIconPreview() {
+private fun PhotoBottomIconsPreview() {
     AppTheme {
-        PhotoTopIcons()
+        PhotoBottomIcons()
     }
 }

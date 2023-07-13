@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.ui.photos
+package photos.network.ui.common.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import photos.network.ui.common.R
 import photos.network.ui.common.theme.AppTheme
 
 /**
@@ -47,11 +48,11 @@ fun Tag(
         modifier = Modifier
             .background(
                 color = MaterialTheme.colorScheme.secondaryContainer,
-                shape = RoundedCornerShape(topStartPercent = 50, bottomStartPercent = 1),
+                shape = RoundedCornerShape(10.dp),
             )
-            .clip(RoundedCornerShape(topStartPercent = 50))
+            .clip(RoundedCornerShape(5.dp))
             .clickable(onClick = { onClickTag(tag) })
-            .padding(horizontal = 8.dp),
+            .padding(start = 2.dp, end = 4.dp),
 
     ) {
         Icon(
@@ -60,12 +61,13 @@ fun Tag(
                 .padding(vertical = 4.dp),
             imageVector = Icons.Default.Bookmarks,
             contentDescription = stringResource(id = R.string.icon_tags),
+            tint = MaterialTheme.colorScheme.secondary,
         )
         Text(
             modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
             text = tag,
             fontSize = MaterialTheme.typography.labelSmall.fontSize,
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = MaterialTheme.colorScheme.secondary,
         )
     }
 }

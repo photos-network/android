@@ -22,16 +22,15 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipe
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
-import photos.network.MainActivity
 import photos.network.generateTestPhoto
 import photos.network.ui.common.theme.AppTheme
+import photos.network.ui.photos.test.TestActivity
 
 class PhotosScreenTests {
     @get:Rule
-    val composeTestRule = createAndroidComposeRule<MainActivity>()
+    val composeTestRule = createAndroidComposeRule<TestActivity>()
 
     @Test
     fun loading_spinner_should_be_shown_while_loading() {
@@ -39,7 +38,7 @@ class PhotosScreenTests {
         val uiState = PhotosUiState(isLoading = true)
 
         // when
-        composeTestRule.activity.setContent {
+        composeTestRule.setContent {
             AppTheme {
                 PhotosContent(uiState = uiState, handleEvent = {})
             }
@@ -49,7 +48,6 @@ class PhotosScreenTests {
         composeTestRule.onNodeWithTag("LOADING_SPINNER").assertIsDisplayed()
     }
 
-    @Ignore("Broken in test only")
     @Test
     fun back_should_unselect_photo_if_set() {
         // given
@@ -68,7 +66,7 @@ class PhotosScreenTests {
         }
 
         // when
-        composeTestRule.activity.setContent {
+        composeTestRule.setContent {
             AppTheme {
                 PhotosContent(
                     uiState = uiState,
@@ -76,7 +74,9 @@ class PhotosScreenTests {
                 )
             }
         }
-        composeTestRule.activity.onBackPressed()
+        composeTestRule.activityRule.scenario.onActivity { activity ->
+            activity.onBackPressedDispatcher.onBackPressed()
+        }
 
         // then
         assert(called)
@@ -104,7 +104,7 @@ class PhotosScreenTests {
         }
 
         // when
-        composeTestRule.activity.setContent {
+        composeTestRule.setContent {
             AppTheme {
                 PhotosContent(
                     uiState = uiState,

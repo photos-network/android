@@ -28,6 +28,8 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "VERSION_NAME", "\"${version}\"")
     }
 
     compileOptions {
@@ -62,4 +64,10 @@ dependencies {
     // accompanist
     implementation(libs.bundles.accompanist)
 
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.ext.truth)
+    androidTestImplementation(libs.compose.test.junit4)
+    debugImplementation(libs.compose.test.manifest)
 }

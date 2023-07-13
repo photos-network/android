@@ -15,7 +15,7 @@
  */
 package photos.network
 
-import photos.network.data.photos.repository.Photo
+import photos.network.repository.photos.Photo
 import java.time.Instant
 
 fun generateTestPhoto(

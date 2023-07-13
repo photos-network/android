@@ -16,7 +16,6 @@
 package photos.network.home
 
 import android.content.res.Configuration
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -47,7 +46,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,10 +53,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.window.layout.DisplayFeature
 import org.koin.androidx.compose.getViewModel
 import photos.network.ui.common.navigation.Destination
@@ -120,8 +120,7 @@ fun Home(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(bottom = innerPadding.calculateBottomPadding())
-                    .padding(top = topPadding)
-                    .border(2.dp, Color.Green),
+                    .padding(top = topPadding),
             ) {
                 if (showNavigationRail && currentDestination.isRootDestination()) {
                     HomeNavigationRail(
@@ -153,8 +152,21 @@ fun Home(
                             navController = navController,
                         )
                     }
-                    composable(route = Destination.Login.route) {
+                    composable(
+                        route = "${Destination.Login.route}/{host}/{client}",
+                        arguments = listOf(
+                            navArgument("host") { type = NavType.StringType },
+                            navArgument("client") { type = NavType.StringType },
+                        ),
+                    ) { backStackEntry ->
                         photos.network.ui.sharing.login.LoginScreen(
+                            navController = navController,
+                            host = backStackEntry.arguments?.getString("host") ?: "",
+                            client = backStackEntry.arguments?.getString("client") ?: "",
+                        )
+                    }
+                    composable(route = Destination.Search.route) {
+                        photos.network.ui.search.SearchScreen(
                             navController = navController,
                         )
                     }

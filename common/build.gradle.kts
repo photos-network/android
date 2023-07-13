@@ -97,13 +97,10 @@ dependencies {
     testApi(libs.mockk)
     testApi(libs.truth)
     testApi(libs.junit.junit)
-    androidTestApi(libs.androidx.test.core)
-    androidTestApi(libs.androidx.test.ext.junit)
-    androidTestApi(libs.androidx.test.ext.junit)
-    androidTestApi(libs.androidx.test.ext.truth)
-    androidTestApi(libs.androidx.test.monitor)
-    androidTestApi(libs.androidx.test.runner)
-    androidTestApi(libs.androidx.test.rules)
-    androidTestApi(libs.androidx.test.orchestrator)
-    androidTestApi(libs.androidx.test.services)
+
+    // instrumented tests
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.ext.truth)
 }

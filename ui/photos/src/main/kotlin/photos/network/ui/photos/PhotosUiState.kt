@@ -18,10 +18,12 @@ package photos.network.ui.photos
 import photos.network.repository.photos.Photo
 
 data class PhotosUiState(
+    val isLoading: Boolean = true,
+    val hasError: Boolean = false,
+    val hasImagePermission: Boolean = false,
+    val hasLocationPermission: Boolean = false,
     val isPrivacyEnabled: Boolean = false,
     val photos: List<Photo> = emptyList(),
     val selectedPhoto: Photo? = null,
     val selectedIndex: Int? = null,
-    val isLoading: Boolean = true,
-    val hasError: Boolean = false,
 )

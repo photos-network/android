@@ -19,7 +19,9 @@ import android.icu.text.DateFormatSymbols
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -32,6 +34,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -58,10 +61,16 @@ fun PhotoGrid(
     val lazyListState = rememberLazyGridState()
 
     if (photos.isEmpty()) {
-        Text(
-            modifier = Modifier.testTag("LOADING_SPINNER"),
-            text = "There are no photos to show right now.",
-        )
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                modifier = Modifier.testTag("EMPTY_TEXT"),
+                text = "There are no photos to show right now.",
+            )
+        }
     } else {
         // TODO: add fast-scroll
 

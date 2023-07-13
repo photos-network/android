@@ -64,4 +64,8 @@ dependencies {
     implementation(libs.bundles.room)
     ksp(libs.room.compiler)
     androidTestImplementation(libs.room.testing)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.ext.truth)
 }

@@ -3,7 +3,7 @@
     <string name="app_logo_description">application logo</string>
     <string name="privacy_filter_enabled_description">All items labeled as private are hidden</string>
     <string name="privacy_filter_disabled_description">Hide items labeled as private in this view</string>
+    <string name="open_search">Open search</string>
 
-    <string name="icon_tags">tags icon</string>
 
 </resources>

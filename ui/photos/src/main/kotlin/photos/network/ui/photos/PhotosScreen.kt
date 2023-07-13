@@ -22,20 +22,19 @@ import android.net.Uri
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.NotInterested
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.outlined.Shield
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -43,12 +42,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -58,7 +57,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import org.koin.androidx.compose.getViewModel
 import photos.network.api.ServerStatus
@@ -73,7 +72,20 @@ fun PhotosScreen(
 ) {
     val viewmodel: PhotosViewModel = getViewModel()
     val uiState = viewmodel.uiState.collectAsState().value
-    val permissionState = rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+
+    val permissionStateFiles =
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            rememberPermissionState(android.Manifest.permission.READ_MEDIA_IMAGES)
+        } else {
+            rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+
+    val permissionStateLocation =
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            rememberPermissionState(android.Manifest.permission.ACCESS_MEDIA_LOCATION)
+        } else {
+            rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        }
 
     Scaffold(
         topBar = {
@@ -113,6 +125,17 @@ fun PhotosScreen(
                                 )
                             }
                         }
+                        IconButton(
+                            onClick = {
+                                navController.navigate(Destination.Search.route)
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = stringResource(id = R.string.open_search),
+                                tint = MaterialTheme.colorScheme.onPrimary,
+                            )
+                        }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primary,
@@ -121,35 +144,104 @@ fun PhotosScreen(
             }
         },
     ) { innerPadding ->
-        when (permissionState.status) {
-            is PermissionStatus.Denied -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(top = innerPadding.calculateTopPadding())
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        text = "To show images stored on this device, the permission to read external storage is mandatory. Please grant the permission.",
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Button(onClick = { permissionState.launchPermissionRequest() }) {
-                        Text("Grant access")
-                    }
-                }
+        Column(
+            modifier = modifier.padding(top = innerPadding.calculateTopPadding()),
+        ) {
+            val openFilesPermissionDialog = remember {
+                mutableStateOf(!permissionStateFiles.status.isGranted)
             }
-            PermissionStatus.Granted -> {
-                PhotosContent(
-                    modifier = modifier.padding(top = innerPadding.calculateTopPadding()),
-                    navController = navController,
-                    uiState = uiState,
-                    handleEvent = viewmodel::handleEvent,
+            val openLocationPermissionDialog = remember {
+                mutableStateOf(!permissionStateLocation.status.isGranted)
+            }
+
+            if (openFilesPermissionDialog.value) {
+                AlertDialog(
+                    onDismissRequest = {
+                        // Dismiss the dialog when the user clicks outside the dialog or on the back
+                        // button. If you want to disable that functionality, simply use an empty
+                        // onCloseRequest.
+                        openFilesPermissionDialog.value = false
+                    },
+                    icon = {
+                        Icons.Filled.NotInterested
+                    },
+                    title = {
+                        Text(text = "Permission")
+                    },
+                    text = {
+                        Text(
+                            text = "To show images stored on this device, the permission to read external storage is mandatory.",
+                        )
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                permissionStateFiles.launchPermissionRequest()
+                                openFilesPermissionDialog.value = false
+                            },
+                        ) {
+                            Text("Grant access")
+                        }
+                    },
+                    dismissButton = {
+                        OutlinedButton(
+                            onClick = {
+                                openFilesPermissionDialog.value = false
+                            },
+                        ) {
+                            Text("Not now")
+                        }
+                    },
                 )
             }
+
+            if (openLocationPermissionDialog.value && permissionStateFiles.status.isGranted) {
+                AlertDialog(
+                    onDismissRequest = {
+                        // Dismiss the dialog when the user clicks outside the dialog or on the back
+                        // button. If you want to disable that functionality, simply use an empty
+                        // onCloseRequest.
+                        openLocationPermissionDialog.value = false
+                    },
+                    icon = {
+                        Icons.Filled.NotInterested
+                    },
+                    title = {
+                        Text(text = "Permission")
+                    },
+                    text = {
+                        Text(
+                            text = "To show where an images was captured, the location permission is required.",
+                        )
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                permissionStateLocation.launchPermissionRequest()
+                                openLocationPermissionDialog.value = false
+                            },
+                        ) {
+                            Text("Grant access")
+                        }
+                    },
+                    dismissButton = {
+                        OutlinedButton(
+                            onClick = {
+                                openLocationPermissionDialog.value = false
+                            },
+                        ) {
+                            Text("Not now")
+                        }
+                    },
+                )
+            }
+
+            PhotosContent(
+                modifier = modifier.padding(top = innerPadding.calculateTopPadding()),
+                navController = navController,
+                uiState = uiState,
+                handleEvent = viewmodel::handleEvent,
+            )
         }
     }
 }

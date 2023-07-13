@@ -13,23 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.ui
+package photos.network.ui.search
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import photos.network.ui.common.theme.AppTheme
-
-@Composable
-fun PhotoBottomIcons(
-    modifier: Modifier = Modifier,
-) {
-}
-
-@Preview
-@Composable
-private fun PhotoBottomIconsPreview() {
-    AppTheme {
-        PhotoBottomIcons()
-    }
+sealed class SearchEvent {
+    class UpdateSearchQuery(val query: String) : SearchEvent()
 }

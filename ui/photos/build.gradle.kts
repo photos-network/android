@@ -71,4 +71,10 @@ dependencies {
     testImplementation(libs.truth)
     testImplementation(libs.core.testing)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.ext.truth)
+    androidTestImplementation(libs.compose.test.junit4)
 }

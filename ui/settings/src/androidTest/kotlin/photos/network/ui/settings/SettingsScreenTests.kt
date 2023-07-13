@@ -29,7 +29,9 @@ class SettingsScreenTests {
     fun title_should_be_displayed_in_settings_screen() {
         // given
         composeTestRule.setContent {
-            SettingsScreen()
+            SettingsScreen(
+                uiState = SettingsUiState(),
+            )
         }
 
         // then
@@ -40,7 +42,9 @@ class SettingsScreenTests {
     fun logo_should_be_displayed_in_settings_screen() {
         // given
         composeTestRule.setContent {
-            SettingsScreen()
+            SettingsScreen(
+                uiState = SettingsUiState(),
+            )
         }
 
         // then

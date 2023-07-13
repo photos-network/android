@@ -70,6 +70,9 @@ import photos.network.ui.common.components.AppLogo
 import photos.network.ui.common.navigation.Destination
 import photos.network.ui.common.theme.AppTheme
 
+/**
+ * stateful
+ */
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
@@ -77,19 +80,26 @@ fun SettingsScreen(
 ) {
     val viewmodel: SettingsViewModel = getViewModel()
 
-    SettingsContent(
+    SettingsScreen(
         modifier = modifier,
         uiState = viewmodel.uiState.collectAsState().value,
         handleEvent = viewmodel::handleEvent,
-        navigateToLogin = { navController.navigate(Destination.Login.route) },
+        navigateToLogin = {
+            navController.navigate(
+                "${Destination.Login.route}/${viewmodel.uiState.value.host}/${viewmodel.uiState.value.clientId}",
+            )
+        },
     )
 }
 
+/**
+ * stateless
+ */
 @Composable
-fun SettingsContent(
+fun SettingsScreen(
     modifier: Modifier = Modifier,
     uiState: SettingsUiState,
-    handleEvent: (event: SettingsEvent) -> Unit,
+    handleEvent: (event: SettingsEvent) -> Unit = {},
     navigateToLogin: () -> Unit = {},
 ) {
     val verticalScrollState = rememberScrollState(0)
@@ -118,10 +128,12 @@ fun SettingsContent(
             isClientIdVerified = uiState.isClientVerified,
         )
 
-        Divider()
+        AnimatedVisibility(visible = uiState.isClientVerified) {
+            Divider()
 
-        AccountSetupItem(loggedIn = uiState.loggedIn) {
-            navigateToLogin()
+            AccountSetupItem(loggedIn = uiState.loggedIn) {
+                navigateToLogin()
+            }
         }
 
         SectionSpacer()
@@ -411,7 +423,7 @@ private fun PreviewAccount(
     @PreviewParameter(PreviewAccountProvider::class) uiState: SettingsUiState,
 ) {
     AppTheme {
-        SettingsContent(
+        SettingsScreen(
             uiState = uiState,
             handleEvent = {},
         )

@@ -64,6 +64,18 @@ class LoginViewModel(
         }
     }
 
+    fun sethost(host: String) {
+        viewModelScope.launch {
+            uiState.update { it.copy(host = host) }
+        }
+    }
+
+    fun setclient(client: String) {
+        viewModelScope.launch {
+            uiState.update { it.copy(clientId = client) }
+        }
+    }
+
     /**
      * generate random nonce for EACH request to prevent replay attacs
      */

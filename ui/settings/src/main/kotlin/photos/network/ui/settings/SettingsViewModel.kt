@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("DEPRECATION")
+
 package photos.network.ui.settings
 
 import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.os.Build
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -49,15 +52,23 @@ class SettingsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             getSettingsUseCase().collect { settings ->
                 withContext(Dispatchers.Main) {
+                    val versionName = application.packageManager.getPackageInfo(
+                        application.packageName,
+                        0,
+                    ).versionName
+                    val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        application.packageManager.getPackageInfo(application.packageName, 0).longVersionCode
+                    } else {
+                        application.packageManager.getPackageInfo(application.packageName, 0).versionCode
+                    }
+
                     uiState.update {
                         it.copy(
                             host = settings.host ?: "",
                             isHostVerified = isHostVerified.value,
                             clientId = settings.clientId ?: "",
                             isClientVerified = isClientIdVerified.value,
-                            // TDOO: get VERSION_NAME and VERSION_CODE
-//                            appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
-                            appVersion = "{BuildConfig.VERSION_NAME} ({BuildConfig.VERSION_CODE})",
+                            appVersion = "$versionName ($versionCode)",
                         )
                     }
                 }
@@ -87,8 +98,13 @@ class SettingsViewModel(
         val clipboard: ClipboardManager? =
             context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
 
-        // TODO: get VERSION_NAME
-        val clip = ClipData.newPlainText("Photos.networdk", "BuildConfig.VERSION_NAME")
+        @Suppress("DEPRECATION")
+        val versionName = application.packageManager.getPackageInfo(
+            application.packageName,
+            0,
+        ).versionName
+
+        val clip = ClipData.newPlainText("Photos.network", versionName)
         clipboard?.setPrimaryClip(clip)
     }
 

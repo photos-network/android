@@ -53,7 +53,7 @@ class PhotoRepositoryImpl(
         .build()
 
     override suspend fun syncPhotos(): SyncStatus {
-        val photos = mediaStore.queryLocalMediaStore()
+        val photos = mediaStore.queryLocalImages()
         logcat(LogPriority.VERBOSE) { "Found ${photos.size} photos." }
 
         photos.forEach {

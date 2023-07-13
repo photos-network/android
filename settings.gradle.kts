@@ -33,6 +33,7 @@ include(":ui:folders")
 include(":ui:photos")
 include(":ui:settings")
 include(":ui:sharing")
+include(":ui:search")
 
 include(":ui:common")
 
@@ -40,6 +41,7 @@ include(":domain:albums")
 include(":domain:folders")
 include(":domain:photos")
 include(":domain:settings")
+include(":domain:search")
 include(":domain:sharing")
 
 include(":repository:photos")

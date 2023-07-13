@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoAlbum
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.os.bundleOf
 import photos.network.ui.common.R
@@ -41,6 +42,7 @@ sealed class Destination(
     object Albums : Destination("albums", R.string.albums_title, Icons.Filled.PhotoAlbum)
     object Account : Destination("account", R.string.account_title, Icons.Filled.People)
     object Folders : Destination("folders", R.string.folders_title, Icons.Filled.Folder)
+    object Search : Destination("search", R.string.search_title, Icons.Filled.Search)
     object Login : Destination("login", R.string.login_title, Icons.Filled.Lock)
 
     fun isRootDestination(): Boolean {

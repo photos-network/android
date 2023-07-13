@@ -19,7 +19,8 @@ import android.net.Uri
 import java.time.Instant
 
 interface MediaStore {
-    fun queryLocalMediaStore(): List<MediaItem>
+    fun queryLocalImages(): List<MediaItem>
+    fun queryLocalVideos(): List<MediaItem>
 }
 
 data class MediaItem(

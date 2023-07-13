@@ -59,7 +59,7 @@ android {
         versionCode = grgit.log().size
         versionName = "0.1.0-${grgit.head().abbreviatedId}"
 
-        testInstrumentationRunner = "photos.network.PhotosNetworkJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -173,6 +173,7 @@ dependencies {
     implementation(projects.ui.folders)
     implementation(projects.ui.photos)
     implementation(projects.ui.settings)
+    implementation(projects.ui.search)
     implementation(projects.ui.sharing)
 
     implementation(projects.ui.common)

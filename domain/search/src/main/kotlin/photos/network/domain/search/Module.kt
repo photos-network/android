@@ -13,23 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network
+package photos.network.domain.search
 
-import android.app.Application
-import android.content.Context
-import androidx.test.runner.AndroidJUnitRunner
+import org.koin.dsl.module
 
-/**
- * Custom JUnit runner to inject a TestApplication
- */
-@Suppress("unused")
-class PhotosNetworkJUnitRunner : AndroidJUnitRunner() {
-
-    override fun newApplication(
-        cl: ClassLoader?,
-        className: String?,
-        context: Context?,
-    ): Application {
-        return super.newApplication(cl, PhotosNetworkApplication::class.java.name, context)
-    }
+val domainSearchModule = module {
 }

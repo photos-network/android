@@ -15,11 +15,11 @@
  */
 package photos.network.common.persistence
 
-import android.content.Context
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKeys
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SmallTest
+import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.BeforeClass
@@ -31,21 +31,21 @@ import java.io.File
 import java.nio.charset.StandardCharsets
 
 @RunWith(AndroidJUnit4::class)
+@SmallTest
 class SecureStorageTest {
 
-    private val context = ApplicationProvider.getApplicationContext<Context>()
-
+    private val appContext = InstrumentationRegistry.getInstrumentation().targetContext
     private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
     @Before
     fun setup() {
-        File(context.filesDir, "fileToPersist").delete()
+        File(appContext.filesDir, "fileToPersist").delete()
     }
 
     private val encryptedFile =
         EncryptedFile.Builder(
-            File(context.filesDir, "fileToPersist"),
-            context,
+            File(appContext.filesDir, "fileToPersist"),
+            appContext,
             masterKeyAlias,
             EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB,
         ).build()

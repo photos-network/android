@@ -31,6 +31,7 @@ import photos.network.database.sharing.databaseSharingModule
 import photos.network.domain.albums.domainAlbumsModule
 import photos.network.domain.folders.domainFoldersModule
 import photos.network.domain.photos.domainPhotosModule
+import photos.network.domain.search.domainSearchModule
 import photos.network.domain.settings.domainSettingsModule
 import photos.network.domain.sharing.domainSharingModule
 import photos.network.repository.folders.repositoryFoldersModule
@@ -42,6 +43,7 @@ import photos.network.system.mediastore.systemMediastoreModule
 import photos.network.ui.albums.uiAlbumsModule
 import photos.network.ui.folders.uiFoldersModule
 import photos.network.ui.photos.uiPhotosModule
+import photos.network.ui.search.uiSearchModule
 import photos.network.ui.settings.uiSettingsModule
 import photos.network.ui.sharing.uiSharingModule
 
@@ -99,6 +101,10 @@ open class PhotosNetworkApplication : Application(), KoinComponent {
                     domainSharingModule,
                     repositorySharingModule,
                     databaseSharingModule,
+
+                    // search
+                    uiSearchModule,
+                    domainSearchModule,
 
                     apiModule,
 

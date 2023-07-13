@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.ui
+package photos.network.ui.common.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Spacer
@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import photos.network.ui.common.theme.AppTheme
-import photos.network.ui.photos.Tag
 
 @Preview(name = "Tags")
 @Preview(name = "Tags · DARK", uiMode = Configuration.UI_MODE_NIGHT_YES)

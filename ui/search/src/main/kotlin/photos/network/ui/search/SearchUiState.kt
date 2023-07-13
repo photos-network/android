@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.domain.sharing
+package photos.network.ui.search
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
-import org.junit.Test
-import org.junit.runner.RunWith
+data class SearchUiState(
+    val query: String = "",
+    // startDate = today
+    // endDate = today
+    // searchLocation = device location if permission ? world zoom
+    // faces = listOf<Face>
 
-@RunWith(AndroidJUnit4::class)
-class FailingTest {
-    @Test
-    fun failingTest() = runBlocking {
-        assertEquals(true, true)
-    }
-}
+    // results = listOf<Photos>
+)

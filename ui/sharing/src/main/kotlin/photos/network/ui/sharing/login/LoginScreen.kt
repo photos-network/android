@@ -43,8 +43,12 @@ import photos.network.ui.common.navigation.Destination
 fun LoginScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
+    host: String = "",
+    client: String = "",
 ) {
     val viewmodel: LoginViewModel by viewModel()
+    viewmodel.sethost(host)
+    viewmodel.setclient(client)
 
     LoginScreen(
         modifier = modifier,

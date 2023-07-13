@@ -30,8 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import coil.compose.rememberImagePainter
 import photos.network.repository.photos.Photo
-import photos.network.ui.PhotoBottomIcons
-import photos.network.ui.PhotoTopIcons
+import photos.network.ui.common.components.PhotoBottomIcons
+import photos.network.ui.common.components.PhotoTopIcons
 
 @Composable
 fun PhotoDetails(

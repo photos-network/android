@@ -15,12 +15,17 @@
  */
 package photos.network.system.mediastore
 
+import android.Manifest
 import android.app.Application
 import android.location.Location
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
+import androidx.annotation.RequiresPermission
 import logcat.LogPriority
+import logcat.asLog
 import logcat.logcat
+import java.io.InputStream
 import java.time.Instant
 
 class MediaStoreImpl(
@@ -29,8 +34,23 @@ class MediaStoreImpl(
     /**
      * Query images from Androids local MediaStore (`DCIM/` and `Pictures/`)
      */
-    @Suppress("ForbiddenComment", "NestedBlockDepth", "LongMethod")
-    override fun queryLocalMediaStore(): List<MediaItem> {
+    @RequiresPermission(
+        allOf = [
+            // Android 9 or lower
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+
+            // access images > Android 9
+            Manifest.permission.READ_MEDIA_IMAGES,
+
+            // access videos > Android 9
+            Manifest.permission.READ_MEDIA_VIDEO,
+
+            // access any geographic locations > Android 9
+            Manifest.permission.ACCESS_MEDIA_LOCATION,
+        ],
+    )
+    @Suppress("ForbiddenComment", "NestedBlockDepth", "LongMethod", "CyclomaticComplexMethod")
+    override fun queryLocalImages(): List<MediaItem> {
         val photos = mutableListOf<MediaItem>()
 
         val selection = null
@@ -115,21 +135,25 @@ class MediaStoreImpl(
                 // Image location
                 var latLong = FloatArray(2)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    // TODO: ACCESS_MEDIA_LOCATION permission required
                     logcat(LogPriority.WARN) { "Implement ACCESS_MEDIA_LOCATION permission for exif location" }
-//                    photoUri = MediaStore.setRequireOriginal(photoUri)
-//                    val stream: InputStream? =
-//                        applicationContext.contentResolver.openInputStream(photoUri)
-//                    if (stream == null) {
-//                        logcat(LogPriority.WARN) { "Got a null input stream for $photoUri" }
-//                        continue
-//                    }
-//
-//                    val exifInterface = ExifInterface(stream)
-//                    // If it returns null, fall back to {0.0, 0.0}.
-//                    exifInterface.getLatLong(latLong)
-//
-//                    stream.close()
+                    try {
+                        photoUri = android.provider.MediaStore.setRequireOriginal(photoUri)
+                        val stream: InputStream? =
+                            applicationContext.contentResolver.openInputStream(photoUri)
+                        if (stream == null) {
+                            logcat(LogPriority.WARN) { "Got a null input stream for $photoUri" }
+                            continue
+                        }
+
+                        val exifInterface = ExifInterface(stream)
+                        // If it returns null, fall back to {0.0, 0.0}.
+                        exifInterface.getLatLong(latLong)
+
+                        stream.close()
+                    } catch (exception: UnsupportedOperationException) {
+                        logcat(LogPriority.WARN) { "ACCESS_MEDIA_LOCATION permission not granted for exif location" }
+                        logcat(LogPriority.DEBUG) { exception.asLog() }
+                    }
                 } else {
                     if (latColumn != -1 && longColumn != -1) {
                         latLong = floatArrayOf(
@@ -162,6 +186,13 @@ class MediaStoreImpl(
         }
 
         return photos
+    }
+
+    /**
+     * Query videos from Androids local MediaStore (`DCIM/`, `Movies/`, and `Pictures/`)
+     */
+    override fun queryLocalVideos(): List<MediaItem> {
+        TODO("Not yet implemented")
     }
 
     private fun generateContentUri(): Uri {

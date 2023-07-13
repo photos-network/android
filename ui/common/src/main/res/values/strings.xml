@@ -18,4 +18,7 @@
     <string name="server_inprogress_description">Data is being transmitted with the configured photos.network instance.</string>
     <string name="server_unauthorized_description">Communication to the configured photos.network instance is not authorized!</string>
 
+    <string name="icon_tags">tags icon</string>
+    <string name="search_title">Search</string>
+
 </resources>

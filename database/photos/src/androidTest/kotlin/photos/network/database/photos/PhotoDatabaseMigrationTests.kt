@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.data.photos.persistence
+package photos.network.database.photos
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
@@ -27,8 +27,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import photos.network.database.photos.MIGRATION_1_2
-import photos.network.database.photos.PhotoDatabase
 import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
