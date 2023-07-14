@@ -17,7 +17,7 @@ compose-bom = "2023.03.00" # 2023.04.01
 compose-compiler = "1.4.2" # 1.4.7
 
 # https://detekt.dev/
-detekt = "1.22.0"
+detekt = "1.23.0"
 
 # https://github.com/Kotlin/kotlinx-kover
 kover = "0.6.1"
