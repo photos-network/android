@@ -23,15 +23,22 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
@@ -106,10 +113,56 @@ fun SettingsScreen(
 
     Column(
         modifier = modifier
-            .verticalScroll(verticalScrollState)
-            .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(verticalScrollState)
     ) {
         SettingsHeader(serverStatus = uiState.serverStatus)
+
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = stringResource(id = R.string.settings_features_pre)
+        )
+        val map = listOf(
+                stringResource(id = R.string.feature_sharing_title) to stringResource(id = R.string.feature_sharing_description),
+                stringResource(id = R.string.feature_backup_title) to stringResource(id = R.string.feature_backup_description),
+                stringResource(id = R.string.feature_image_analysis_title) to stringResource(id = R.string.feature_image_analysis_description)
+        )
+
+        Column(
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            map.forEach {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
+                        modifier = Modifier
+                                .padding(start = 8.dp, end = 8.dp)
+                                .size(8.dp)
+                                .background(Color.Black, shape = CircleShape),
+                    )
+
+                    Text(
+                        text = it.first,
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                }
+                Text(
+                    modifier = Modifier.padding(start = 24.dp),
+                    text = it.second,
+                )
+            }
+        }
+
+        Text(
+            modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp),
+            text = stringResource(id = R.string.settings_features_post)
+        )
+
+        Divider()
 
         ServerSetupItem(
             onServerSetupClicked = {
@@ -136,7 +189,7 @@ fun SettingsScreen(
             }
         }
 
-        SectionSpacer()
+        Spacer(modifier = Modifier.weight(1f))
 
         AppVersionItem(version = uiState.appVersion) {
             handleEvent(SettingsEvent.SetClipboardEvent)
@@ -159,25 +212,25 @@ internal fun SettingsHeader(
         // header gradient
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .background(MaterialTheme.colorScheme.primary)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0x55000000),
-                            Color(0x00000000),
-                        ),
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .background(
+                            brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                            Color(0x55000000),
+                                            Color(0x00000000),
+                                    ),
+                            ),
                     ),
-                ),
         )
 
         // app name
         Text(
             modifier = Modifier
-                .padding(top = 32.dp)
-                .testTag("SETTINGS_HEADER_TITLE")
-                .fillMaxWidth(),
+                    .padding(top = 32.dp)
+                    .testTag("SETTINGS_HEADER_TITLE")
+                    .fillMaxWidth(),
             text = stringResource(id = R.string.app_name_full),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
@@ -187,10 +240,10 @@ internal fun SettingsHeader(
         // logo with status indicator
         AppLogo(
             modifier = Modifier
-                .padding(top = 125.dp)
-                .testTag("SETTINGS_HEADER_LOGO")
-                .fillMaxWidth()
-                .align(Alignment.Center),
+                    .padding(top = 125.dp)
+                    .testTag("SETTINGS_HEADER_LOGO")
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
             size = 150.dp,
             serverStatus = serverStatus,
         )
@@ -297,8 +350,8 @@ fun FormInput(
 
         TextField(
             modifier = Modifier
-                .padding(horizontal = 32.dp, vertical = 8.dp)
-                .fillMaxWidth(),
+                    .padding(horizontal = 32.dp, vertical = 8.dp)
+                    .fillMaxWidth(),
             value = text,
             onValueChange = {
                 text = it
@@ -336,10 +389,10 @@ fun SectionSpacer(
 ) {
     Box(
         modifier = modifier
-            .height(48.dp)
-            .background(
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.12f),
-            ),
+                .height(48.dp)
+                .background(
+                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.12f),
+                ),
     )
 }
 
@@ -361,8 +414,8 @@ fun AppVersionItem(
     ) {
         Row(
             modifier = Modifier
-                .semantics(mergeDescendants = true) {}
-                .padding(16.dp),
+                    .semantics(mergeDescendants = true) {}
+                    .padding(16.dp),
         ) {
             Text(
                 modifier = Modifier.weight(1f),

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_item_server_setup">Setup server</string>
+    <string name="settings_item_server_update">Server Setup ändern</string>
+    <string name="settings_copied_to_clipboard">Version kopiert</string>
+
+    <string name="feature_sharing_title">Foto teilen</string>
+    <string name="feature_sharing_description">Teile Fotos oder Alben mit der Familie, Freunden oder der Öffentlichkeit</string>
+    <string name="feature_backup_title">Datensicherung</string>
+    <string name="feature_backup_description">Behalte eine Kopie deiner Daten sicher in der Cloud um den Verlust des Geräts zu minimieren oder den begrenzten Speicherplatz zu umgehen.</string>
+    <string name="feature_image_analysis_title">Bilderkennung</string>
+    <string name="feature_image_analysis_description">Gewinne aussagekräftige Informationen aus deinen Fotos wie die Erkennung von Personen anhand ihrer Gesichter</string>
+
+    <string name="settings_features_pre">Um Funktionen wie</string>
+    <string name="settings_features_post">nutzen zu können, wird ein Benutzerkonto auf einem Photos.network Server benötigt.</string>
+</resources>
