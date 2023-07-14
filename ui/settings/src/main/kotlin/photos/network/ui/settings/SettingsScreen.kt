@@ -24,14 +24,18 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
@@ -106,10 +110,56 @@ fun SettingsScreen(
 
     Column(
         modifier = modifier
-            .verticalScroll(verticalScrollState)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .verticalScroll(verticalScrollState),
     ) {
         SettingsHeader(serverStatus = uiState.serverStatus)
+
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = stringResource(id = R.string.settings_features_pre),
+        )
+        val map = listOf(
+            stringResource(id = R.string.feature_sharing_title) to stringResource(id = R.string.feature_sharing_description),
+            stringResource(id = R.string.feature_backup_title) to stringResource(id = R.string.feature_backup_description),
+            stringResource(id = R.string.feature_image_analysis_title) to stringResource(id = R.string.feature_image_analysis_description),
+        )
+
+        Column(
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            map.forEach {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(start = 8.dp, end = 8.dp)
+                            .size(8.dp)
+                            .background(Color.Black, shape = CircleShape),
+                    )
+
+                    Text(
+                        text = it.first,
+                        style = MaterialTheme.typography.headlineMedium,
+                    )
+                }
+                Text(
+                    modifier = Modifier.padding(start = 24.dp),
+                    text = it.second,
+                )
+            }
+        }
+
+        Text(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 16.dp),
+            text = stringResource(id = R.string.settings_features_post),
+        )
+
+        Divider()
 
         ServerSetupItem(
             onServerSetupClicked = {
@@ -136,7 +186,7 @@ fun SettingsScreen(
             }
         }
 
-        SectionSpacer()
+        Spacer(modifier = Modifier.weight(1f))
 
         AppVersionItem(version = uiState.appVersion) {
             handleEvent(SettingsEvent.SetClipboardEvent)

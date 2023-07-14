@@ -1,5 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_item_server_setup">Setup server instance</string>
+    <string name="settings_item_server_setup">Setup server</string>
     <string name="settings_item_server_update">Change server setup</string>
     <string name="settings_copied_to_clipboard">Version copied into clipboard</string>
+
+    <string name="feature_sharing_title">Photo sharing</string>
+    <string name="feature_sharing_description">Share photos or albums with family, friends or public.</string>
+    <string name="feature_backup_title">Backup</string>
+    <string name="feature_backup_description">Keep a copy of your data safe in the cloud to mitigate the loss of the device or to bypass storage limits.</string>
+    <string name="feature_image_analysis_title">Image analysis</string>
+    <string name="feature_image_analysis_description">Extract meaningful informations from your photos like identifying a person from their face.</string>
+
+    <string name="settings_features_pre">To use features like</string>
+    <string name="settings_features_post">you need an account on any Photos.network server.</string>
 </resources>
