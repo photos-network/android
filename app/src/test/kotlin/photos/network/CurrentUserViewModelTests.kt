@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Photos.network developers
+ * Copyright 2020-2023 Photos.network developers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,22 @@ package photos.network
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
-import photos.network.domain.user.usecase.GetCurrentUserUseCase
+import photos.network.domain.sharing.usecase.GetCurrentUserUseCase
 
 class CurrentUserViewModelTests {
     @get:Rule
     var rule = InstantTaskExecutorRule()
-
-    @get:Rule
-    val coroutineRule = TestCoroutineDispatcherRule()
 
     private val getCurrentUserUseCase: GetCurrentUserUseCase = mockk<GetCurrentUserUseCase>()
 //    private val viewmodel by lazy { CurrentUserViewModel(getCurrentUserUseCase) }
 
     @Ignore
     @Test
-    fun `viewmodel should reflect the given user state from the use case`() {
+    fun `viewmodel should reflect the given user state from the use case`() = runTest {
         // given
 //        every { getCurrentUserUseCase() } answers { flowOf(null) }
 

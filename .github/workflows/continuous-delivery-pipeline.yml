@@ -135,16 +135,41 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Decode Android Keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1.1
+        with:
+          fileName: 'android_release.keystore'
+          encodedString: ${{ secrets.ANDROID_KEYSTORE }}
+
+      - name: Decode Gradle Play Publisher Credentials
+        id: decode_play_store_credentials
+        uses: timheuer/base64-to-file@v1.1
+        with:
+          fileName: 'gradle_playstore_publisher_credentials.json'
+          fileDir: './'
+          encodedString: ${{ secrets.PLAYSTORE_CREDENTIALS }}
+
       - name: Run debug unit tests
         run: |
-          ./gradlew --console=plain testDebugUnitTest --stacktrace
+          ./gradlew --console=plain koverMergedXmlReport --stacktrace
 
       - name: Upload test reports
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: tests
-          path: app/build/reports/tests
+          path: build/reports
+
+      - name: Add coverage report to PR
+        uses: mi-kas/kover-report@v1
+        with:
+          path: ${{ github.workspace }}/build/reports/kover/result.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: App Coverage
+          update-comment: true
+          min-coverage-overall: 20
+          min-coverage-changed-files: 50
 
   android_tests:
     name: Tests on Android (API level ${{ matrix.api-level }})
@@ -213,29 +238,6 @@ jobs:
         with:
           name: androidTests
           path: app/build/reports/androidTests
-
-      - name: Run testCoverage
-        run: ./gradlew --console=plain testCoverage --stacktrace
-
-      - name: Jacoco Report to PR
-        if: matrix.api-level == 29
-        id: jacoco
-        uses: madrapps/jacoco-report@v1.2
-        with:
-          paths: |
-            ${{ github.workspace }}/app/build/reports/jacoco/testCoverage/testCoverage.xml,
-            ${{ github.workspace }}/domain/build/reports/jacoco/testCoverage/testCoverage.xml,
-            ${{ github.workspace }}/data/build/reports/jacoco/testCoverage/testCoverage.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 1
-          min-coverage-changed-files: 10
-          title: Code Coverage
-          debug-mode: false
-
-      - name: Get the Coverage info
-        run: |
-          echo "Total coverage ${{ steps.jacoco.outputs.coverage-overall }}"
-          echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
 
   # upload an android bundle to google play store into the internal test track
   deployment:

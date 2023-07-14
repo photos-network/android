@@ -1,23 +1,21 @@
 import com.github.triplet.gradle.androidpublisher.ResolutionStrategy
 import com.github.triplet.gradle.androidpublisher.ReleaseStatus
-import de.fayard.refreshVersions.core.versionFor
 
 plugins {
-    id("com.android.application")
-    id("com.diffplug.spotless")
-    kotlin("android")
-    kotlin("kapt")
-    kotlin("plugin.serialization")
-    id("io.gitlab.arturbosch.detekt")
-    id("com.github.triplet.play")
-    id("org.ajoberstar.grgit")
-    id("jacoco")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.kover)
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.grgit)
+    alias(libs.plugins.triplet)
 }
 
 spotless {
     kotlin {
         target("src/*/kotlin/**/*.kt")
-        ktlint("0.43.2")
+        ktlint( libs.versions.ktlint.get())
         licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
     }
 }
@@ -41,75 +39,15 @@ play {
     releaseStatus.set(ReleaseStatus.COMPLETED)
 }
 
-jacoco {
-    toolVersion = "0.8.7"
-}
-
-project.afterEvaluate {
-    tasks.create<JacocoReport>(name = "testCoverage") {
-        dependsOn("testDebugUnitTest")
-        group = "Reporting"
-        description = "Generate jacoco coverage reports"
-
-        reports {
-            html.required.set(true)
-            xml.required.set(true)
-            csv.required.set(true)
-        }
-
-        val excludes = listOf<String>(
-            // android
-            "**/R.class",
-            "**/R$*.class",
-            "**/BuildConfig.*",
-            "**/Manifest*.*",
-            "**/*Test*.*",
-            "android/**/*.*",
-            // kotlin
-            "**/*MapperImpl*.*",
-            "**/*\$ViewInjector*.*",
-            "**/*\$ViewBinder*.*",
-            "**/BuildConfig.*",
-            "**/*Component*.*",
-            "**/*BR*.*",
-            "**/Manifest*.*",
-            "**/*\$Lambda$*.*",
-            "**/*Companion*.*",
-            "**/*Module*.*",
-            "**/*Dagger*.*",
-            "**/*Hilt*.*",
-            "**/*MembersInjector*.*",
-            "**/*_MembersInjector.class",
-            "**/*_Factory*.*",
-            "**/*_Provide*Factory*.*",
-            "**/*Extensions*.*",
-            // sealed and data classes
-            "**/*$Result.*",
-            "**/*$Result$*.*"
-        )
-
-        val kotlinClasses = fileTree(baseDir = "$buildDir/tmp/kotlin-classes/debug") {
-            exclude(excludes)
-        }
-
-        classDirectories.setFrom(kotlinClasses)
-
-        val androidTestData = fileTree(baseDir = "$buildDir/outputs/code_coverage/debugAndroidTest/connected/")
-
-        executionData(files(
-            "${project.buildDir}/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",
-            androidTestData
-        ))
-    }
-}
-
 // https://detekt.dev/gradle.html
 detekt {
     config = files("../detekt.yml")
 }
 
 android {
-    compileSdk = 33
+    namespace = "photos.network"
+
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
         applicationId = "photos.network"
         // API 21 | required by: security-crypto library
@@ -117,17 +55,11 @@ android {
         // API 24 | required by: networkSecurityConfig
         // API 26 | required by: Java 8 Time API
         minSdk = 26
-        targetSdk = 31
+        targetSdk = libs.versions.compileSdk.get().toInt()
         versionCode = grgit.log().size
         versionName = "0.1.0-${grgit.head().abbreviatedId}"
 
-        testInstrumentationRunner = "photos.network.PhotosNetworkJUnitRunner"
-    }
-
-    testCoverage {
-        // needed to force the jacoco version
-        jacocoVersion = "0.8.7"
-        version = "0.8.7"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -163,7 +95,6 @@ android {
                 "proguard-rules-debug.pro",
             )
             signingConfig = signingConfigs.getByName("debug")
-            isTestCoverageEnabled = true
         }
         release {
             isMinifyEnabled = true
@@ -182,34 +113,45 @@ android {
         resValues = false
         shaders = false
     }
+
     composeOptions {
-        kotlinCompilerExtensionVersion = versionFor(AndroidX.compose.compiler)
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
         freeCompilerArgs = freeCompilerArgs + "-Xallow-unstable-dependencies"
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=coil.annotation.ExperimentalCoilApi"
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.Experimental"
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi"
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi"
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi"
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi"
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api"
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=androidx.compose.ui.ExperimentalComposeUiApi"
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=com.google.accompanist.pager.ExperimentalPagerApi"
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=coil.annotation.ExperimentalCoilApi"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.Experimental"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlinx.serialization.ExperimentalSerializationApi"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=androidx.compose.animation.ExperimentalAnimationApi"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=androidx.compose.material.ExperimentalMaterialApi"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=com.google.accompanist.pager.ExperimentalPagerApi"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi"
     }
 
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
+
+            // Disable kover for non-debug builds
+            all {
+                it.extensions.configure(kotlinx.kover.api.KoverTaskExtension::class) {
+                    isDisabled.set(!it.name.contains("testDebug"))
+                }
+            }
         }
     }
 
@@ -222,58 +164,32 @@ android {
     }
 }
 
-repositories {
-    google()
-    mavenCentral()
-}
-
 dependencies {
-    api(project(":domain"))
-    testImplementation(project(":data", "testArtifacts"))
-    androidTestImplementation(project(":data", "androidTestArtifacts"))
+    implementation(projects.common)
+    testImplementation(project(":common", "testArtifacts"))
+    androidTestImplementation(project(":common", "androidTestArtifacts"))
 
-    // Compose
-    implementation(AndroidX.activity.compose)
-    implementation(AndroidX.compose.runtime.liveData)
-    implementation(AndroidX.compose.ui)
-    implementation(AndroidX.compose.material3)
-    implementation(AndroidX.compose.material)
-    implementation(AndroidX.compose.ui.toolingPreview)
-    implementation(AndroidX.navigation.compose)
-    implementation(AndroidX.constraintLayout.compose)
-    implementation(AndroidX.compose.material.icons.extended)
-    implementation(AndroidX.paging.compose)
-    implementation(AndroidX.paging.commonKtx)
-    androidTestApi(AndroidX.compose.ui.test)
-    androidTestApi(AndroidX.compose.ui.testJunit4)
-    debugImplementation(AndroidX.compose.ui.testManifest)
-    debugApi(AndroidX.compose.ui.tooling)
+    implementation(projects.ui.albums)
+    implementation(projects.ui.folders)
+    implementation(projects.ui.photos)
+    implementation(projects.ui.settings)
+    implementation(projects.ui.search)
+    implementation(projects.ui.sharing)
 
-    // accompanist
-    implementation(Google.accompanist.navigationAnimation)
-    implementation(Google.accompanist.systemUiController)
-    implementation(Google.accompanist.placeholder)
-    implementation(Google.accompanist.flowLayout)
-    implementation(Google.accompanist.insets)
-    implementation(Google.accompanist.pager)
-    implementation(Google.accompanist.swipeRefresh)
-    implementation(Google.accompanist.permissions)
+    implementation(projects.ui.common)
 
-    // design
-    implementation(Google.android.material)
+    // Compose Activity
+    implementation(platform(libs.compose.bom))
+    implementation(libs.activity.compose)
 
-    // Coil
-    implementation(COIL)
-    implementation(COIL.compose)
-
-    // retrofit
-    implementation(Square.retrofit2)
-    implementation(Square.okHttp3.loggingInterceptor)
-
-    // serialization
-    implementation(KotlinX.serialization.json)
-    implementation(JakeWharton.retrofit2.converter.kotlinxSerialization)
+    implementation(libs.bundles.accompanist)
+    implementation(libs.androidx.window)
+//    implementation(libs.androidx.window.core)
 
     // leakCanary
-    debugImplementation(Square.leakCanary.android)
+    debugImplementation(libs.leakcanary.android)
+
+    testImplementation(libs.core.testing)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

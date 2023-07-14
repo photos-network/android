@@ -1,0 +1,5 @@
+<resources>
+    <string name="settings_item_server_setup">Setup server instance</string>
+    <string name="settings_item_server_update">Change server setup</string>
+    <string name="settings_copied_to_clipboard">Version copied into clipboard</string>
+</resources>

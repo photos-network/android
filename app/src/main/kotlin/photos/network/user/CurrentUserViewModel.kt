@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Photos.network developers
+ * Copyright 2020-2023 Photos.network developers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 package photos.network.user
 
 import androidx.lifecycle.ViewModel
-import photos.network.data.user.repository.UserRepository
-import photos.network.domain.user.User
+import photos.network.repository.sharing.User
+import photos.network.repository.sharing.UserRepository
 
 class CurrentUserViewModel(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : ViewModel() {
     val currentUser: User?
         get() {

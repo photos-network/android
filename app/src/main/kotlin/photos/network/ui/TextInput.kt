@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Photos.network developers
+ * Copyright 2020-2023 Photos.network developers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import photos.network.theme.AppTheme
+import photos.network.ui.common.theme.AppTheme
 
 @Composable
 fun TextInput(
@@ -42,17 +42,17 @@ fun TextInput(
     labelColor: Color = MaterialTheme.colorScheme.secondary,
     valueColor: Color = MaterialTheme.colorScheme.secondary,
     errroColor: Color = MaterialTheme.colorScheme.error,
-    isValid: () -> (Boolean) = { true }
+    isValid: () -> (Boolean) = { true },
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         label?.let {
             Text(
                 modifier = Modifier.padding(all = 0.dp),
                 text = it,
                 style = MaterialTheme.typography.labelSmall,
-                color = labelColor
+                color = labelColor,
             )
         }
         BasicTextField(
@@ -61,17 +61,17 @@ fun TextInput(
                 .border(
                     BorderStroke(
                         1.dp,
-                        if (isValid()) valueColor else errroColor
-                    )
+                        if (isValid()) valueColor else errroColor,
+                    ),
                 )
                 .padding(horizontal = 8.dp),
             value = value,
             maxLines = 2,
             textStyle = TextStyle(
                 color = valueColor,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             ),
-            onValueChange = onValueChanged
+            onValueChange = onValueChanged,
         )
     }
 }
@@ -84,7 +84,7 @@ fun PreviewTextInput() {
             TextInput(
                 label = "Label",
                 value = "content",
-                onValueChanged = {}
+                onValueChanged = {},
             )
         }
     }

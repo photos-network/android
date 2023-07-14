@@ -1,0 +1,358 @@
+/*
+ * Copyright 2020-2023 Photos.network developers
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package photos.network.ui.photos
+
+import android.content.Context
+import android.content.Intent
+import android.content.res.Configuration
+import android.net.Uri
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.NotInterested
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.outlined.Shield
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import org.koin.androidx.compose.getViewModel
+import photos.network.api.ServerStatus
+import photos.network.ui.common.components.AppLogo
+import photos.network.ui.common.navigation.Destination
+import photos.network.ui.common.theme.AppTheme
+
+@Composable
+fun PhotosScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+) {
+    val viewmodel: PhotosViewModel = getViewModel()
+    val uiState = viewmodel.uiState.collectAsState().value
+
+    val permissionStateFiles =
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            rememberPermissionState(android.Manifest.permission.READ_MEDIA_IMAGES)
+        } else {
+            rememberPermissionState(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+
+    val permissionStateLocation =
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            rememberPermissionState(android.Manifest.permission.ACCESS_MEDIA_LOCATION)
+        } else {
+            rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+    Scaffold(
+        topBar = {
+            if (uiState.selectedPhoto == null) {
+                TopAppBar(
+                    title = {},
+                    modifier = Modifier,
+                    navigationIcon = {
+                        AppLogo(
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp)
+                                .clickable {
+                                    navController.navigate(Destination.Account.route)
+                                },
+                            size = 32.dp,
+                            statusSize = 16.dp,
+                            serverStatus = ServerStatus.UNAVAILABLE,
+                        )
+                    },
+                    actions = {
+                        IconButton(
+                            onClick = {
+                                viewmodel.handleEvent(PhotosEvent.TogglePrivacyEvent)
+                            },
+                        ) {
+                            if (uiState.isPrivacyEnabled) {
+                                Icon(
+                                    imageVector = Icons.Default.Shield,
+                                    contentDescription = stringResource(id = R.string.privacy_filter_enabled_description),
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Outlined.Shield,
+                                    contentDescription = stringResource(id = R.string.privacy_filter_disabled_description),
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                )
+                            }
+                        }
+                        IconButton(
+                            onClick = {
+                                navController.navigate(Destination.Search.route)
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = stringResource(id = R.string.open_search),
+                                tint = MaterialTheme.colorScheme.onPrimary,
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.smallTopAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                    ),
+                )
+            }
+        },
+    ) { innerPadding ->
+        Column(
+            modifier = modifier.padding(top = innerPadding.calculateTopPadding()),
+        ) {
+            val openFilesPermissionDialog = remember {
+                mutableStateOf(!permissionStateFiles.status.isGranted)
+            }
+            val openLocationPermissionDialog = remember {
+                mutableStateOf(!permissionStateLocation.status.isGranted)
+            }
+
+            if (openFilesPermissionDialog.value) {
+                AlertDialog(
+                    onDismissRequest = {
+                        // Dismiss the dialog when the user clicks outside the dialog or on the back
+                        // button. If you want to disable that functionality, simply use an empty
+                        // onCloseRequest.
+                        openFilesPermissionDialog.value = false
+                    },
+                    icon = {
+                        Icons.Filled.NotInterested
+                    },
+                    title = {
+                        Text(text = "Permission")
+                    },
+                    text = {
+                        Text(
+                            text = "To show images stored on this device, the permission to read external storage is mandatory.",
+                        )
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                permissionStateFiles.launchPermissionRequest()
+                                openFilesPermissionDialog.value = false
+                            },
+                        ) {
+                            Text("Grant access")
+                        }
+                    },
+                    dismissButton = {
+                        OutlinedButton(
+                            onClick = {
+                                openFilesPermissionDialog.value = false
+                            },
+                        ) {
+                            Text("Not now")
+                        }
+                    },
+                )
+            }
+
+            if (openLocationPermissionDialog.value && permissionStateFiles.status.isGranted) {
+                AlertDialog(
+                    onDismissRequest = {
+                        // Dismiss the dialog when the user clicks outside the dialog or on the back
+                        // button. If you want to disable that functionality, simply use an empty
+                        // onCloseRequest.
+                        openLocationPermissionDialog.value = false
+                    },
+                    icon = {
+                        Icons.Filled.NotInterested
+                    },
+                    title = {
+                        Text(text = "Permission")
+                    },
+                    text = {
+                        Text(
+                            text = "To show where an images was captured, the location permission is required.",
+                        )
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                permissionStateLocation.launchPermissionRequest()
+                                openLocationPermissionDialog.value = false
+                            },
+                        ) {
+                            Text("Grant access")
+                        }
+                    },
+                    dismissButton = {
+                        OutlinedButton(
+                            onClick = {
+                                openLocationPermissionDialog.value = false
+                            },
+                        ) {
+                            Text("Not now")
+                        }
+                    },
+                )
+            }
+
+            PhotosContent(
+                modifier = modifier.padding(top = innerPadding.calculateTopPadding()),
+                navController = navController,
+                uiState = uiState,
+                handleEvent = viewmodel::handleEvent,
+            )
+        }
+    }
+}
+
+/**
+ * Open app settings screen to adjust permissions
+ */
+private fun navigateToPermissionSettings(context: Context) {
+    val intent = Intent(
+        ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.parse("package:${context.packageName}"),
+    ).apply {
+        addCategory(Intent.CATEGORY_DEFAULT)
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    startActivity(context, intent, null)
+}
+
+@Composable
+fun PhotosContent(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+    uiState: PhotosUiState,
+    handleEvent: (event: PhotosEvent) -> Unit,
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { source, event ->
+            if (event == Lifecycle.Event.ON_PAUSE) {
+                // onPause
+                // TODO: stop observing media store
+            } else if (event == Lifecycle.Event.ON_RESUME) {
+                // onResume
+                handleEvent(PhotosEvent.StartLocalPhotoSyncEvent)
+                // TODO: start observing media store
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    BackHandler(enabled = true) {
+        handleEvent(PhotosEvent.SelectIndex(null))
+    }
+
+    if (uiState.isLoading) {
+        Text(
+            modifier = Modifier.testTag("LOADING_SPINNER"),
+            text = "Loading",
+        )
+    }
+
+    PhotoGrid(
+        modifier = modifier,
+        photos = uiState.photos,
+        selectedPhoto = uiState.selectedPhoto,
+        selectedIndex = uiState.selectedIndex,
+        onSelectItem = {
+            handleEvent(PhotosEvent.SelectIndex(it))
+        },
+        selectNextPhoto = {
+            handleEvent(PhotosEvent.SelectNextPhoto)
+        },
+        selectPreviousPhoto = {
+            handleEvent(PhotosEvent.SelectPreviousPhoto)
+        },
+    )
+}
+
+@Preview(
+    "Photos",
+    showSystemUi = true,
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+@Preview(
+    "Photos • Dark",
+    showSystemUi = true,
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+)
+@Composable
+private fun PreviewDashboard(
+    @PreviewParameter(PreviewPhotosProvider::class) uiState: PhotosUiState,
+) {
+    AppTheme {
+        PhotosContent(
+            uiState = uiState,
+            handleEvent = {},
+        )
+    }
+}
+
+internal class PreviewPhotosProvider : PreviewParameterProvider<PhotosUiState> {
+    override val values = sequenceOf(
+        PhotosUiState(photos = emptyList(), isLoading = true, hasError = false),
+        PhotosUiState(photos = emptyList(), isLoading = false, hasError = true),
+        PhotosUiState(
+//            photos = listOf(
+//                PhotoElement(
+//                    filename = "0L",
+//                    imageUrl = "",
+//                    dateAdded = Instant.parse("2022-01-01T13:37:00.123Z"),
+//                    dateTaken = Instant.parse("2022-01-01T13:37:00.123Z"),
+//                ),
+//            ),
+            isLoading = false,
+            hasError = false,
+        ),
+    )
+    override val count: Int = values.count()
+}

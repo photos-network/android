@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Photos.network developers
+ * Copyright 2020-2023 Photos.network developers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ class SearchContentProvider : PreviewParameterProvider<String> {
     showSystemUi = false,
     locale = "ar",
     uiMode = UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_4
+    device = Devices.PIXEL_4,
 )
 @Preview(name = "Day", locale = "ko-rKR", showSystemUi = false, device = Devices.PIXEL_4)
 @Preview(name = "Day, small screen", showSystemUi = true, device = Devices.NEXUS_5)
@@ -68,7 +68,7 @@ fun SearchViewPreview(@PreviewParameter(SearchContentProvider::class) search: St
             value = textState.value,
             onValueChange = { newTextFieldValue -> textState.value = newTextFieldValue },
             onSearch = {},
-            hint = stringResource(id = R.string.search_hint)
+            hint = stringResource(id = R.string.search_hint),
         )
     }
 }
@@ -84,12 +84,12 @@ fun Searchbar(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(
         imeAction = ImeAction.Search,
         keyboardType = KeyboardType.Text,
-        capitalization = KeyboardCapitalization.Sentences
+        capitalization = KeyboardCapitalization.Sentences,
     ),
     keyboardActions: KeyboardActions = KeyboardActions(onSearch = { onSearch() }),
 ) {
     Box(
-        modifier = modifier.testTag("Searchbar")
+        modifier = modifier.testTag("Searchbar"),
     ) {
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusManager = LocalFocusManager.current

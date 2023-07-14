@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Photos.network developers
+ * Copyright 2020-2023 Photos.network developers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,16 @@
  */
 package photos.network
 
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
@@ -28,25 +33,47 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.view.WindowCompat
-import androidx.navigation.NavHostController
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_SWIPE
+import androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+import androidx.window.layout.DisplayFeature
+import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import logcat.logcat
 import photos.network.home.Home
-import photos.network.navigation.Destination
-import photos.network.theme.AppTheme
+import photos.network.ui.common.theme.AppTheme
 import photos.network.user.CurrentUserHost
 
 /**
  * Main entry point, handling navigation events.
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+
         setContent {
-            PhotosApp()
+            PhotosApp(
+                windowSizeClass = calculateWindowSizeClass(this),
+                displayFeatures = calculateDisplayFeatures(this),
+            )
+        }
+    }
+
+    /**
+     * Handle specific configuration changes to prevent activity recreation in the Manifest.
+     */
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        // Checks whether a keyboard is available
+        if (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_YES) {
+            logcat { "Keyboard available" }
+        } else if (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_NO) {
+            logcat { "No Keyboard" }
         }
     }
 }
@@ -55,17 +82,23 @@ val LocalAppVersion = staticCompositionLocalOf { "Unknown" }
 
 @Composable
 fun PhotosApp(
-    startDestination: String = Destination.Home.route,
-    navController: NavHostController = rememberAnimatedNavController(),
     systemUiController: SystemUiController = rememberSystemUiController(),
+    windowSizeClass: WindowSizeClass,
+    displayFeatures: List<DisplayFeature>,
 ) {
     val useDarkIcons = !isSystemInDarkTheme()
 
     SideEffect {
         systemUiController.setSystemBarsColor(
             color = Color.Transparent,
-            darkIcons = useDarkIcons
+            darkIcons = useDarkIcons,
         )
+        systemUiController.isStatusBarVisible = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            systemUiController.systemBarsBehavior = BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        } else {
+            systemUiController.systemBarsBehavior = BEHAVIOR_SHOW_BARS_BY_SWIPE
+        }
     }
 
     CompositionLocalProvider(LocalAppVersion provides BuildConfig.VERSION_NAME) {
@@ -73,7 +106,9 @@ fun PhotosApp(
             CurrentUserHost {
                 Home(
                     modifier = Modifier.fillMaxSize(),
-                    orientation = LocalConfiguration.current.orientation
+                    orientation = LocalConfiguration.current.orientation,
+                    windowSizeClass = windowSizeClass,
+                    displayFeatures = displayFeatures,
                 )
             }
         }

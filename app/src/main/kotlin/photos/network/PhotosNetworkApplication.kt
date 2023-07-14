@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Photos.network developers
+ * Copyright 2020-2023 Photos.network developers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,28 @@ import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
-import photos.network.data.BuildConfig
-import photos.network.data.dataModule
-import photos.network.domain.domainModule
+import photos.network.api.apiModule
+import photos.network.database.photos.databasePhotosModule
+import photos.network.database.settings.databaseSettingsModule
+import photos.network.database.sharing.databaseSharingModule
+import photos.network.domain.albums.domainAlbumsModule
+import photos.network.domain.folders.domainFoldersModule
+import photos.network.domain.photos.domainPhotosModule
+import photos.network.domain.search.domainSearchModule
+import photos.network.domain.settings.domainSettingsModule
+import photos.network.domain.sharing.domainSharingModule
+import photos.network.repository.folders.repositoryFoldersModule
+import photos.network.repository.photos.repositoryPhotosModule
+import photos.network.repository.settings.repositorySettingsModule
+import photos.network.repository.sharing.repositorySharingModule
+import photos.network.system.filesystem.systemFilesystemModule
+import photos.network.system.mediastore.systemMediastoreModule
+import photos.network.ui.albums.uiAlbumsModule
+import photos.network.ui.folders.uiFoldersModule
+import photos.network.ui.photos.uiPhotosModule
+import photos.network.ui.search.uiSearchModule
+import photos.network.ui.settings.uiSettingsModule
+import photos.network.ui.sharing.uiSharingModule
 
 /**
  * Android Application subclass to manually initialize logging and dependency injection.
@@ -38,7 +57,7 @@ open class PhotosNetworkApplication : Application(), KoinComponent {
         // setup logging
         AndroidLogcatLogger.installOnDebuggableApp(
             this@PhotosNetworkApplication,
-            minPriority = LogPriority.VERBOSE
+            minPriority = LogPriority.VERBOSE,
         )
 
         // setup dependency injection
@@ -54,10 +73,44 @@ open class PhotosNetworkApplication : Application(), KoinComponent {
             // use modules
             modules(
                 listOf(
-                    dataModule,
-                    domainModule,
                     appModule,
-                )
+
+                    // albums
+                    uiAlbumsModule,
+                    domainAlbumsModule,
+
+                    // folders
+                    uiFoldersModule,
+                    domainFoldersModule,
+                    repositoryFoldersModule,
+
+                    // photos
+                    uiPhotosModule,
+                    domainPhotosModule,
+                    repositoryPhotosModule,
+                    databasePhotosModule,
+
+                    // settings
+                    uiSettingsModule,
+                    domainSettingsModule,
+                    repositorySettingsModule,
+                    databaseSettingsModule,
+
+                    // sharing
+                    uiSharingModule,
+                    domainSharingModule,
+                    repositorySharingModule,
+                    databaseSharingModule,
+
+                    // search
+                    uiSearchModule,
+                    domainSearchModule,
+
+                    apiModule,
+
+                    systemFilesystemModule,
+                    systemMediastoreModule,
+                ),
             )
         }
     }
