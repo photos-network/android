@@ -1,0 +1,1 @@
+A gallery app with focus on privacy and if used with a self-hosted photos.network server extended functionality like photo sharing, backup or image analysis.
