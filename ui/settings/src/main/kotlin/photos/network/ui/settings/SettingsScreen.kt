@@ -70,9 +70,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.getViewModel
 import photos.network.api.ServerStatus
+import photos.network.ui.common.ReferenceDevices
 import photos.network.ui.common.components.AppLogo
 import photos.network.ui.common.navigation.Destination
 import photos.network.ui.common.theme.AppTheme
+import photos.network.ui.settings.composable.ServerSetupItem
+import photos.network.ui.settings.composable.SettingsHeader
 
 /**
  * stateful
@@ -110,6 +113,7 @@ fun SettingsScreen(
 
     Column(
         modifier = modifier
+            .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
             .verticalScroll(verticalScrollState),
     ) {
@@ -118,6 +122,7 @@ fun SettingsScreen(
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),
             text = stringResource(id = R.string.settings_features_pre),
+            color = MaterialTheme.colorScheme.onBackground
         )
         val map = listOf(
             stringResource(id = R.string.feature_sharing_title) to stringResource(id = R.string.feature_sharing_description),
@@ -137,17 +142,19 @@ fun SettingsScreen(
                         modifier = Modifier
                             .padding(start = 8.dp, end = 8.dp)
                             .size(8.dp)
-                            .background(Color.Black, shape = CircleShape),
+                            .background(MaterialTheme.colorScheme.onBackground, shape = CircleShape),
                     )
 
                     Text(
                         text = it.first,
                         style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
                 Text(
                     modifier = Modifier.padding(start = 24.dp),
                     text = it.second,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
@@ -157,6 +164,7 @@ fun SettingsScreen(
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 16.dp),
             text = stringResource(id = R.string.settings_features_post),
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         Divider()
@@ -193,143 +201,6 @@ fun SettingsScreen(
         }
 
         // ActivityLog()
-    }
-}
-
-@Suppress("MagicNumber")
-@Composable
-internal fun SettingsHeader(
-    modifier: Modifier = Modifier,
-    serverStatus: ServerStatus,
-) {
-    // header + icon
-    Box(
-        modifier = modifier.background(MaterialTheme.colorScheme.surface),
-    ) {
-        // header gradient
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .background(MaterialTheme.colorScheme.primary)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0x55000000),
-                            Color(0x00000000),
-                        ),
-                    ),
-                ),
-        )
-
-        // app name
-        Text(
-            modifier = Modifier
-                .padding(top = 32.dp)
-                .testTag("SETTINGS_HEADER_TITLE")
-                .fillMaxWidth(),
-            text = stringResource(id = R.string.app_name_full),
-            style = MaterialTheme.typography.headlineLarge,
-            textAlign = TextAlign.Center,
-            color = Color.White,
-        )
-
-        // logo with status indicator
-        AppLogo(
-            modifier = Modifier
-                .padding(top = 125.dp)
-                .testTag("SETTINGS_HEADER_LOGO")
-                .fillMaxWidth()
-                .align(Alignment.Center),
-            size = 150.dp,
-            serverStatus = serverStatus,
-        )
-    }
-}
-
-@Composable
-fun ServerSetupItem(
-    modifier: Modifier = Modifier,
-    isExpanded: Boolean = false,
-    serverHost: String = "",
-    onServerHostUpdated: (String) -> Unit = {},
-    isHostVerified: Boolean = false,
-    clientId: String = "",
-    onClientIdUpdated: (String) -> Unit = {},
-    isClientIdVerified: Boolean = false,
-    serverStatus: ServerStatus = ServerStatus.UNAVAILABLE,
-    onServerSetupClicked: () -> Unit = {},
-) {
-    val serverSetupLabel = if (serverStatus != ServerStatus.AVAILABLE) {
-        stringResource(id = R.string.settings_item_server_setup)
-    } else {
-        stringResource(id = R.string.settings_item_server_update)
-    }
-    Surface(
-        modifier = modifier
-            .clickable(
-                onClickLabel = serverSetupLabel,
-            ) {
-                onServerSetupClicked()
-            },
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp),
-        ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = serverSetupLabel,
-            )
-            if (isExpanded) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = null,
-                )
-            } else {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowRight,
-                    contentDescription = null,
-                )
-            }
-        }
-    }
-
-    Column {
-        // server host
-        AnimatedVisibility(
-            visible = isExpanded,
-            enter = fadeIn(animationSpec = tween(durationMillis = 1000)) + expandVertically(),
-            exit = shrinkVertically(animationSpec = tween(durationMillis = 500, delayMillis = 0)),
-        ) {
-            FormInput(
-                modifier = modifier,
-                label = "Host",
-                value = serverHost,
-                hint = "https://",
-                onValueChanged = {
-                    onServerHostUpdated(it)
-                },
-                showTrailingIcon = isHostVerified,
-            )
-        }
-
-        // client id
-        AnimatedVisibility(
-            visible = isExpanded && isHostVerified,
-            enter = fadeIn(animationSpec = tween(durationMillis = 1000)) + expandVertically(),
-            exit = shrinkVertically(animationSpec = tween(durationMillis = 500, delayMillis = 0)),
-        ) {
-            FormInput(
-                modifier = modifier,
-                label = "Client ID",
-                value = clientId,
-                onValueChanged = {
-                    onClientIdUpdated(it)
-                },
-                showTrailingIcon = isClientIdVerified,
-            )
-        }
     }
 }
 
@@ -456,20 +327,9 @@ fun AccountSetupItem(
     }
 }
 
-@Preview(
-    "Account",
-    showSystemUi = true,
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-)
-@Preview(
-    "Account • Dark",
-    showSystemUi = true,
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-)
+@ReferenceDevices
 @Composable
-private fun PreviewAccount(
+private fun Settings(
     @PreviewParameter(PreviewAccountProvider::class) uiState: SettingsUiState,
 ) {
     AppTheme {
