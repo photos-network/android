@@ -15,13 +15,8 @@
  */
 package photos.network.ui.settings
 
-import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -40,8 +35,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -55,14 +48,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -71,7 +60,6 @@ import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.getViewModel
 import photos.network.api.ServerStatus
 import photos.network.ui.common.ReferenceDevices
-import photos.network.ui.common.components.AppLogo
 import photos.network.ui.common.navigation.Destination
 import photos.network.ui.common.theme.AppTheme
 import photos.network.ui.settings.composable.ServerSetupItem
@@ -122,7 +110,7 @@ fun SettingsScreen(
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),
             text = stringResource(id = R.string.settings_features_pre),
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onBackground,
         )
         val map = listOf(
             stringResource(id = R.string.feature_sharing_title) to stringResource(id = R.string.feature_sharing_description),
@@ -148,13 +136,13 @@ fun SettingsScreen(
                     Text(
                         text = it.first,
                         style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
                 }
                 Text(
                     modifier = Modifier.padding(start = 24.dp),
                     text = it.second,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
             }
         }
@@ -164,7 +152,7 @@ fun SettingsScreen(
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 16.dp),
             text = stringResource(id = R.string.settings_features_post),
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onBackground,
         )
 
         Divider()
