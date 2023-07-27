@@ -179,7 +179,7 @@ fun SettingsScreen(
 @ReferenceDevices
 @Composable
 private fun Settings(
-    @PreviewParameter(PreviewAccountProvider::class) uiState: SettingsUiState,
+    @PreviewParameter(SettingsUiStateProvider::class) uiState: SettingsUiState,
 ) {
     AppTheme {
         SettingsScreen(
@@ -189,15 +189,25 @@ private fun Settings(
     }
 }
 
-internal class PreviewAccountProvider : PreviewParameterProvider<SettingsUiState> {
+internal class SettingsUiStateProvider : PreviewParameterProvider<SettingsUiState> {
     override val values = sequenceOf(
         SettingsUiState(
             serverStatus = ServerStatus.UNAVAILABLE,
             isServerSetupExpanded = true,
+            host = "https://demo.photos.network",
             isHostVerified = true,
+            appVersion = "1.0.0",
         ),
-        SettingsUiState(serverStatus = ServerStatus.PROGRESS, isServerSetupExpanded = true),
-        SettingsUiState(serverStatus = ServerStatus.AVAILABLE, isServerSetupExpanded = true),
+        SettingsUiState(
+            serverStatus = ServerStatus.PROGRESS,
+            isServerSetupExpanded = false,
+            appVersion = "1.0.0",
+        ),
+        SettingsUiState(
+            serverStatus = ServerStatus.AVAILABLE,
+            isServerSetupExpanded = false,
+            appVersion = "1.0.0",
+        ),
     )
     override val count: Int = values.count()
 }
