@@ -99,7 +99,7 @@ private fun Header(
         SettingsHeader(serverStatus = status)
     }
 }
-private class ServerStatusProvider : PreviewParameterProvider<ServerStatus> {
+internal class ServerStatusProvider : PreviewParameterProvider<ServerStatus> {
     override val values = sequenceOf(
         ServerStatus.AVAILABLE,
         ServerStatus.PROGRESS,

@@ -33,8 +33,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import photos.network.api.ServerStatus
+import photos.network.ui.common.ReferenceDevices
+import photos.network.ui.common.theme.AppTheme
 import photos.network.ui.settings.FormInput
 import photos.network.ui.settings.R
 
@@ -56,70 +59,92 @@ fun ServerSetupItem(
     } else {
         stringResource(id = R.string.settings_item_server_update)
     }
-    Surface(
-        modifier = modifier
-            .clickable(
-                onClickLabel = serverSetupLabel,
-            ) {
-                onServerSetupClicked()
-            },
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp),
+    Column {
+        Surface(
+            modifier = modifier
+                .clickable(
+                    onClickLabel = serverSetupLabel,
+                ) {
+                    onServerSetupClicked()
+                },
         ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = serverSetupLabel,
-            )
-            if (isExpanded) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = null,
+            Row(
+                modifier = Modifier
+                    .padding(16.dp),
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = serverSetupLabel,
                 )
-            } else {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowRight,
-                    contentDescription = null,
+                if (isExpanded) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = null,
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowRight,
+                        contentDescription = null,
+                    )
+                }
+            }
+        }
+
+        Column {
+            // server host
+            AnimatedVisibility(
+                visible = isExpanded,
+                enter = fadeIn(animationSpec = tween(durationMillis = 1000)) + expandVertically(),
+                exit = shrinkVertically(
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        delayMillis = 0,
+                    ),
+                ),
+            ) {
+                FormInput(
+                    modifier = modifier,
+                    label = "Host",
+                    value = serverHost,
+                    hint = "https://",
+                    onValueChanged = {
+                        onServerHostUpdated(it)
+                    },
+                    showTrailingIcon = isHostVerified,
+                )
+            }
+
+            // client id
+            AnimatedVisibility(
+                visible = isExpanded && isHostVerified,
+                enter = fadeIn(animationSpec = tween(durationMillis = 1000)) + expandVertically(),
+                exit = shrinkVertically(
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        delayMillis = 0,
+                    ),
+                ),
+            ) {
+                FormInput(
+                    modifier = modifier,
+                    label = "Client ID",
+                    value = clientId,
+                    onValueChanged = {
+                        onClientIdUpdated(it)
+                    },
+                    showTrailingIcon = isClientIdVerified,
                 )
             }
         }
     }
+}
 
-    Column {
-        // server host
-        AnimatedVisibility(
-            visible = isExpanded,
-            enter = fadeIn(animationSpec = tween(durationMillis = 1000)) + expandVertically(),
-            exit = shrinkVertically(animationSpec = tween(durationMillis = 500, delayMillis = 0)),
-        ) {
-            FormInput(
-                modifier = modifier,
-                label = "Host",
-                value = serverHost,
-                hint = "https://",
-                onValueChanged = {
-                    onServerHostUpdated(it)
-                },
-                showTrailingIcon = isHostVerified,
-            )
-        }
-
-        // client id
-        AnimatedVisibility(
-            visible = isExpanded && isHostVerified,
-            enter = fadeIn(animationSpec = tween(durationMillis = 1000)) + expandVertically(),
-            exit = shrinkVertically(animationSpec = tween(durationMillis = 500, delayMillis = 0)),
-        ) {
-            FormInput(
-                modifier = modifier,
-                label = "Client ID",
-                value = clientId,
-                onValueChanged = {
-                    onClientIdUpdated(it)
-                },
-                showTrailingIcon = isClientIdVerified,
-            )
-        }
+@ReferenceDevices
+@Composable
+private fun ServerSetupItem(
+    @PreviewParameter(ServerStatusProvider::class) status: ServerStatus,
+) {
+    AppTheme {
+        ServerSetupItem(serverStatus = status)
     }
 }
