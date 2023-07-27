@@ -3,6 +3,9 @@
     <string name="settings_item_server_setup">Setup server</string>
     <string name="settings_item_server_update">Change server setup</string>
     <string name="settings_copied_to_clipboard">Version copied into clipboard</string>
+    <string name="settings_item_app_version">App version</string>
+    <string name="settings_account_login">Open user login</string>
+    <string name="settings_account_logout">Logout user</string>
 
     <string name="feature_sharing_title">Photo sharing</string>
     <string name="feature_sharing_description">Share photos or albums with family, friends or public.</string>

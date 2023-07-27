@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.kover)
     alias(libs.plugins.spotless)
+    alias(libs.plugins.paparazzi)
 }
 
 spotless {

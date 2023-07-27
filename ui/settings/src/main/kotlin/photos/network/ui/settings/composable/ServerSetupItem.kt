@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
@@ -37,8 +38,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import photos.network.api.ServerStatus
 import photos.network.ui.common.ReferenceDevices
+import photos.network.ui.common.components.FormInput
 import photos.network.ui.common.theme.AppTheme
-import photos.network.ui.settings.FormInput
 import photos.network.ui.settings.R
 
 @Composable
@@ -110,7 +111,11 @@ fun ServerSetupItem(
                     onValueChanged = {
                         onServerHostUpdated(it)
                     },
-                    showTrailingIcon = isHostVerified,
+                    trailingIcon = if (isHostVerified) {
+                        Icons.Default.Check
+                    } else {
+                        null
+                    },
                 )
             }
 
@@ -132,7 +137,11 @@ fun ServerSetupItem(
                     onValueChanged = {
                         onClientIdUpdated(it)
                     },
-                    showTrailingIcon = isClientIdVerified,
+                    trailingIcon = if (isClientIdVerified) {
+                        Icons.Default.Check
+                    } else {
+                        null
+                    },
                 )
             }
         }
