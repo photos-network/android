@@ -15,44 +15,27 @@
  */
 package photos.network.ui.settings
 
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -63,6 +46,8 @@ import photos.network.api.ServerStatus
 import photos.network.ui.common.ReferenceDevices
 import photos.network.ui.common.navigation.Destination
 import photos.network.ui.common.theme.AppTheme
+import photos.network.ui.settings.composable.AccountSetupItem
+import photos.network.ui.settings.composable.AppVersionItem
 import photos.network.ui.settings.composable.ServerSetupItem
 import photos.network.ui.settings.composable.SettingsHeader
 
@@ -187,134 +172,6 @@ fun SettingsScreen(
 
         AppVersionItem(version = uiState.appVersion) {
             handleEvent(SettingsEvent.SetClipboardEvent)
-        }
-
-        // ActivityLog()
-    }
-}
-
-@Composable
-fun FormInput(
-    modifier: Modifier = Modifier,
-    label: String = "",
-    value: String = "",
-    onValueChanged: (String) -> Unit = {},
-    hint: String = "",
-    showTrailingIcon: Boolean = false,
-) {
-    Surface(modifier = modifier) {
-        var text by remember { mutableStateOf(value) }
-
-        TextField(
-            modifier = Modifier
-                .padding(horizontal = 32.dp, vertical = 8.dp)
-                .fillMaxWidth(),
-            value = text,
-            onValueChange = {
-                text = it
-                onValueChanged(it)
-            },
-            enabled = true,
-            readOnly = false,
-            textStyle = MaterialTheme.typography.bodyMedium,
-            label = {
-                Text(label)
-            },
-            placeholder = {
-                Text(text = hint)
-            },
-            leadingIcon = null,
-            trailingIcon = {
-                if (showTrailingIcon) {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        tint = Color(0xFF4CAF50),
-                        contentDescription = null,
-                    )
-                }
-            },
-            isError = false,
-            singleLine = true,
-            maxLines = 1,
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = MaterialTheme.colorScheme.onBackground,
-            ),
-        )
-    }
-}
-
-@Composable
-fun SectionSpacer(
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier = modifier
-            .height(48.dp)
-            .background(
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.12f),
-            ),
-    )
-}
-
-@Composable
-fun AppVersionItem(
-    modifier: Modifier = Modifier,
-    version: String = "",
-    onAppVersionClicked: () -> Unit,
-) {
-    val context = LocalContext.current
-    Surface(
-        modifier = modifier
-            .clickable {
-                onAppVersionClicked()
-                Toast
-                    .makeText(context, R.string.settings_copied_to_clipboard, Toast.LENGTH_SHORT)
-                    .show()
-            },
-    ) {
-        Row(
-            modifier = Modifier
-                .semantics(mergeDescendants = true) {}
-                .padding(16.dp),
-        ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = "App Version",
-            )
-            Text(
-                text = version,
-            )
-        }
-    }
-}
-
-@Composable
-fun AccountSetupItem(
-    modifier: Modifier = Modifier,
-    loggedIn: Boolean = false,
-    onAccountSetupClicked: () -> Unit = {},
-) {
-    val clickLabel: String = if (loggedIn) {
-        "Logout user"
-    } else {
-        "Open user login"
-    }
-    Surface(
-        modifier = modifier
-            .clickable(
-                onClickLabel = clickLabel,
-            ) {
-                onAccountSetupClicked()
-            },
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp),
-        ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = clickLabel,
-            )
         }
     }
 }
