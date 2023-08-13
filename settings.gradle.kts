@@ -16,11 +16,10 @@ pluginManagement {
     }
 
     plugins {
-        kotlin("android").version("1.8.10")
-        id("com.android.application").version("7.4.0")
-        id("com.android.library").version("7.4.0")
-        // kotlin("kapt").version("1.8.10")
-        id("com.google.devtools.ksp").version("1.8.10-1.0.9")
+        kotlin("android").version("1.9.0")
+        id("com.android.application").version("8.1.0")
+        id("com.android.library").version("8.1.0")
+        id("com.google.devtools.ksp").version("1.9.0-1.0.13")
     }
 }
 
