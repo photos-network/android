@@ -42,7 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.google.accompanist.insets.LocalWindowInsets
-import photos.network.R
 
 class SearchContentProvider : PreviewParameterProvider<String> {
     override val values = sequenceOf("Searchphrase", "")
@@ -68,7 +67,7 @@ fun SearchViewPreview(@PreviewParameter(SearchContentProvider::class) search: St
             value = textState.value,
             onValueChange = { newTextFieldValue -> textState.value = newTextFieldValue },
             onSearch = {},
-            hint = stringResource(id = R.string.search_hint),
+            hint = stringResource(id = photos.network.ui.common.R.string.search_hint),
         )
     }
 }
@@ -79,7 +78,7 @@ fun Searchbar(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     onSearch: () -> Unit = {},
-    hint: String = stringResource(id = R.string.search_hint),
+    hint: String = stringResource(id = photos.network.ui.common.R.string.search_hint),
     maxLength: Int = 200,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(
         imeAction = ImeAction.Search,

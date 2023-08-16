@@ -71,7 +71,7 @@ internal fun SettingsHeader(
                 .padding(top = 24.dp)
                 .testTag("SETTINGS_HEADER_TITLE")
                 .fillMaxWidth(),
-            text = stringResource(id = R.string.app_name_full),
+            text = stringResource(id = photos.network.ui.common.R.string.app_name_full),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
             color = Color.White,

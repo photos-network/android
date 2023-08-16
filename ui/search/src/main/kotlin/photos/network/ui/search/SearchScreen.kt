@@ -115,7 +115,7 @@ internal fun SearchHeader(
                 .padding(top = 32.dp)
                 .testTag("SEARCH_HEADER_TITLE")
                 .fillMaxWidth(),
-            text = stringResource(id = R.string.app_name_full),
+            text = stringResource(id = photos.network.ui.common.R.string.app_name_full),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
             color = Color.White,
