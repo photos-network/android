@@ -42,10 +42,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
-          java-version: 11
+          distribution: 'adopt'
+          java-version: 17
 
       - name: Decode Gradle Play Publisher Credentials
         id: decode_play_store_credentials
