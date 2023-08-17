@@ -298,7 +298,12 @@ jobs:
           KEY_ALIAS: ${{ secrets.ANDROID_KEYSTORE_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}
           ANDROID_JSON_KEY_FILE: './gradle_playstore_publisher_credentials.json'
-
+      - name: Set up ruby env
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.2
+          bundler-cache: true
+      
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:

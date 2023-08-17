@@ -1,11 +1,6 @@
 name: Promote release version within Google Play
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - '*'
   workflow_dispatch:
     inputs:
       fromTrack:
