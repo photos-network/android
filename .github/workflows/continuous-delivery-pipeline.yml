@@ -286,6 +286,11 @@ jobs:
           fileDir: './'
           encodedString: ${{ secrets.PLAYSTORE_CREDENTIALS }}
 
+      - name: Set versionCode to git count
+        run: |
+          export versionCode=$(git rev-list --first-parent --count HEAD)
+          sed -i -d "s/versionCode = 999/versionCode = $versionCode/g" app/build.gradle.kts
+
       - name: Build release bundle
         run: |
           ./gradlew --console=plain -PreleaseKeystore=${{ steps.decode_keystore.outputs.filePath }} -PreleaseStorePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} -PreleaseKeyAlias=${{ secrets.ANDROID_KEYSTORE_KEY_ALIAS }} -PreleaseKeyPassword=${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }} app:bundle

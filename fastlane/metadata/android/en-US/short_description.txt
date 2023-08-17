@@ -1,1 +1,1 @@
-Photos.network is a privacy first, photo gallery which can be extended by a self-hosted photo storage and sharing service.
+Photos.network is a privacy first, photo gallery with an opt self-hosted backend
