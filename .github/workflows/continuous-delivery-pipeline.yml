@@ -289,7 +289,7 @@ jobs:
       - name: Set versionCode to git count
         run: |
           export versionCode=$(git rev-list --first-parent --count HEAD)
-          sed -i -d "s/versionCode = 999/versionCode = $versionCode/g" app/build.gradle.kts
+          sed -i "s/versionCode = 999/versionCode = $versionCode/g" app/build.gradle.kts
 
       - name: Build release bundle
         run: |
