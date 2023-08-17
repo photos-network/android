@@ -39,8 +39,9 @@ android {
         // API 26 | required by: Java 8 Time API
         minSdk = 26
         targetSdk = libs.versions.compileSdk.get().toInt()
-        versionCode = grgit.log().size
-        versionName = "0.1.0-${grgit.head().abbreviatedId}"
+        // versionCode will be set manually on each release
+        versionCode = 9999
+        versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -63,7 +64,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
-            versionNameSuffix = "-DEBUG"
+            versionNameSuffix = "-${grgit.head().abbreviatedId}"
             isMinifyEnabled = !gradle.startParameter.taskNames.any { it.contains("AndroidTest") }
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
