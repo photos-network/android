@@ -1,6 +1,3 @@
-import com.github.triplet.gradle.androidpublisher.ResolutionStrategy
-import com.github.triplet.gradle.androidpublisher.ReleaseStatus
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,7 +6,6 @@ plugins {
     alias(libs.plugins.kover)
     alias(libs.plugins.spotless)
     alias(libs.plugins.grgit)
-    alias(libs.plugins.triplet)
 }
 
 spotless {
@@ -25,19 +21,6 @@ val releaseKeystore: String by project
 val releaseStorePassword: String by project
 val releaseKeyAlias: String by project
 val releaseKeyPassword: String by project
-
-// deployment
-play {
-    // publishing will be enabled for release flavor only
-    enabled.set(false)
-
-    serviceAccountCredentials.set(rootProject.file("gradle_playstore_publisher_credentials.json"))
-    defaultToAppBundles.set(true)
-
-    promoteTrack.set("alpha")
-    resolutionStrategy.set(ResolutionStrategy.AUTO)
-    releaseStatus.set(ReleaseStatus.COMPLETED)
-}
 
 // https://detekt.dev/gradle.html
 detekt {
@@ -74,13 +57,6 @@ android {
             storePassword = releaseStorePassword
             keyAlias = releaseKeyAlias
             keyPassword = releaseKeyPassword
-        }
-    }
-
-    (this as ExtensionAware).extensions.configure<
-            NamedDomainObjectContainer<com.github.triplet.gradle.play.PlayPublisherExtension>>("playConfigs") {
-        register("release") {
-            enabled.set(true)
         }
     }
 
