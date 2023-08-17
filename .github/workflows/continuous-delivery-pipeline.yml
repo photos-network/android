@@ -295,6 +295,12 @@ jobs:
         run: |
           ./gradlew --console=plain -PreleaseKeystore=${{ steps.decode_keystore.outputs.filePath }} -PreleaseStorePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} -PreleaseKeyAlias=${{ secrets.ANDROID_KEYSTORE_KEY_ALIAS }} -PreleaseKeyPassword=${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }} app:bundle
 
+      - name: Set up ruby env
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.2
+          bundler-cache: true
+
       - name: Publish release bundle
         run: bundle exec fastlane android deploy
         env:
@@ -303,11 +309,6 @@ jobs:
           KEY_ALIAS: ${{ secrets.ANDROID_KEYSTORE_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}
           ANDROID_JSON_KEY_FILE: './gradle_playstore_publisher_credentials.json'
-      - name: Set up ruby env
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7.2
-          bundler-cache: true
       
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
