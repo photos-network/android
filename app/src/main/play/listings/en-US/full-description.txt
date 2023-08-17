@@ -1,7 +1,0 @@
-Photos.network is an open source project for self hosted photo management.
-
-Its core features are:
-
-    Keep track of your photos with privacy
-    Share photos and albums with friends, family or with public
-    Search for photos by attributes like location or objects
