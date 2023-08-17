@@ -291,5 +291,17 @@ jobs:
           ./gradlew --console=plain -PreleaseKeystore=${{ steps.decode_keystore.outputs.filePath }} -PreleaseStorePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} -PreleaseKeyAlias=${{ secrets.ANDROID_KEYSTORE_KEY_ALIAS }} -PreleaseKeyPassword=${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }} app:bundle
 
       - name: Publish release bundle
-        run: |
-          ./gradlew --console=plain app:publishBundle --artifact-dir app/build/outputs/bundle/release/app-release.aab
+        run: bundle exec fastlane android deploy
+        env:
+          KEYSTORE_FILE: ${{ steps.decode_keystore.outputs.filePath }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEYSTORE_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}
+          ANDROID_JSON_KEY_FILE: './gradle_playstore_publisher_credentials.json'
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: assets
+          path: |
+            ${{ github.workspace }}/app/build/outputs/bundle/release
