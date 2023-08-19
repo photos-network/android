@@ -308,7 +308,7 @@ jobs:
           ./gradlew --console=plain -PreleaseKeystore=${{ steps.decode_keystore.outputs.filePath }} -PreleaseStorePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} -PreleaseKeyAlias=${{ secrets.ANDROID_KEYSTORE_KEY_ALIAS }} -PreleaseKeyPassword=${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }} app:bundle
 
       - name: Publish release bundle
-        run: fastlane android deploy
+        run: fastlane android deploy --verbose
         env:
           KEYSTORE_FILE: ${{ steps.decode_keystore.outputs.filePath }}
           STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
