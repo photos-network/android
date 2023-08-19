@@ -24,12 +24,16 @@ platform :android do
   desc "Deploy a new version to the Google Play"
   lane :deploy do
     upload_to_play_store(
-      track: "alpha",
+      release_status: "inProgress",
+      track: "beta",
+      rollout: "1",
       skip_upload_apk: true,
       skip_upload_metadata: true,
       skip_upload_changelogs: true,
       skip_upload_images: true,
-      skip_upload_screenshots: true
+      skip_upload_screenshots: true,
+      changes_not_sent_for_review: true,
+      ack_bundle_installation_warning: true
     )
   end
 end

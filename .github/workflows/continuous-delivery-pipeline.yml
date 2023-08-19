@@ -76,7 +76,7 @@ jobs:
           ./gradlew --console=plain detekt
 
       - name: Upload detekt reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: detekt
           path: app/build/reports/detekt/
@@ -112,7 +112,7 @@ jobs:
           ./gradlew --console=plain lint
 
       - name: Upload lint reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: lint
           path: |
@@ -149,14 +149,14 @@ jobs:
 
       - name: Decode Android Keystore
         id: decode_keystore
-        uses: timheuer/base64-to-file@v1.1
+        uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'android_release.keystore'
           encodedString: ${{ secrets.ANDROID_KEYSTORE }}
 
       - name: Decode Gradle Play Publisher Credentials
         id: decode_play_store_credentials
-        uses: timheuer/base64-to-file@v1.1
+        uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'gradle_playstore_publisher_credentials.json'
           fileDir: './'
@@ -249,7 +249,7 @@ jobs:
 
       - name: Upload artifact
         if: always()
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: androidTests
           path: app/build/reports/androidTests
@@ -285,14 +285,14 @@ jobs:
 
       - name: Decode Android Keystore
         id: decode_keystore
-        uses: timheuer/base64-to-file@v1.1
+        uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'android_release.keystore'
           encodedString: ${{ secrets.ANDROID_KEYSTORE }}
 
       - name: Decode Gradle Play Publisher Credentials
         id: decode_play_store_credentials
-        uses: timheuer/base64-to-file@v1.1
+        uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'gradle_playstore_publisher_credentials.json'
           fileDir: './'
@@ -317,7 +317,7 @@ jobs:
           ANDROID_JSON_KEY_FILE: './gradle_playstore_publisher_credentials.json'
       
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: assets
           path: |

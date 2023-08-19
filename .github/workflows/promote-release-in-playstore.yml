@@ -35,7 +35,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -50,6 +52,11 @@ jobs:
           fileName: 'gradle_playstore_publisher_credentials.json'
           encodedString: ${{ secrets.ANDROID_KEYSTORE }}
 
-      - name: Promote release artifact
-        run: |
-          ./gradlew --console=plain app:promoteArtifact --from-track ${{ github.event.inputs.fromTrack }} --promote-track ${{ github.event.inputs.promoteTrack }} --user-fraction ${{ github.event.inputs.userFraction }}
+      - name: Publish release bundle
+        run: fastlane android promote --track_promote_to ${{ github.event.inputs.promoteTrack }} --rollout ${{ github.event.inputs.userFraction }}
+        env:
+          KEYSTORE_FILE: ${{ steps.decode_keystore.outputs.filePath }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEYSTORE_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}
+          ANDROID_JSON_KEY_FILE: './gradle_playstore_publisher_credentials.json'
