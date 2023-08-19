@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -27,7 +29,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Cache between builds
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -46,7 +48,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -58,7 +62,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Cache between builds
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -83,7 +87,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -92,7 +98,7 @@ jobs:
           java-version: 17
 
       - name: Cache between builds
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -121,7 +127,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -130,7 +138,7 @@ jobs:
           java-version: 17
 
       - name: Cache between builds
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -187,7 +195,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -196,7 +206,7 @@ jobs:
           java-version: 17
 
       - name: Cache between builds
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -206,7 +216,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: AVD cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: avd-cache
         with:
           path: |
@@ -253,7 +263,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -262,7 +274,7 @@ jobs:
           java-version: 17
 
       - name: Cache between builds
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
