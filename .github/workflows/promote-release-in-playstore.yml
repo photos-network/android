@@ -10,16 +10,18 @@ on:
         type: choice
         options:
           - internal
+          - open_beta
           - alpha
           - beta
           - production
       promoteTrack:
         description: 'Track to which to promote a release'
         required: true
-        default: 'alpha'
+        default: 'open_beta'
         type: choice
         options:
           - internal
+          - open_beta
           - alpha
           - beta
           - production
@@ -27,7 +29,12 @@ on:
         description: 'percentage of users who will receive a staged release'
         required: false
         default: '0.25'
-        type: environment
+        type: choice
+        options:
+          - "0.25"
+          - "0.5"
+          - "0.75"
+          - "1.0"
 
 jobs:
   promote:
