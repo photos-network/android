@@ -25,6 +25,7 @@ val uiPhotosModule = module {
             togglePrivacyStateUseCase = get(),
             getPhotosUseCase = get(),
             startPhotosSyncUseCase = get(),
+            getFacesUseCase = get(),
         )
     }
 }

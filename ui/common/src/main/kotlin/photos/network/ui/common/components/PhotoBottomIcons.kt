@@ -22,19 +22,26 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import photos.network.ui.common.theme.AppTheme
 
 @Composable
 fun PhotoBottomIcons(
     modifier: Modifier = Modifier,
+    icon: ImageVector = Icons.Filled.Delete,
     onIconClicked: () -> Unit = {},
 ) {
     Row(modifier = modifier) {
         IconButton(
             onClick = { onIconClicked() },
         ) {
-            Icon(Icons.Filled.Delete, null)
+            Icon(
+                icon,
+                null,
+                tint = Color.LightGray
+            )
         }
     }
 }

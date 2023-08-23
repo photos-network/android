@@ -64,6 +64,8 @@ dependencies {
     implementation(projects.api)
     api(projects.database.photos)
 
+    implementation(libs.tensorflow.android)
+
     testImplementation(libs.mockk)
     testImplementation(libs.junit.junit)
     testImplementation(libs.truth)

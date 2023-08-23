@@ -22,7 +22,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import logcat.LogPriority
+import logcat.logcat
 import photos.network.common.persistence.PrivacyState
+import photos.network.domain.photos.usecase.GetFacesUseCase
 import photos.network.domain.photos.usecase.GetPhotosUseCase
 import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
 import photos.network.domain.settings.usecase.GetSettingsUseCase
@@ -33,6 +36,7 @@ class PhotosViewModel(
     private val togglePrivacyStateUseCase: TogglePrivacyUseCase,
     private val getPhotosUseCase: GetPhotosUseCase,
     private val startPhotosSyncUseCase: StartPhotosSyncUseCase,
+    private val getFacesUseCase: GetFacesUseCase,
 ) : ViewModel() {
     val uiState = MutableStateFlow(PhotosUiState())
 
@@ -53,6 +57,11 @@ class PhotosViewModel(
             PhotosEvent.TogglePrivacyEvent -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     togglePrivacyStateUseCase()
+                }
+            }
+            PhotosEvent.ToggleFaces -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    uiState.update { it.copy(showFaces = !it.showFaces) }
                 }
             }
         }
@@ -135,6 +144,19 @@ class PhotosViewModel(
                 uiState.value.photos[index]
             } else {
                 null
+            }
+
+            logcat(LogPriority.ERROR) { "uri:${photo?.uri}" }
+
+            photo?.uri?.let { uri ->
+                getFacesUseCase(uri).collect { boxes ->
+                    logcat(LogPriority.ERROR) { "boxes:${boxes.size}" }
+                    withContext(Dispatchers.Main) {
+                        uiState.update {
+                            it.copy(faces = boxes)
+                        }
+                    }
+                }
             }
             withContext(Dispatchers.Main) {
                 uiState.update {

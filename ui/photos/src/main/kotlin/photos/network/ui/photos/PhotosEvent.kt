@@ -21,4 +21,5 @@ sealed interface PhotosEvent {
     class SelectIndex(val index: Int?) : PhotosEvent
     object SelectNextPhoto : PhotosEvent
     object SelectPreviousPhoto : PhotosEvent
+    object ToggleFaces : PhotosEvent
 }

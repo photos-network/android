@@ -16,6 +16,7 @@
 package photos.network.ui.photos
 
 import photos.network.repository.photos.Photo
+import photos.network.repository.photos.model.Box
 
 data class PhotosUiState(
     val isLoading: Boolean = true,
@@ -26,4 +27,6 @@ data class PhotosUiState(
     val photos: List<Photo> = emptyList(),
     val selectedPhoto: Photo? = null,
     val selectedIndex: Int? = null,
+    val showFaces: Boolean = false,
+    val faces: List<Box> = emptyList()
 )

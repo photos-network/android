@@ -301,6 +301,8 @@ fun PhotosContent(
         photos = uiState.photos,
         selectedPhoto = uiState.selectedPhoto,
         selectedIndex = uiState.selectedIndex,
+        showFaces = uiState.showFaces,
+        faces = uiState.faces,
         onSelectItem = {
             handleEvent(PhotosEvent.SelectIndex(it))
         },
@@ -310,6 +312,9 @@ fun PhotosContent(
         selectPreviousPhoto = {
             handleEvent(PhotosEvent.SelectPreviousPhoto)
         },
+        onToggleFaces = {
+            handleEvent(PhotosEvent.ToggleFaces)
+        }
     )
 }
 

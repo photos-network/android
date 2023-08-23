@@ -16,6 +16,7 @@
 package photos.network.domain.photos
 
 import org.koin.dsl.module
+import photos.network.domain.photos.usecase.GetFacesUseCase
 import photos.network.domain.photos.usecase.GetPhotoUseCase
 import photos.network.domain.photos.usecase.GetPhotosUseCase
 import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
@@ -25,6 +26,12 @@ val domainPhotosModule = module {
         GetPhotosUseCase(
             photoRepository = get(),
             settingsRepository = get(),
+        )
+    }
+
+    factory {
+        GetFacesUseCase(
+            photoRepository = get()
         )
     }
 

@@ -15,6 +15,8 @@
  */
 package photos.network.repository.photos
 
+import android.content.Context
+import android.content.res.AssetManager
 import androidx.work.WorkManager
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.workmanager.dsl.worker
@@ -51,10 +53,16 @@ val repositoryPhotosModule = module {
 
     single<PhotoRepository> {
         PhotoRepositoryImpl(
+            application = get(),
             photoApi = get(),
             photoDao = get(),
             workManager = get(),
             mediaStore = get(),
+            assetManager = provideAssetManager(context = get())
         )
     }
+}
+
+fun provideAssetManager(context: Context): AssetManager {
+    return context.assets
 }
