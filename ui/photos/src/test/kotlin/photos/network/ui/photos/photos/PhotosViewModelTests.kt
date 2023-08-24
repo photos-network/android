@@ -53,7 +53,7 @@ class PhotosViewModelTests {
             togglePrivacyStateUseCase = togglePrivacyUseCase,
             getPhotosUseCase = getPhotosUseCase,
             startPhotosSyncUseCase = startPhotosSyncUseCase,
-            getFacesUseCase = getFacesUseCase
+            getFacesUseCase = getFacesUseCase,
         )
     }
     private val photo1 = Photo(
