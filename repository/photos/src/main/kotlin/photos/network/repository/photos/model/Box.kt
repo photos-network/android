@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020-2023 Photos.network developers
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package photos.network.repository.photos.model
 
 import kotlin.math.max
@@ -7,11 +22,13 @@ class Box internal constructor() {
     // box[1] = top
     // box[2] = right
     // box[3] = bottom
-    var box : IntArray = IntArray(4)
-    var score = 0f //probability
+    var box: IntArray = IntArray(4)
+    var score = 0f // probability
+
     // bounding box regression
     var bbr: FloatArray = FloatArray(4)
     var deleted = false
+
     // ONet output
     var landmark: Array<Landmark?> = arrayOfNulls(5)
 

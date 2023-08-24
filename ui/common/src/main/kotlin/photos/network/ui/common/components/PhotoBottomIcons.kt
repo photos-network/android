@@ -40,7 +40,7 @@ fun PhotoBottomIcons(
             Icon(
                 icon,
                 null,
-                tint = Color.LightGray
+                tint = Color.LightGray,
             )
         }
     }

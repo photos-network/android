@@ -44,7 +44,7 @@ class PhotoRepositoryImpl(
     private val photoApi: PhotoApi,
     private val photoDao: PhotoDao,
     private val workManager: WorkManager,
-    private val assetManager: AssetManager
+    private val assetManager: AssetManager,
 ) : PhotoRepository {
     // TODO: user should be able to define the required network type in the app settings.
     private val constraints = Constraints.Builder()
@@ -123,7 +123,7 @@ class PhotoRepositoryImpl(
 
             val faces = MTCNN(assetManager).detectFaces(
                 bitmap,
-                40
+                40,
             )
 
             emit(faces.map { box -> box })

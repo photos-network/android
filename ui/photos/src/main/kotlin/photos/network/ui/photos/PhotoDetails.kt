@@ -18,10 +18,8 @@ package photos.network.ui.photos
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,7 +37,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import photos.network.repository.photos.Photo
@@ -57,7 +54,7 @@ fun PhotoDetails(
     onSelectItem: (index: Int?) -> Unit,
     showFaces: Boolean = false,
     faces: List<Box> = emptyList(),
-    onToggleFaces: () -> Unit
+    onToggleFaces: () -> Unit,
 ) {
     val data = if (selectedPhoto.uri != null) {
         selectedPhoto.uri
@@ -97,8 +94,8 @@ fun PhotoDetails(
                         block = fun ImageRequest.Builder.() {
                             crossfade(true)
                             placeholder(R.drawable.image_placeholder)
-                        }
-                    ).build()
+                        },
+                    ).build(),
             ),
             contentDescription = null,
         )
@@ -110,7 +107,7 @@ fun PhotoDetails(
                         topLeft = Offset(face.left.toFloat() + 35, face.top.toFloat() + 640),
                         color = Color.Green,
                         size = Size(face.width.toFloat(), face.height.toFloat()),
-                        style = Stroke(1.0f)
+                        style = Stroke(1.0f),
                     )
                 }
             }

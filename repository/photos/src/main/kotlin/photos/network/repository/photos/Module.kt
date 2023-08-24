@@ -58,7 +58,7 @@ val repositoryPhotosModule = module {
             photoDao = get(),
             workManager = get(),
             mediaStore = get(),
-            assetManager = provideAssetManager(context = get())
+            assetManager = provideAssetManager(context = get()),
         )
     }
 }

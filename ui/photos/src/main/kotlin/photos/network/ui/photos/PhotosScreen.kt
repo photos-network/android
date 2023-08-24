@@ -314,7 +314,7 @@ fun PhotosContent(
         },
         onToggleFaces = {
             handleEvent(PhotosEvent.ToggleFaces)
-        }
+        },
     )
 }
 

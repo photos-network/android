@@ -28,5 +28,5 @@ data class PhotosUiState(
     val selectedPhoto: Photo? = null,
     val selectedIndex: Int? = null,
     val showFaces: Boolean = false,
-    val faces: List<Box> = emptyList()
+    val faces: List<Box> = emptyList(),
 )

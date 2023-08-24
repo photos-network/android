@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020-2023 Photos.network developers
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package photos.network.repository.photos
 
 import android.content.res.AssetManager
@@ -16,8 +31,8 @@ import photos.network.repository.photos.model.Box
 import photos.network.repository.photos.model.Landmark
 import java.util.Vector
 import kotlin.math.ceil
-import kotlin.math.min
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
@@ -154,21 +169,21 @@ class MTCNN internal constructor(
         for (i in 0 until num) {
             cropAndResize(bitmap, boxes[i], 24, curCrop)
             flipDiagonal(curCrop, 24, 24, 3)
-            //Log.i(TAG,"[*]Pixels values:"+curCrop[0]+" "+curCrop[1]);
+            // Log.i(TAG,"[*]Pixels values:"+curCrop[0]+" "+curCrop[1]);
             for (j in curCrop.indices) RNetIn[RNetInIdx++] = curCrop[j]
         }
 
-        //Run RNet
+        // Run RNet
         runRNetForward(RNetIn, boxes)
 
-        //RNetThreshold
+        // RNetThreshold
         for (i in 0 until num) {
             if (boxes[i].score < thresholdRNet) {
                 boxes[i].deleted = true
             }
         }
 
-        //Nms
+        // Nms
         nonMaximumSuppression(boxes, 0.7f, "Union")
 
         boundingBoxReggression(boxes)
@@ -195,10 +210,10 @@ class MTCNN internal constructor(
             for (j in curCrop.indices) ONetIn[ONetInIdx++] = curCrop[j]
         }
 
-        //Run ONet
+        // Run ONet
         runONetForward(ONetIn, boxes)
 
-        //ONetThreshold
+        // ONetThreshold
         for (i in 0 until num) {
             if (boxes[i].score < thresholdONet) {
                 boxes[i].deleted = true
@@ -207,7 +222,7 @@ class MTCNN internal constructor(
 
         boundingBoxReggression(boxes)
 
-        //Nms
+        // Nms
         nonMaximumSuppression(boxes, 0.7f, "Min")
 
         return updateBoxes(boxes)
@@ -217,13 +232,13 @@ class MTCNN internal constructor(
     private fun runPNetForward(
         bitmap: Bitmap,
         outProbPNet: Array<FloatArray>,
-        outBiasPNet: Array<Array<FloatArray>>
+        outBiasPNet: Array<Array<FloatArray>>,
     ): Int {
         val w = bitmap.width
         val h = bitmap.height
         val PNetIn = normalizeImage(bitmap)
 
-        flipDiagonal(PNetIn, h, w, 3) //Flip along the diagonal
+        flipDiagonal(PNetIn, h, w, 3) // Flip along the diagonal
 
         inferenceInterface!!.feed(PNetInName, PNetIn, 1, w.toLong(), h.toLong(), 3)
         inferenceInterface!!.run(PNetOutName, false)
@@ -236,7 +251,7 @@ class MTCNN internal constructor(
         inferenceInterface!!.fetch(PNetOutName[0], PNetOutP)
         inferenceInterface!!.fetch(PNetOutName[1], PNetOutB)
 
-        //[Writing 1] Flip first, then convert to a 2/3 dimensional array
+        // [Writing 1] Flip first, then convert to a 2/3 dimensional array
         flipDiagonal(PNetOutP, PNetOutSizeW, PNetOutSizeH, 2)
         flipDiagonal(PNetOutB, PNetOutSizeW, PNetOutSizeH, 4)
         expand(PNetOutB, outBiasPNet)
@@ -290,9 +305,9 @@ class MTCNN internal constructor(
 
         // convert
         for (i in 0 until num) {
-            //prob
+            // prob
             boxes[i].score = ONetP[i * 2 + 1]
-            //bias
+            // bias
             for (j in 0..3) {
                 boxes[i].bbr[j] = ONetB[i * 4 + j]
             }
@@ -363,7 +378,7 @@ class MTCNN internal constructor(
      */
     private fun bitmapResize(
         bitmap: Bitmap,
-        scale: Float
+        scale: Float,
     ): Bitmap {
         val width = bitmap.width
         val height = bitmap.height
@@ -379,7 +394,7 @@ class MTCNN internal constructor(
             /* width = */ width,
             /* height = */ height,
             /* m = */ matrix,
-            /* filter = */ true
+            /* filter = */ true,
         )
     }
 
@@ -439,7 +454,7 @@ class MTCNN internal constructor(
         bias: Array<Array<FloatArray>>,
         scale: Float,
         threshold: Float,
-        boxes: Vector<Box>
+        boxes: Vector<Box>,
     ) {
         val h = prob.size
         val w = prob[0].size
@@ -447,25 +462,25 @@ class MTCNN internal constructor(
             (0 until w).forEach { x ->
                 val score = prob[y][x]
 
-                //only accept prob >threadshold(0.6 here)
+                // only accept prob >threadshold(0.6 here)
                 if (score > threshold) {
                     val box = Box()
 
-                    //score
+                    // score
                     box.score = score
 
-                    //box
+                    // box
                     box.box[0] = (x * 2 / scale).roundToInt()
                     box.box[1] = (y * 2 / scale).roundToInt()
                     box.box[2] = ((x * 2 + 11) / scale).roundToInt()
                     box.box[3] = ((y * 2 + 11) / scale).roundToInt()
 
-                    //bbr
+                    // bbr
                     (0..3).forEach { i ->
                         box.bbr[i] = bias[y][x][i]
                     }
 
-                    //add
+                    // add
                     boxes.addElement(box)
                 }
             }
@@ -491,7 +506,7 @@ class MTCNN internal constructor(
             box.width,
             box.height,
             matrix,
-            true
+            true,
         )
 
         // save
