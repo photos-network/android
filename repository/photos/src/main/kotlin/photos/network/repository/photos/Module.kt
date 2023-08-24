@@ -53,7 +53,6 @@ val repositoryPhotosModule = module {
 
     single<PhotoRepository> {
         PhotoRepositoryImpl(
-            application = get(),
             photoApi = get(),
             photoDao = get(),
             workManager = get(),

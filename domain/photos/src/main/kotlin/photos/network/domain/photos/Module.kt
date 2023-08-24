@@ -31,6 +31,7 @@ val domainPhotosModule = module {
 
     factory {
         GetFacesUseCase(
+            application = get(),
             photoRepository = get(),
         )
     }

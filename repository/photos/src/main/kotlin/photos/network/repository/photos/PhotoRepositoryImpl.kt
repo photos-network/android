@@ -15,10 +15,8 @@
  */
 package photos.network.repository.photos
 
-import android.app.Application
 import android.content.res.AssetManager
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
@@ -39,7 +37,6 @@ import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 class PhotoRepositoryImpl(
-    private val application: Application,
     private val mediaStore: MediaStore,
     private val photoApi: PhotoApi,
     private val photoDao: PhotoDao,
@@ -115,11 +112,9 @@ class PhotoRepositoryImpl(
         photoDao.insertAll(photos = arrayOf(photo.toDatabasePhoto()))
     }
 
-    override fun getFaces(photoUri: Uri): Flow<List<Box>> {
+    override fun getFaces(bitmap: Bitmap): Flow<List<Box>> {
         return flow {
             emit(emptyList())
-
-            val bitmap: Bitmap = android.provider.MediaStore.Images.Media.getBitmap(application.contentResolver, photoUri)
 
             val faces = MTCNN(assetManager).detectFaces(
                 bitmap,

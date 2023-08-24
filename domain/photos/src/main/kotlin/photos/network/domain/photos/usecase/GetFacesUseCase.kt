@@ -15,15 +15,20 @@
  */
 package photos.network.domain.photos.usecase
 
+import android.app.Application
+import android.graphics.Bitmap
 import android.net.Uri
+import android.provider.MediaStore
 import kotlinx.coroutines.flow.Flow
 import photos.network.repository.photos.PhotoRepository
 import photos.network.repository.photos.model.Box
 
 class GetFacesUseCase(
+    private val application: Application,
     private val photoRepository: PhotoRepository,
 ) {
     operator fun invoke(photoUri: Uri): Flow<List<Box>> {
-        return photoRepository.getFaces(photoUri = photoUri)
+        val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(application.contentResolver, photoUri)
+        return photoRepository.getFaces(bitmap = bitmap)
     }
 }
