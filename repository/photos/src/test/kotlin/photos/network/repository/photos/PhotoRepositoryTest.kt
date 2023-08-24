@@ -15,7 +15,7 @@
  */
 package photos.network.repository.photos
 
-import android.content.Context
+import android.content.res.AssetManager
 import androidx.work.WorkManager
 import com.google.common.truth.Truth
 import io.mockk.every
@@ -33,7 +33,7 @@ import photos.network.system.mediastore.MediaStore
  */
 class PhotoRepositoryTest {
 
-    private val applicationContext = mockk<Context>()
+    private val assetManager = mockk<AssetManager>()
     private val photoApi = mockk<PhotoApi>()
     private val photoDao = mockk<PhotoDao>()
     private val mediaStore = mockk<MediaStore>()
@@ -45,6 +45,7 @@ class PhotoRepositoryTest {
             photoDao = photoDao,
             workManager = workManager,
             mediaStore = mediaStore,
+            assetManager = assetManager,
         )
     }
 

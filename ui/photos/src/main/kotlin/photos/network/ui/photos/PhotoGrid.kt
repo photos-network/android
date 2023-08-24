@@ -44,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import photos.network.repository.photos.Photo
+import photos.network.repository.photos.model.Box
 import photos.network.ui.common.theme.AppTheme
 import java.time.Instant
 import java.time.ZoneOffset
@@ -52,11 +53,14 @@ import java.time.ZoneOffset
 fun PhotoGrid(
     modifier: Modifier = Modifier,
     photos: List<Photo>,
+    showFaces: Boolean = false,
+    faces: List<Box> = emptyList(),
     selectedIndex: Int? = null,
     selectedPhoto: Photo? = null,
     onSelectItem: (index: Int?) -> Unit,
     selectPreviousPhoto: () -> Unit = {},
     selectNextPhoto: () -> Unit = {},
+    onToggleFaces: () -> Unit = {},
 ) {
     val lazyListState = rememberLazyGridState()
 
@@ -86,6 +90,9 @@ fun PhotoGrid(
                     selectPreviousPhoto = selectPreviousPhoto,
                     selectedPhoto = selectedPhoto,
                     onSelectItem = onSelectItem,
+                    showFaces = showFaces,
+                    faces = faces,
+                    onToggleFaces = onToggleFaces,
                 )
             } else {
                 LazyVerticalGrid(

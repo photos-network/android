@@ -32,6 +32,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import photos.network.domain.photos.usecase.GetFacesUseCase
 import photos.network.domain.photos.usecase.GetPhotosUseCase
 import photos.network.domain.photos.usecase.StartPhotosSyncUseCase
 import photos.network.domain.settings.usecase.GetSettingsUseCase
@@ -45,12 +46,14 @@ class PhotosViewModelTests {
     private val togglePrivacyUseCase = mockk<TogglePrivacyUseCase>()
     private val getPhotosUseCase = mockk<GetPhotosUseCase>()
     private val startPhotosSyncUseCase = mockk<StartPhotosSyncUseCase>()
+    private val getFacesUseCase = mockk<GetFacesUseCase>()
     private val viewmodel by lazy {
         photos.network.ui.photos.PhotosViewModel(
             getSettingsUseCase = getSettingsUseCase,
             togglePrivacyStateUseCase = togglePrivacyUseCase,
             getPhotosUseCase = getPhotosUseCase,
             startPhotosSyncUseCase = startPhotosSyncUseCase,
+            getFacesUseCase = getFacesUseCase,
         )
     }
     private val photo1 = Photo(

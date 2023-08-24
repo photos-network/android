@@ -15,7 +15,9 @@
  */
 package photos.network.repository.photos
 
+import android.graphics.Bitmap
 import kotlinx.coroutines.flow.Flow
+import photos.network.repository.photos.model.Box
 import photos.network.repository.photos.worker.SyncStatus
 
 interface PhotoRepository {
@@ -23,6 +25,8 @@ interface PhotoRepository {
 
     fun getPhotos(): Flow<List<Photo>>
     fun getPhoto(identifier: String): Flow<Photo?>
+
+    fun getFaces(bitmap: Bitmap): Flow<List<Box>>
 
     suspend fun addPhoto(photo: Photo)
 }

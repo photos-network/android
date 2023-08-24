@@ -41,7 +41,7 @@ android {
         targetSdk = libs.versions.compileSdk.get().toInt()
         // versionCode will be set manually on each release
         versionCode = 9999
-        versionName = "0.1.0"
+        versionName = "0.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

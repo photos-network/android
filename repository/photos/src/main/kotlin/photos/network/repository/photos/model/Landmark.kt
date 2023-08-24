@@ -13,20 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.ui.photos
+package photos.network.repository.photos.model
 
-import photos.network.repository.photos.Photo
-import photos.network.repository.photos.model.Box
+import android.graphics.PointF
 
-data class PhotosUiState(
-    val isLoading: Boolean = true,
-    val hasError: Boolean = false,
-    val hasImagePermission: Boolean = false,
-    val hasLocationPermission: Boolean = false,
-    val isPrivacyEnabled: Boolean = false,
-    val photos: List<Photo> = emptyList(),
-    val selectedPhoto: Photo? = null,
-    val selectedIndex: Int? = null,
-    val showFaces: Boolean = false,
-    val faces: List<Box> = emptyList(),
+data class Landmark(
+    val eyebrows: PointF,
+    val eyes: PointF,
+    val nose: PointF,
+    val mouth: PointF,
+    val jawline: PointF,
 )

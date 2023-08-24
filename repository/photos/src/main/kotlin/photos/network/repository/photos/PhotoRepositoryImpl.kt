@@ -15,17 +15,21 @@
  */
 package photos.network.repository.photos
 
+import android.content.res.AssetManager
+import android.graphics.Bitmap
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
 import logcat.LogPriority
 import logcat.logcat
 import photos.network.api.photo.PhotoApi
 import photos.network.database.photos.PhotoDao
+import photos.network.repository.photos.model.Box
 import photos.network.repository.photos.worker.SyncLocalPhotosWorker
 import photos.network.repository.photos.worker.SyncStatus
 import photos.network.system.mediastore.MediaStore
@@ -37,6 +41,7 @@ class PhotoRepositoryImpl(
     private val photoApi: PhotoApi,
     private val photoDao: PhotoDao,
     private val workManager: WorkManager,
+    private val assetManager: AssetManager,
 ) : PhotoRepository {
     // TODO: user should be able to define the required network type in the app settings.
     private val constraints = Constraints.Builder()
@@ -105,5 +110,18 @@ class PhotoRepositoryImpl(
 
     override suspend fun addPhoto(photo: Photo) {
         photoDao.insertAll(photos = arrayOf(photo.toDatabasePhoto()))
+    }
+
+    override fun getFaces(bitmap: Bitmap): Flow<List<Box>> {
+        return flow {
+            emit(emptyList())
+
+            val faces = MTCNN(assetManager).detectFaces(
+                bitmap,
+                40,
+            )
+
+            emit(faces.map { box -> box })
+        }
     }
 }

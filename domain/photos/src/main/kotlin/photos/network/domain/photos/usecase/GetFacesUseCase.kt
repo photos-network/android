@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package photos.network.ui.photos
+package photos.network.domain.photos.usecase
 
-import photos.network.repository.photos.Photo
+import android.app.Application
+import android.graphics.Bitmap
+import android.net.Uri
+import android.provider.MediaStore
+import kotlinx.coroutines.flow.Flow
+import photos.network.repository.photos.PhotoRepository
 import photos.network.repository.photos.model.Box
 
-data class PhotosUiState(
-    val isLoading: Boolean = true,
-    val hasError: Boolean = false,
-    val hasImagePermission: Boolean = false,
-    val hasLocationPermission: Boolean = false,
-    val isPrivacyEnabled: Boolean = false,
-    val photos: List<Photo> = emptyList(),
-    val selectedPhoto: Photo? = null,
-    val selectedIndex: Int? = null,
-    val showFaces: Boolean = false,
-    val faces: List<Box> = emptyList(),
-)
+class GetFacesUseCase(
+    private val application: Application,
+    private val photoRepository: PhotoRepository,
+) {
+    operator fun invoke(photoUri: Uri): Flow<List<Box>> {
+        val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(application.contentResolver, photoUri)
+        return photoRepository.getFaces(bitmap = bitmap)
+    }
+}
