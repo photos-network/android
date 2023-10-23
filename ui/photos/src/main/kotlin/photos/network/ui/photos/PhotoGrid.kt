@@ -16,9 +16,12 @@
 package photos.network.ui.photos
 
 import android.icu.text.DateFormatSymbols
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,19 +31,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import photos.network.repository.photos.Photo
@@ -62,7 +73,7 @@ fun PhotoGrid(
     selectNextPhoto: () -> Unit = {},
     onToggleFaces: () -> Unit = {},
 ) {
-    val lazyListState = rememberLazyGridState()
+    val lazyGridState = rememberLazyGridState()
 
     if (photos.isEmpty()) {
         Column(
@@ -96,10 +107,11 @@ fun PhotoGrid(
                 )
             } else {
                 LazyVerticalGrid(
-                    state = lazyListState,
+                    state = lazyGridState,
                     modifier = modifier
                         .fillMaxSize()
-                        .padding(4.dp),
+                        .padding(4.dp)
+                        .simpleVerticalScrollbar(lazyGridState),
                     columns = GridCells.Adaptive(90.dp),
                 ) {
                     // group by year
@@ -194,5 +206,37 @@ internal fun PreviewPhotoGrid() {
             photos = list,
             onSelectItem = {},
         )
+    }
+}
+
+fun Modifier.simpleVerticalScrollbar(
+    state: LazyGridState,
+    width: Dp = 8.dp
+): Modifier = composed {
+    val targetAlpha = if (state.isScrollInProgress) 1f else 0f
+    val duration = if (state.isScrollInProgress) 150 else 500
+
+    val alpha by animateFloatAsState(
+        targetValue = targetAlpha,
+        animationSpec = tween(durationMillis = duration), label = ""
+    )
+
+    drawWithContent {
+        drawContent()
+
+        val firstVisibleElementIndex = state.layoutInfo.visibleItemsInfo.firstOrNull()?.index
+        val needDrawScrollbar = state.isScrollInProgress || alpha > 0.0f
+
+        // Draw scrollbar if scrolling or if the animation is still running and lazy column has content
+        if (firstVisibleElementIndex != null) {
+            val elementHeight = this.size.height / state.layoutInfo.totalItemsCount
+            var scrollbarOffsetY = firstVisibleElementIndex * elementHeight
+
+            drawRect(
+                color = Color.Red,
+                topLeft = Offset(this.size.width - width.toPx(), scrollbarOffsetY),
+                size = Size(32.dp.toPx(), 32.dp.toPx()),
+            )
+        }
     }
 }
